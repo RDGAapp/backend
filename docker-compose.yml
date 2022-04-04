@@ -12,7 +12,7 @@ service:
     environment:
       POSTGRES_USER: rdga_admin
       POSTGRES_PASSWORD: lol_u_believed
-      POSTGRES_DB: rdga
+      POSTGRES_DB: rdga_db
     ports:
       - 5432:5432
     volumes:
