@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "files": true,
+  },
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
@@ -6,7 +9,7 @@
     "moduleResolution": "node",
     "sourceMap": false,
     "outDir": "dist",
-    "baseUrl": "src"
+    "baseUrl": "src",
   },
   "extends": "@tsconfig/node17/tsconfig.json",
   "include": [

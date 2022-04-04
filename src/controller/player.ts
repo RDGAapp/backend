@@ -3,10 +3,10 @@ import playerMapping from 'mapping/player';
 import mapObject from 'mapObject';
 
 class PlayerController {
-  async getAll() {
+  async getAll(): Promise<Array<Player>> {
     const playersDao = await playerDao.getAll();
 
-    return playersDao.map(playerDao => mapObject(playerDao, playerMapping));
+    return playersDao.map(playerDao => mapObject<PlayerDb, Player>(playerDao, playerMapping));
   }
 }
 

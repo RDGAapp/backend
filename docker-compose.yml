@@ -1,8 +1,8 @@
 version: "0.1"
-service:
+services:
   backend:
     build: .
-    port:
+    ports:
       - 8080:8080
     env_file: .env
     depends_on:
@@ -18,4 +18,4 @@ service:
     volumes:
       - database-data:/var/lib/postgresql/data
 volumes:
-  database-data
+  database-data:
