@@ -1,4 +1,20 @@
 const knexfile = {
+  test: {
+    client: 'postgresql',
+    connection: {
+      database: 'rdga_db_test',
+      user:     'rdga_admin',
+      password: 'lol_u_believed'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  },
+
   development: {
     client: 'postgresql',
     connection: {
