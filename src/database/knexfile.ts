@@ -3,8 +3,8 @@ const knexfile = {
     client: 'postgresql',
     connection: {
       database: 'rdga_db_test',
-      user:     'rdga_admin',
-      password: 'lol_u_believed'
+      user:     'postgres',
+      password: 'postgres'
     },
     pool: {
       min: 2,
@@ -18,9 +18,9 @@ const knexfile = {
   development: {
     client: 'postgresql',
     connection: {
-      database: 'rdga_db',
-      user:     'rdga_admin',
-      password: 'lol_u_believed'
+      database: 'rdga_dev_db',
+      user:     'rdga_dev',
+      password: 'java_script_i_love_it'
     },
     pool: {
       min: 2,

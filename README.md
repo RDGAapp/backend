@@ -4,6 +4,10 @@
 ## Scripts that you can find useful
 ### yarn install
 Install all dependencies
+### yarn start:dev:database
+Start database on local environment to be able to test API calls
+### yarn migrate:latest
+Run all migrations in configured database
 ### yarn start:dev
 Main script if you want to develop something locally. Need PostgreSQL database on localhost to communicate with database.
 ### yarn build
