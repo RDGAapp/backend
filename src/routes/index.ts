@@ -7,6 +7,8 @@ router.get('/coffee', (req: Request, res: Response) => {
   res.status(418).send("I'm a teapot");
 });
 
+/* Player routes */
 router.get('/players', playerController.getAll);
+router.get('/players/:id', playerController.getById);
 
 export default router;

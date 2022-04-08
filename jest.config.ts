@@ -4,6 +4,7 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   verbose: true,
-  moduleDirectories: ['node_modules', 'src']
+  moduleDirectories: ['node_modules', 'src'],
+  modulePathIgnorePatterns: ["__tests__/helpers/*"]
 }
 export default config;
