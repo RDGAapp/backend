@@ -6,6 +6,12 @@ class PlayerService {
 
     return playersDao;
   }
+
+  async getById(id: number): Promise<Player | null> {
+    const player = await playerDao.getById(id);
+
+    return player;
+  }
 }
 
 export default new PlayerService();
