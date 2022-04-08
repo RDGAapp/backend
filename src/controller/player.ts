@@ -1,10 +1,11 @@
-import playerDao from 'dao/player';
+import { Request, Response } from 'express';
+import playerService from 'service/player';
 
 class PlayerController {
-  async getAll(): Promise<Player[]> {
-    const playersDao = await playerDao.getAll();
+  async getAll(request: Request, response: Response) {
+    const players = await playerService.getAll();
 
-    return playersDao;
+    response.status(200).json(players);
   }
 }
 
