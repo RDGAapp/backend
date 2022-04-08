@@ -30,13 +30,15 @@
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "start:dev": "NODE_PATH=src nodemon --watch src -e ts --exec ts-node -r dotenv/config src",
     "start": "NODE_PATH=dist NODE_ENV=production node dist/index.js",
-    "lint": "eslint . --ext .ts",
     "migration:make": "npx knex migrate:make --migrations-directory=src/database/migrations -x ts",
     "migrate:latest": "npx knex migrate:latest --knexfile src/database/knexfile.ts",
     "migrate:up": "npx knex migrate:up --knexfile database/knexfile.ts",
     "migrate:down": "npx knex migrate:down --knexfile src/database/knexfile.ts",
     "migrate:rollback": "npx knex migrate:rollback --knexfile src/database/knexfile.ts",
     "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
-    "test": "jest"
+    "lint": "eslint . --ext .ts",
+    "types:check": "tsc --noEmit",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   }
 }
