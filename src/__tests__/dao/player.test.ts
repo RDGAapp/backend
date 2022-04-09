@@ -33,7 +33,7 @@ describe('Player Dao', () => {
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
-      expect(db().where).toBeCalledWith({ rdgaNumber: 24 });
+      expect(db().where).toBeCalledWith({ rdga_number: 24 });
       expect(player).toEqual(testPlayer);
     });
 
@@ -48,7 +48,7 @@ describe('Player Dao', () => {
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
-      expect(db().where).toBeCalledWith({ rdgaNumber: 24 });
+      expect(db().where).toBeCalledWith({ rdga_number: 24 });
       expect(player).toEqual(null);
     });
   });
