@@ -5,6 +5,6 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   verbose: true,
   moduleDirectories: ['node_modules', 'src'],
-  modulePathIgnorePatterns: ["__tests__/helpers/*"]
+  modulePathIgnorePatterns: ["__tests__/mocks/*", "<rootDir>/.*/__mocks__"]
 }
 export default config;

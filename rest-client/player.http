@@ -1,0 +1,30 @@
+@hostname = localhost
+@port = 8080
+@protocol = http
+@host = {{protocol}}://{{hostname}}:{{port}}
+
+### Get all players
+GET {{host}}/players
+
+### Get player by RDGA number
+GET {{host}}/players/24
+
+### Create player
+POST {{host}}/players
+Content-Type: application/json
+
+{
+  "name": "Гарри",
+  "middleName": "Джеймс",
+  "surname": "Поттер",
+  "rdgaNumber": 1,
+  "rdgaRating": 1000,
+  "rdgaRatingChange": 0,
+  "town": "Годрикова Впадина",
+  "dateOfBirth": "1980-07-31",
+  "email": "harry-potter@hogwarts.com",
+  "pdgaNumber": 1,
+  "pdgaRating": 1000,
+  "metrixNumber": 1,
+  "metrixRating": 1000
+}

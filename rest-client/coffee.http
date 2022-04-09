@@ -1,0 +1,7 @@
+@hostname = localhost
+@port = 8080
+@protocol = http
+@host = {{protocol}}://{{hostname}}:{{port}}
+
+#ask for coffee
+GET {{host}}/coffee

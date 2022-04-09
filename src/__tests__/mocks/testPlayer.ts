@@ -1,18 +1,17 @@
-const mockPlayer: Player = {
-  id: 24,
+const testPlayer: Player = {
   name: 'Test',
   surname: 'User',
   middleName: 'Real',
-  rdgaNumber: 0,
+  rdgaNumber: 1,
   rdgaRating: 10000,
-  rdgaRatingChange: 0,
+  rdgaRatingChange: 10,
   town: 'Somewhere',
   dateOfBirth: new Date(2022, 1, 1),
   email: 'test@user.com',
-  pdgaNumber: 0,
+  pdgaNumber: 1,
   pdgaRating: 10000,
-  metrixNumber: 0,
+  metrixNumber: 1,
   metrixRating: 10000,
 };
 
-export default mockPlayer;
+export default testPlayer;
