@@ -1,4 +1,4 @@
-const dbMock = {
+export const queriesMock = {
   from: jest.fn().mockReturnThis(),
   where: jest.fn().mockReturnThis(),
   select: jest.fn().mockReturnThis(),
@@ -9,5 +9,7 @@ const dbMock = {
   returning: jest.fn().mockReturnThis(),
   toNative: jest.fn(),
 };
+
+const dbMock = jest.fn().mockReturnValue(queriesMock);
 
 export default dbMock;
