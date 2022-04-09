@@ -9,6 +9,7 @@ router.get('/coffee', (req: Request, res: Response) => {
 
 /* Player routes */
 router.get('/players', playerController.getAll);
-router.get('/players/:id', playerController.getById);
+router.get('/players/:rdgaNumber', playerController.getByRdgaNumber);
+router.post('/players', playerController.createPlayer);
 
 export default router;

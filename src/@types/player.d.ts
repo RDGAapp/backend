@@ -1,10 +1,9 @@
 interface Player {
-  id: number;
   name: string;
   surname: string;
-  middleName: string;
+  middleName?: string;
   rdgaNumber: number;
-  rdgaRating: number;
+  rdgaRating?: number;
   rdgaRatingChange?: number;
   town?: string;
   dateOfBirth?: Date;

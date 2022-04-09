@@ -1,6 +1,7 @@
 const playerDaoMock = {
   getAll: jest.fn(),
-  getById: jest.fn(),
+  getByRdgaNumber: jest.fn(),
+  createPlayer: jest.fn(),
 };
 
 export default playerDaoMock;

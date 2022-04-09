@@ -1,5 +1,4 @@
 export default {
-  id: 'id',
   name: 'name',
   surname: 'surname',
   middleName: 'middle_name',
