@@ -11,5 +11,6 @@ router.get('/coffee', (req: Request, res: Response) => {
 router.get('/players', playerController.getAll);
 router.get('/players/:rdgaNumber', playerController.getByRdgaNumber);
 router.post('/players', playerController.createPlayer);
+router.put('/players/:rdgaNumber', playerController.updatePlayer);
 
 export default router;

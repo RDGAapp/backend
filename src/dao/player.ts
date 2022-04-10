@@ -19,9 +19,15 @@ class PlayerDao {
   }
 
   async createPlayer(player: PlayerDb): Promise<number> {
-    const createdPlayer = await db(this.#tableName).insert(player).returning('*');
+    const createdPlayer = await db(this.#tableName).insert(player).returning('rdga_number');
     
     return createdPlayer[0].rdga_number;
+  }
+
+  async updatePlayer(player: PlayerDb): Promise<PlayerDb> {
+    const updatedPlayer = await db(this.#tableName).where({ rdga_number: player.rdga_number }).update(player).returning('*');
+
+    return updatedPlayer[0];
   }
 }
 

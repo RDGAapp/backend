@@ -66,6 +66,23 @@ describe('Player Dao', () => {
       expect(db().insert).toBeCalledTimes(1);
       expect(db().insert).toBeCalledWith(testPlayerDb);
       expect(db().returning).toBeCalledTimes(1);
+      expect(db().returning).toBeCalledWith('rdga_number');
+    });
+  });
+
+  describe('updatePlayer', () => {
+    test('should return updated player', async() => {
+      (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);
+      jest.clearAllMocks();
+
+      const updatedPlayer = await playerDao.updatePlayer(testPlayerDb);
+
+      expect(updatedPlayer).toEqual(testPlayerDb);
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('player');
+      expect(db().update).toBeCalledTimes(1);
+      expect(db().update).toBeCalledWith(testPlayerDb);
+      expect(db().returning).toBeCalledTimes(1);
       expect(db().returning).toBeCalledWith('*');
     });
   });

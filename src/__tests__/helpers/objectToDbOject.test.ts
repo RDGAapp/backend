@@ -5,12 +5,14 @@ describe('Helper function objectToDbObject', () => {
     harry: 'potter',
     ron: 'weasley',
     ginny: 'weasley_potter',
+    muggle: 'shwuggle',
   };
 
   const fullObject = {
     harry: 'wizard',
     ron: 'friend',
     ginny: 'girlfriend',
+    muggle: null,
   }
 
   const halfObject = { harry: 'wizard' };
@@ -20,7 +22,8 @@ describe('Helper function objectToDbObject', () => {
     expect(dbObject).toEqual({
       potter: 'wizard',
       weasley: 'friend',
-      weasley_potter: 'girlfriend'
+      weasley_potter: 'girlfriend',
+      shwuggle: null,
     });
   });
 

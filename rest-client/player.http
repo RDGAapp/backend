@@ -7,7 +7,7 @@
 GET {{host}}/players
 
 ### Get player by RDGA number
-GET {{host}}/players/24
+GET {{host}}/players/1
 
 ### Create player
 POST {{host}}/players
@@ -23,6 +23,25 @@ Content-Type: application/json
   "town": "Годрикова Впадина",
   "dateOfBirth": "1980-07-31",
   "email": "harry-potter@hogwarts.com",
+  "pdgaNumber": 1,
+  "pdgaRating": 1000,
+  "metrixNumber": 1,
+  "metrixRating": 1000
+}
+
+### Update player
+PUT {{host}}/players/1
+Content-Type: application/json
+
+{
+  "name": "Гарри",
+  "middleName": "Джеймс",
+  "surname": "Поттер",
+  "rdgaRating": 1000,
+  "rdgaRatingChange": 0,
+  "town": "Годрикова Впадина",
+  "dateOfBirth": "1980-07-31",
+  "email": "harry-potter@muggle.com",
   "pdgaNumber": 1,
   "pdgaRating": 1000,
   "metrixNumber": 1,
