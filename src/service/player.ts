@@ -1,5 +1,6 @@
 import playerDao from 'dao/player';
 import objectToDbObject from 'helpers/objectToDbObject';
+import dbObjectToObject from 'helpers/dbObjectToObject';
 import playerMapping from 'mapping/player';
 class PlayerService {
   async checkIfPlayerExist(player: Player) {
@@ -34,6 +35,15 @@ class PlayerService {
     const playerRdgaNumber = await playerDao.createPlayer(playerDb);
 
     return playerRdgaNumber;
+  }
+
+  async updatePlayer(player: Player): Promise<Player> {
+    const playerDb = objectToDbObject<Player, PlayerDb>(player, playerMapping);
+
+    const updatedPlayerDb = await playerDao.updatePlayer(playerDb);
+
+    const updatedPlayer = dbObjectToObject<PlayerDb, Player>(updatedPlayerDb, playerMapping);
+    return updatedPlayer;
   }
 }
 

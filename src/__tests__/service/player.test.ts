@@ -90,4 +90,16 @@ describe('Player Service', () => {
       expect(playerDao.createPlayer).toBeCalledTimes(0);
     });
   });
+
+  describe('updatePlayer', () => {
+    test('should return updated player', async() => {
+      (playerDao.updatePlayer as jest.Mock).mockReturnValueOnce(testPlayerDb);
+
+      const updatedPlayer = await playerService.updatePlayer(testPlayer);
+      
+      expect(updatedPlayer).toEqual(testPlayer);
+      expect(playerDao.updatePlayer).toBeCalledTimes(1);
+      expect(playerDao.updatePlayer).toBeCalledWith(testPlayerDb);
+    });
+  });
 });

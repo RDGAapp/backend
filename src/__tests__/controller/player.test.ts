@@ -16,12 +16,29 @@ describe('Player Controller', () => {
 
     test('should response 200 with controller result ', async() => {
       (playerService.getAll as jest.Mock).mockReturnValueOnce([]);
+
       await playerController.getAll(request, response);
+
       expect(playerService.getAll).toBeCalledTimes(1);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(200);
       expect(response.json).toBeCalledTimes(1);
       expect(response.json).toBeCalledWith([]);
+    });
+
+    test('should handle service throw with 500', async() => {
+      (playerService.getAll as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.getAll(request, response);
+
+      expect(playerService.getAll).toBeCalledTimes(1);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
     });
   });
 
@@ -65,6 +82,23 @@ describe('Player Controller', () => {
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Игрок с таким номером РДГА не найден');
     });
+
+    test('should handle service throw with 500', async() => {
+      const request = { params: { rdgaNumber: '24' } } as unknown as Request;
+      (playerService.getByRdgaNumber as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.getByRdgaNumber(request, response);
+
+      expect(playerService.getByRdgaNumber).toBeCalledTimes(1);
+      expect(playerService.getByRdgaNumber).toBeCalledWith(24);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
   });
 
   describe('createPlayer', () => {
@@ -95,7 +129,7 @@ describe('Player Controller', () => {
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(500);
       expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Error: Test');
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
     });
 
     test('should return 400 if data is corrupted', async() => {
@@ -108,6 +142,65 @@ describe('Player Controller', () => {
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Проверьте данные: "dateOfBirth" must be a valid date');
+    });
+  });
+
+  describe('updatePlayer', () => {
+    test('should update with 200 response', async() => {
+      const request = { body: { ...testPlayer }, params: { rdgaNumber: 1 } } as unknown as Request;
+      delete request.body.rdgaNumber;
+      (playerService.updatePlayer as jest.Mock).mockReturnValueOnce(testPlayer);
+
+      await playerController.updatePlayer(request, response);
+
+      expect(playerService.updatePlayer).toBeCalledTimes(1);
+      expect(playerService.updatePlayer).toBeCalledWith(testPlayer);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith(testPlayer);
+    });
+
+    test('should return 500 if something went wrong', async() => {
+      const request = { body: { ...testPlayer }, params: { rdgaNumber: 1 } } as unknown as Request;
+      delete request.body.rdgaNumber;
+      (playerService.updatePlayer as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.updatePlayer(request, response);
+
+      expect(playerService.updatePlayer).toBeCalledTimes(1);
+      expect(playerService.updatePlayer).toBeCalledWith(testPlayer);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
+
+    test('should return 400 if data is corrupted', async() => {
+      const request = { body: { ...testPlayer, dateOfBirth: 'test' }, params: { rdgaNumber: 1 } } as unknown as Request;
+
+      await playerController.updatePlayer(request, response);
+
+      expect(playerService.updatePlayer).toBeCalledTimes(0);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(400);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Проверьте данные: "dateOfBirth" must be a valid date');
+    });
+
+    test('should return 400 if rdgaNumber is not valid number', async() => {
+      const request = { body: { ...testPlayer, dateOfBirth: 'test' }, params: { rdgaNumber: 'test' } } as unknown as Request;
+
+      await playerController.updatePlayer(request, response);
+
+      expect(playerService.updatePlayer).toBeCalledTimes(0);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(400);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Номер РДГА должен быть числом');
     });
   });
 });

@@ -7,6 +7,7 @@ export const queriesMock = {
   insert: jest.fn().mockReturnThis(),
   into: jest.fn().mockReturnThis(),
   returning: jest.fn().mockReturnThis(),
+  update: jest.fn().mockReturnThis(),
   toNative: jest.fn(),
 };
 
