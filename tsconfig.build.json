@@ -1,4 +1,7 @@
 {
   "extends": "./tsconfig",
+  "compilerOptions": {
+    "types": ["node"],
+  },
   "exclude": ["**/*.test.*", "**/__mocks__/*", "**/__tests__/*", "rest-client/*"]
 }
