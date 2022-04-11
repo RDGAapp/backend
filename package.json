@@ -15,12 +15,14 @@
   },
   "devDependencies": {
     "@types/jest": "27.4.1",
+    "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.17.0",
     "@typescript-eslint/parser": "5.17.0",
     "dotenv": "16.0.0",
     "eslint": "8.12.0",
     "jest": "27.5.1",
     "nodemon": "2.0.15",
+    "supertest": "6.2.2",
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0"
   },
@@ -29,8 +31,8 @@
     "clean:packages": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "start": "NODE_PATH=dist NODE_ENV=production node dist/index.js",
-    "start:dev": "NODE_PATH=src nodemon --watch src -e ts --exec ts-node -r dotenv/config src",
+    "start": "NODE_PATH=dist NODE_ENV=production node dist/server.js",
+    "start:dev": "NODE_PATH=src nodemon --watch src -e ts --exec ts-node -r dotenv/config src/server.ts",
     "start:dev:database": "docker run --name rdga_db --rm -d -p 5432:5432 -e POSTGRES_USER=rdga_dev -e POSTGRES_PASSWORD=java_script_i_love_it -e POSTGRES_DB=rdga_dev_db postgres:14.2",
     "stop:dev:database": "docker stop rdga_db",
     "migration:make": "npx knex migrate:make --migrations-directory=src/database/migrations -x ts",
@@ -41,7 +43,7 @@
     "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
     "lint": "eslint . --ext .ts",
     "types:check": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test": "jest --runInBand --forceExit --detectOpenHandles",
+    "test:coverage": "jest --coverage --runInBand --forceExit --detectOpenHandles"
   }
 }

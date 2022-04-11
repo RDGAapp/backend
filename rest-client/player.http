@@ -15,13 +15,11 @@ Content-Type: application/json
 
 {
   "name": "Гарри",
-  "middleName": "Джеймс",
   "surname": "Поттер",
   "rdgaNumber": 1,
   "rdgaRating": 1000,
   "rdgaRatingChange": 0,
   "town": "Годрикова Впадина",
-  "dateOfBirth": "1980-07-31",
   "email": "harry-potter@hogwarts.com",
   "pdgaNumber": 1,
   "pdgaRating": 1000,
@@ -35,12 +33,10 @@ Content-Type: application/json
 
 {
   "name": "Гарри",
-  "middleName": "Джеймс",
   "surname": "Поттер",
   "rdgaRating": 1000,
   "rdgaRatingChange": 0,
   "town": "Годрикова Впадина",
-  "dateOfBirth": "1980-07-31",
   "email": "harry-potter@muggle.com",
   "pdgaNumber": 1,
   "pdgaRating": 1000,
