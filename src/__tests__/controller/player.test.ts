@@ -133,7 +133,7 @@ describe('Player Controller', () => {
     });
 
     test('should return 400 if data is corrupted', async() => {
-      const request = { body: { ...testPlayer, dateOfBirth: 'test' } } as unknown as Request;
+      const request = { body: { ...testPlayer, pdgaNumber: 'test' } } as unknown as Request;
 
       await playerController.createPlayer(request, response);
 
@@ -141,7 +141,7 @@ describe('Player Controller', () => {
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Проверьте данные: "dateOfBirth" must be a valid date');
+      expect(response.send).toBeCalledWith('Проверьте данные: "pdgaNumber" must be a number');
     });
   });
 
@@ -180,7 +180,7 @@ describe('Player Controller', () => {
     });
 
     test('should return 400 if data is corrupted', async() => {
-      const request = { body: { ...testPlayer, dateOfBirth: 'test' }, params: { rdgaNumber: 1 } } as unknown as Request;
+      const request = { body: { ...testPlayer, pdgaNumber: 'test' }, params: { rdgaNumber: 1 } } as unknown as Request;
 
       await playerController.updatePlayer(request, response);
 
@@ -188,7 +188,7 @@ describe('Player Controller', () => {
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Проверьте данные: "dateOfBirth" must be a valid date');
+      expect(response.send).toBeCalledWith('Проверьте данные: "pdgaNumber" must be a number');
     });
 
     test('should return 400 if rdgaNumber is not valid number', async() => {

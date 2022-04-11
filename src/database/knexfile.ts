@@ -1,10 +1,11 @@
+import path from 'path';
+
 const defaultSettings = {
   client: 'postgresql',
   connection: {
-    host:     process.env.DATABASE_HOST,
-    database: process.env.DATABASE,
-    user:     process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD
+    database: 'rdga_dev_db',
+    user:     'rdga_dev',
+    password: 'java_script_i_love_it'
   },
   pool: {
     min: 2,
@@ -18,24 +19,31 @@ const defaultSettings = {
 const knexfile = {
   test: {
     ...defaultSettings,
-    connection: {
-      database: 'rdga_db_test',
-      user:     'postgres',
-      password: 'postgres'
+    migrations: {
+      ...defaultSettings.migrations,
+      directory: path.join(__dirname, 'migrations'),
+    },
+    seeds: {
+      directory: path.join(__dirname, 'seeds'),
+    },
+    pool: { 
+      min: 1,
+      max: 1,
     },
   },
 
   development: {
     ...defaultSettings,
-    connection: {
-      database: 'rdga_dev_db',
-      user:     'rdga_dev',
-      password: 'java_script_i_love_it'
-    },
   },
 
   production: {
     ...defaultSettings,
+    connection: {
+      host:     process.env.DATABASE_HOST,
+      database: process.env.DATABASE,
+      user:     process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD
+    },
   }
 };
 
