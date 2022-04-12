@@ -12,5 +12,6 @@ router.get('/players', playerController.getAll);
 router.get('/players/:rdgaNumber', playerController.getByRdgaNumber);
 router.post('/players', playerController.createPlayer);
 router.put('/players/:rdgaNumber', playerController.updatePlayer);
+router.delete('/players/:rdgaNumber', playerController.deletePlayer);
 
 export default router;

@@ -64,6 +64,19 @@ class PlayerController {
       return response500(response, error);
     }
   }
+
+  async deletePlayer(request: Request, response: Response) {
+    const rdgaNumber = Number(request.params.rdgaNumber);
+    if (isNaN(rdgaNumber)) return response400(response, 'Номер РДГА', 'числом', 'he');
+
+    try {
+      await playerService.deletePlayer(rdgaNumber);
+
+      response.status(200).send(`Игрок с номером РДГА ${rdgaNumber} удален`);
+    } catch(error) {
+      return response500(response, error);
+    }
+  }
 }
 
 export default new PlayerController();

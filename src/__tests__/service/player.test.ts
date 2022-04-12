@@ -38,32 +38,32 @@ describe('Player Service', () => {
   });
 
   describe('checkIfPlayerExist', () => {
-    test('should pass if no match found', async() => {
+    test('should return false if no match found', async() => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2, pdgaNumber: 2, metrixNumber: 2 }]);
 
-      const testFunction = async() => await playerService.checkIfPlayerExist(testPlayer);
-      expect(testFunction).not.toThrow();
+      const exist = await playerService.checkIfPlayerExist(testPlayer);
+      expect(exist).toBe(false);
     });
 
-    test('should throw if found same RDGA number', async() => {
+    test('should return true if found same RDGA number', async() => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, pdgaNumber: 2, metrixNumber: 2 }]);
 
-      const testFunction = async() => playerService.checkIfPlayerExist(testPlayer);
-      expect(testFunction).rejects.toThrow('Игрок с таким номером RDGA, PDGA или Metrix уже существует');
+      const exist = await playerService.checkIfPlayerExist(testPlayer);
+      expect(exist).toBe(true);
     });
 
-    test('should throw if found same PDGA number', async() => {
+    test('should return true if found same PDGA number', async() => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2, metrixNumber: 2 }]);
 
-      const testFunction = async() => playerService.checkIfPlayerExist(testPlayer);
-      expect(testFunction).rejects.toThrow('Игрок с таким номером RDGA, PDGA или Metrix уже существует');
+      const exist = await playerService.checkIfPlayerExist(testPlayer);
+      expect(exist).toBe(true);
     });
 
-    test('should throw if found same Metrix number', async() => {
+    test('should return true if found same Metrix number', async() => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2, pdgaNumber: 2 }]);
 
-      const testFunction = async() => playerService.checkIfPlayerExist(testPlayer);
-      expect(testFunction).rejects.toThrow('Игрок с таким номером RDGA, PDGA или Metrix уже существует');
+      const exist = await playerService.checkIfPlayerExist(testPlayer);
+      expect(exist).toBe(true);
     });
   });
 
@@ -100,6 +100,26 @@ describe('Player Service', () => {
       expect(updatedPlayer).toEqual(testPlayer);
       expect(playerDao.updatePlayer).toBeCalledTimes(1);
       expect(playerDao.updatePlayer).toBeCalledWith(testPlayerDb);
+    });
+  });
+
+  describe('deletePlayer', () => {
+    test('should call dao delete player', async() => {
+      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
+
+      await playerService.deletePlayer(1);
+
+      expect(playerDao.deletePlayer).toBeCalledTimes(1);
+      expect(playerDao.deletePlayer).toBeCalledWith(1);
+    });
+
+    test('should throw if player not exist', async() => {
+      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2 }]);
+
+      const testFunction = async() => await playerService.deletePlayer(1);
+
+      expect(testFunction).rejects.toThrow('Игрока с таким номером РДГА нет в базе');
+      expect(playerDao.deletePlayer).toBeCalledTimes(0);
     });
   });
 });
