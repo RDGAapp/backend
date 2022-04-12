@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "yarn"
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
+      time: "12:00"
+    commit-message:
+      prefix: "DEPENDABOT: "
