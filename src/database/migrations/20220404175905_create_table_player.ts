@@ -13,6 +13,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('pdga_rating').defaultTo(null);
     table.integer('metrix_number').defaultTo(null).unique();
     table.integer('metrix_rating').defaultTo(null);
+    table.integer('priority').defaultTo(0);
   });
 }
 

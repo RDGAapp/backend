@@ -10,6 +10,7 @@ const testPlayer: Player = {
   pdgaRating: 10000,
   metrixNumber: 1,
   metrixRating: 10000,
+  priority: 0,
 };
 
 export default testPlayer;

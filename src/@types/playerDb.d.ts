@@ -10,4 +10,5 @@ interface PlayerDb {
   pdga_rating?: number;
   metrix_number?: number;
   metrix_rating?: number;
+  priority?: number;
 }
