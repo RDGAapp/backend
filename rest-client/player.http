@@ -24,7 +24,8 @@ Content-Type: application/json
   "pdgaNumber": 1,
   "pdgaRating": 1000,
   "metrixNumber": 1,
-  "metrixRating": 1000
+  "metrixRating": 1000,
+  "priority": 0
 }
 
 ### Update player
@@ -41,5 +42,6 @@ Content-Type: application/json
   "pdgaNumber": 1,
   "pdgaRating": 1000,
   "metrixNumber": 1,
-  "metrixRating": 1000
+  "metrixRating": 1000,
+  "priority": 1
 }

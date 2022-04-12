@@ -10,6 +10,7 @@ const mockPlayerDb: PlayerDb = {
   pdga_rating: 10000,
   metrix_number: 1,
   metrix_rating: 10000,
+  priority: 0,
 };
 
 export default mockPlayerDb;

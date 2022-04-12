@@ -10,4 +10,5 @@ interface Player {
   pdgaRating?: number;
   metrixNumber?: number;
   metrixRating?: number;
+  priority?: number;
 }

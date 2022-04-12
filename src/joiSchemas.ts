@@ -12,6 +12,7 @@ export const playerSchema: Joi.ObjectSchema<Player> = Joi.object().keys({
   pdgaRating: Joi.number().optional(),
   metrixNumber: Joi.number().optional().min(1),
   metrixRating: Joi.number().optional(),
+  priority: Joi.number().optional(),
 });
 
 export const playerPutSchema: Joi.ObjectSchema<Partial<Player>> = Joi.object().keys({
@@ -25,4 +26,5 @@ export const playerPutSchema: Joi.ObjectSchema<Partial<Player>> = Joi.object().k
   pdgaRating: Joi.number().optional(),
   metrixNumber: Joi.number().optional().min(1),
   metrixRating: Joi.number().optional(),
+  priority: Joi.number().optional(),
 });
