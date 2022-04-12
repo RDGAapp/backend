@@ -203,4 +203,48 @@ describe('Player Controller', () => {
       expect(response.send).toBeCalledWith('Номер РДГА должен быть числом');
     });
   });
+
+  describe('deletePlayer', () => {
+    test('should response 200 if player found and deleted', async() => {
+      const request = { params: { rdgaNumber: '24' } } as unknown as Request;
+
+      await playerController.deletePlayer(request, response);
+
+      expect(playerService.deletePlayer).toBeCalledTimes(1);
+      expect(playerService.deletePlayer).toBeCalledWith(24);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Игрок с номером РДГА 24 удален');
+    });
+
+    test('should response 400 if id is not a number', async() => {
+      const request = { params: { id: 'some-string' } } as unknown as Request;
+
+      await playerController.deletePlayer(request, response);
+
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(400);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Номер РДГА должен быть числом');
+      expect(playerService.deletePlayer).toHaveBeenCalledTimes(0);
+    });
+
+    test('should handle service throw with 500', async() => {
+      const request = { params: { rdgaNumber: '24' } } as unknown as Request;
+      (playerService.deletePlayer as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.deletePlayer(request, response);
+
+      expect(playerService.deletePlayer).toBeCalledTimes(1);
+      expect(playerService.deletePlayer).toBeCalledWith(24);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
+  });
 });

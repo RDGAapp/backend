@@ -86,4 +86,17 @@ describe('Player Dao', () => {
       expect(db().returning).toBeCalledWith('*');
     });
   });
+
+  describe('deletePlayer', () => {
+    test('should delete player', async() => {
+      await playerDao.deletePlayer(1);
+
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('player');
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ rdga_number: 1 });
+      expect(db().del).toBeCalledTimes(1);
+      expect(db().del).toBeCalledWith();
+    });
+  });
 });

@@ -45,3 +45,7 @@ Content-Type: application/json
   "metrixRating": 1000,
   "priority": 1
 }
+
+### Delete player
+
+DELETE {{host}}/players/1

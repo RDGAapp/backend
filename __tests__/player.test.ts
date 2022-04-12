@@ -110,4 +110,32 @@ describe('Player endpoints', () => {
       expect(response.text).toEqual('Проверьте данные: "pdgaNumber" must be a number');
     });
   });
+
+  describe('DELETE /players/:rdgaNumber', () => {
+    test('should return 200 and delete player', async() => {
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).del('/players/1');
+      
+      expect(response.status).toBe(200);
+      expect(response.text).toEqual('Игрок с номером РДГА 1 удален');
+
+      const getResponse = await request(app).get('/players/1');
+      expect(getResponse.status).toBe(404);
+    });
+
+    test('should return 500 if player does not exist', async() => {
+      const response = await request(app).del('/players/1');
+      
+      expect(response.status).toBe(500);
+      expect(response.text).toEqual('Что-то пошло не так: Error: Игрока с таким номером РДГА нет в базе');
+    });
+
+    test('should return 400 if rdgaNumber is not a number', async() => {
+      const response = await request(app).del('/players/test');
+      
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual('Номер РДГА должен быть числом');
+    });
+
+  });
 });

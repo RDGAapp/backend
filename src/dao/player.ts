@@ -29,6 +29,10 @@ class PlayerDao {
 
     return updatedPlayer[0];
   }
+
+  async deletePlayer(rdgaNumber: number): Promise<void> {
+    await db(this.#tableName).where({ rdga_number: rdgaNumber }).del();
+  }
 }
 
 export default new PlayerDao();
