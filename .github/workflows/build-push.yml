@@ -45,9 +45,9 @@ jobs:
           context: .
           push: true
           tags: cherkasik/rdga-backend:latest
-          build-args:
-            PORT=${{ secrets.BACKEND_PORT }},
-            DATABASE=${{ secrets.DATABASE }},
-            DATABASE_HOST=${{ secrets.DATABASE_HOST }},
-            DATABASE_USER=${{ secrets.DATABASE_USER }},
+          build-args: |
+            PORT=${{ secrets.BACKEND_PORT }}
+            DATABASE=${{ secrets.DATABASE }}
+            DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+            DATABASE_USER=${{ secrets.DATABASE_USER }}
             DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
