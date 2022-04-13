@@ -4,6 +4,16 @@ import db from '../src/database';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
 
 describe('Player endpoints', () => {
+  const nullablePlayer = {
+    ...testPlayer,
+    surname: null,
+    town: null,
+    pdgaNumber: null,
+    pdgaRating: null,
+    metrixNumber: null,
+    metrixRating: null,
+  };
+
   beforeEach(async() => {
     await db.migrate.latest();
   });
@@ -79,6 +89,16 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Проверьте данные: "rdgaNumber" must be a number');
     });
+
+    test('should return 200 and create player with null fields', async() => {
+      const response = await request(app).post('/players').send(nullablePlayer);
+      expect(response.status).toBe(200);
+      expect(response.text).toBe('Игрок с номером РДГА 1 создан');
+      
+      const getAllResponse = await request(app).get('/players');
+      expect(getAllResponse.status).toBe(200);
+      expect(getAllResponse.body).toEqual([nullablePlayer]);
+    });
   });
 
   describe('PUT /players/:rdgaNumber', () => {
@@ -88,6 +108,9 @@ describe('Player endpoints', () => {
 
     const playerToUpdate: Partial<typeof testPlayer> = { ...testPlayer, email: 'test1@user.com' };
     delete playerToUpdate.rdgaNumber;
+
+    const nullablePlayerToUpdate: Partial<typeof testPlayer> = { ...nullablePlayer, name: 'Test1' };
+    delete nullablePlayerToUpdate.rdgaNumber;
 
     test('should return 200 and update player', async() => {
       const response = await request(app).put('/players/1').send(playerToUpdate);
@@ -108,6 +131,13 @@ describe('Player endpoints', () => {
       
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Проверьте данные: "pdgaNumber" must be a number');
+    });
+
+    test('should return 200 and update player with null fields', async() => {
+      const response = await request(app).put('/players/1').send(nullablePlayerToUpdate);
+      
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ ...nullablePlayerToUpdate, rdgaNumber: 1 });
     });
   });
 

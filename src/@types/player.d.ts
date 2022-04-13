@@ -1,14 +1,14 @@
 interface Player {
   name: string;
-  surname: string;
+  surname?: string | null;
   rdgaNumber: number;
   rdgaRating?: number;
   rdgaRatingChange?: number;
-  town?: string;
+  town?: string | null;
   email?: string;
-  pdgaNumber?: number;
-  pdgaRating?: number;
-  metrixNumber?: number;
-  metrixRating?: number;
+  pdgaNumber?: number | null;
+  pdgaRating?: number | null;
+  metrixNumber?: number | null;
+  metrixRating?: number | null;
   priority?: number;
 }
