@@ -2,11 +2,13 @@
   "name": "backend",
   "private": true,
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "server.js",
   "dependencies": {
     "@tsconfig/node17": "1.0.0",
+    "@types/cors": "2.8.12",
     "@types/express": "4.17.13",
     "@types/node": "17.0.23",
+    "cors": "2.8.5",
     "express": "4.17.3",
     "joi": "17.6.0",
     "knex": "1.0.6",
@@ -30,26 +32,21 @@
     "clean:build": "rm -rf dist",
     "clean:packages": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist",
-
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "start": "NODE_PATH=dist NODE_ENV=production node dist/server.js",
-
     "start:dev": "NODE_PATH=src nodemon --watch src -e ts --exec ts-node -r dotenv/config src/server.ts",
     "start:dev:database": "docker run --name rdga_db --rm -d -p 5432:5432 -e POSTGRES_USER=rdga_dev -e POSTGRES_PASSWORD=java_script_i_love_it -e POSTGRES_DB=rdga_dev_db postgres:14.2",
     "stop:dev:database": "docker stop rdga_db",
-
     "migration:make": "npx knex migrate:make --migrations-directory=src/database/migrations -x ts",
     "migrate:latest": "npx knex migrate:latest --knexfile src/database/knexfile.ts",
     "migrate:up": "npx knex migrate:up --knexfile database/knexfile.ts",
     "migrate:down": "npx knex migrate:down --knexfile src/database/knexfile.ts",
     "migrate:rollback": "npx knex migrate:rollback --knexfile src/database/knexfile.ts",
     "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
-
     "lint": "eslint . --ext .ts",
     "types:check": "tsc --noEmit",
     "test": "jest --runInBand --forceExit --detectOpenHandles",
     "test:coverage": "jest --coverage --runInBand --forceExit --detectOpenHandles",
-
     "docker:pull": "docker pull cherkasik/rdga-backend:latest",
     "docker:start": "docker run -d -p 8080:8080 cherkasik/rdga-backend:latest"
   }
