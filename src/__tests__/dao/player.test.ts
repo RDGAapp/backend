@@ -13,11 +13,13 @@ describe('Player Dao', () => {
 
   describe('getAll', () => {
     test('should use select from table player ', async() => {
-      await playerDao.getAll();
+      await playerDao.getAll(1);
       expect(db).toBeCalledTimes(1);
       expect(db).toBeCalledWith('player');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
+      expect(db().orderBy).toBeCalledTimes(1);
+      expect(db().orderBy).toBeCalledWith('rdga_rating', 'desc');
     });
   });
 
@@ -35,6 +37,39 @@ describe('Player Dao', () => {
       expect(db().where).toBeCalledTimes(1);
       expect(db().where).toBeCalledWith({ rdga_number: 24 });
       expect(player).toEqual(testPlayer);
+    });
+
+    test('should return null if it was found', async() => {
+      (db().where as jest.Mock).mockReturnValueOnce([]);
+      jest.clearAllMocks();
+
+      const player = await playerDao.getByRdgaNumber(24);
+
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('player');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(playerMapping);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ rdga_number: 24 });
+      expect(player).toEqual(null);
+    });
+  });
+
+  describe('getByRdgaPdgaMetrixNumber', () => {
+    test('should return player if it was found', async() => {
+      jest.clearAllMocks();
+
+      await playerDao.getByRdgaPdgaMetrixNumber(24, 24, 24);
+
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('player');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(playerMapping);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ rdga_number: 24 });
+      expect(db().orWhere).toBeCalledTimes(2);
+      expect(db().orWhere).toHaveBeenNthCalledWith(1, { pdga_number: 24 });
+      expect(db().orWhere).toHaveBeenNthCalledWith(2, { metrix_number: 24 });
     });
 
     test('should return null if it was found', async() => {

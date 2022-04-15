@@ -2985,6 +2985,11 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
+knex-paginate@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/knex-paginate/-/knex-paginate-3.0.0.tgz#ec322dd262d6e9ab7d453b5d2232ef9f9a468e03"
+  integrity sha512-jX6pacyvFtUon1QYp/AqK20zMjAPlrr/7zHrqP2HbRz/qdewDRX5huExXOp3+3+501VVYEwxlg84eB3TVzYTEw==
+
 knex@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/knex/-/knex-1.0.6.tgz#4b72050bd5569dd3c758f766d8b0932928dd0284"

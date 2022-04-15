@@ -13,7 +13,7 @@ describe('Player Service', () => {
   describe('getAll', () => {
     test('should return whatever playerDao returns', async() => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([]);
-      const players = await playerService.getAll();
+      const players = await playerService.getAll(1);
       expect(players).toEqual([]);
       expect(playerDao.getAll).toBeCalledTimes(1);
     });
@@ -39,28 +39,14 @@ describe('Player Service', () => {
 
   describe('checkIfPlayerExist', () => {
     test('should return false if no match found', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2, pdgaNumber: 2, metrixNumber: 2 }]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
 
       const exist = await playerService.checkIfPlayerExist(testPlayer);
       expect(exist).toBe(false);
     });
 
-    test('should return true if found same RDGA number', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, pdgaNumber: 2, metrixNumber: 2 }]);
-
-      const exist = await playerService.checkIfPlayerExist(testPlayer);
-      expect(exist).toBe(true);
-    });
-
-    test('should return true if found same PDGA number', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2, metrixNumber: 2 }]);
-
-      const exist = await playerService.checkIfPlayerExist(testPlayer);
-      expect(exist).toBe(true);
-    });
-
-    test('should return true if found same Metrix number', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2, pdgaNumber: 2 }]);
+    test('should return true if player was found', async() => {
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([testPlayer]);
 
       const exist = await playerService.checkIfPlayerExist(testPlayer);
       expect(exist).toBe(true);
@@ -69,24 +55,24 @@ describe('Player Service', () => {
 
   describe('createPlayer', () => {
     test('should return id', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
       (playerDao.createPlayer as jest.Mock).mockReturnValueOnce(1);
 
       const playerId = await playerService.createPlayer(testPlayer);
 
       expect(playerId).toBe(1);
-      expect(playerDao.getAll).toBeCalledTimes(1);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
       expect(playerDao.createPlayer).toBeCalledTimes(1);
       expect(playerDao.createPlayer).toBeCalledWith(testPlayerDb);
     });
 
     test('should throw', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
 
       const testFunction = async() => await playerService.createPlayer(testPlayer);
 
       expect(testFunction).rejects.toThrow('Игрок с таким номером RDGA, PDGA или Metrix уже существует');
-      expect(playerDao.getAll).toBeCalledTimes(1);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
       expect(playerDao.createPlayer).toBeCalledTimes(0);
     });
   });
@@ -105,7 +91,7 @@ describe('Player Service', () => {
 
   describe('deletePlayer', () => {
     test('should call dao delete player', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
 
       await playerService.deletePlayer(1);
 
@@ -114,7 +100,7 @@ describe('Player Service', () => {
     });
 
     test('should throw if player not exist', async() => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaNumber: 2 }]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
 
       const testFunction = async() => await playerService.deletePlayer(1);
 

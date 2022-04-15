@@ -12,6 +12,7 @@
     "express": "4.17.3",
     "joi": "17.6.0",
     "knex": "1.0.6",
+    "knex-paginate": "3.0.0",
     "pg": "8.7.3",
     "typescript": "4.6.3"
   },
@@ -43,11 +44,11 @@
     "migrate:down": "npx knex migrate:down --knexfile src/database/knexfile.ts",
     "migrate:rollback": "npx knex migrate:rollback --knexfile src/database/knexfile.ts",
     "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
+    "seed:make": "knex seed:make -x ts",
+    "seed:run": "knex seed:run --knexfile src/database/knexfile.ts",
     "lint": "eslint . --ext .ts",
     "types:check": "tsc --noEmit",
     "test": "jest --runInBand --forceExit --detectOpenHandles",
-    "test:coverage": "jest --coverage --runInBand --forceExit --detectOpenHandles",
-    "docker:pull": "docker pull cherkasik/rdga-backend:latest",
-    "docker:start": "docker run -d -p 8080:8080 cherkasik/rdga-backend:latest"
+    "test:coverage": "jest --coverage --runInBand --forceExit --detectOpenHandles"
   }
 }

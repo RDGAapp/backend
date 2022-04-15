@@ -27,7 +27,10 @@ describe('Player endpoints', () => {
       const response = await request(app).get('/players');
       
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([]);
+      expect(response.body).toEqual({
+        data: [],
+        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 15, to: 0, total: 0 }
+      });
     });
 
     test('should return 200 with someData', async() => {
@@ -35,7 +38,10 @@ describe('Player endpoints', () => {
       const response = await request(app).get('/players');
       
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([testPlayer]);
+      expect(response.body).toEqual({
+        data: [testPlayer],
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 1, total: 1 }
+      });
     });
   });
 
@@ -72,7 +78,7 @@ describe('Player endpoints', () => {
       
       const getAllResponse = await request(app).get('/players');
       expect(getAllResponse.status).toBe(200);
-      expect(getAllResponse.body).toEqual([testPlayer]);
+      expect(getAllResponse.body.data).toEqual([testPlayer]);
     });
 
     test('should return 500 if player already exists', async() => {
@@ -97,7 +103,7 @@ describe('Player endpoints', () => {
       
       const getAllResponse = await request(app).get('/players');
       expect(getAllResponse.status).toBe(200);
-      expect(getAllResponse.body).toEqual([nullablePlayer]);
+      expect(getAllResponse.body.data).toEqual([nullablePlayer]);
     });
   });
 
