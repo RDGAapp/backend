@@ -2,22 +2,18 @@ import playerDao from 'dao/player';
 import objectToDbObject from 'helpers/objectToDbObject';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import playerMapping from 'mapping/player';
+import { IWithPagination } from 'knex-paginate';
 class PlayerService {
   async checkIfPlayerExist(player: Partial<Player>): Promise<boolean> {
-    const players = await playerDao.getAll();
-    const existingPlayer = players.find(dbPlayer => (
-      dbPlayer.rdgaNumber === player.rdgaNumber
-      || (player.pdgaNumber && dbPlayer.pdgaNumber === player.pdgaNumber)
-      || (player.metrixNumber && dbPlayer.metrixNumber === player.metrixNumber)
-      )
-    );
+    const existingPlayer = await playerDao
+      .getByRdgaPdgaMetrixNumber(player.rdgaNumber, player.pdgaNumber, player.metrixNumber);
 
-    if(!existingPlayer) return false;
+    if(existingPlayer.length === 0) return false;
     return true;
   }
 
-  async getAll(): Promise<Player[]> {
-    const playersDao = await playerDao.getAll();
+  async getAll(pageNumber: number): Promise<IWithPagination<Player[]>> {
+    const playersDao = await playerDao.getAll(pageNumber);
 
     return playersDao;
   }

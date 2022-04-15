@@ -12,7 +12,7 @@ describe('Player Controller', () => {
   });
 
   describe('getAll', () => {
-    const request = {} as Request;
+    const request = { query: {} } as Request;
 
     test('should response 200 with controller result ', async() => {
       (playerService.getAll as jest.Mock).mockReturnValueOnce([]);

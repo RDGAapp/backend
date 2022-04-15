@@ -5,8 +5,9 @@ import { response500, response400Joi, response400 } from 'helpers/responses';
 
 class PlayerController {
   async getAll(request: Request, response: Response) {
+    const pageNumber = Number(request.query.page) || 1;
     try {
-      const players = await playerService.getAll();
+      const players = await playerService.getAll(pageNumber);
 
       return response.status(200).json(players);
     } catch (error) {
