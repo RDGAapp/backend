@@ -20,6 +20,8 @@ describe('Player Dao', () => {
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().orderBy).toBeCalledTimes(1);
       expect(db().orderBy).toBeCalledWith('rdga_rating', 'desc');
+      expect(db().paginate).toBeCalledTimes(1);
+      expect(db().paginate).toBeCalledWith({ perPage: 15, currentPage: 1, isLengthAware: true });
     });
   });
 

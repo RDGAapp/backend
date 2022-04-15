@@ -13,7 +13,11 @@ class PlayerDao {
     return db(this.#tableName)
       .select(playerMapping)
       .orderBy('rdga_rating', 'desc')
-      .paginate({ perPage: 15, currentPage: pageNumber });
+      .paginate({
+        perPage: 15,
+        currentPage: pageNumber,
+        isLengthAware: true,
+      });
   }
 
   async getByRdgaNumber(rdgaNumber: number): Promise<Player | null> {
