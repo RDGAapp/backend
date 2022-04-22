@@ -43,6 +43,21 @@ describe('Player endpoints', () => {
         pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 1, total: 1 }
       });
     });
+
+    test('should return 200 sorted by rating and then by number', async() => {
+      const testPlayer2 = { ...testPlayer, rdgaNumber: 2, metrixNumber: 2, pdgaNumber: 2 };
+      const testPlayer3 = { ...testPlayer, rdgaNumber: 3, rdgaRating: 10001, metrixNumber: 3, pdgaNumber: 3 };
+      await request(app).post('/players').send(testPlayer2);
+      await request(app).post('/players').send(testPlayer3);
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).get('/players');
+      
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        data: [testPlayer3, testPlayer, testPlayer2],
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 3, total: 3 }
+      });
+    });
   });
 
   describe('GET /players/:rdgaNumber', () => {

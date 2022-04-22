@@ -13,6 +13,7 @@ class PlayerDao {
     return db(this.#tableName)
       .select(playerMapping)
       .orderBy('rdga_rating', 'desc')
+      .orderBy('rdga_number', 'asc')
       .paginate({
         perPage: 15,
         currentPage: pageNumber,
