@@ -18,8 +18,9 @@ describe('Player Dao', () => {
       expect(db).toBeCalledWith('player');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
-      expect(db().orderBy).toBeCalledTimes(1);
-      expect(db().orderBy).toBeCalledWith('rdga_rating', 'desc');
+      expect(db().orderBy).toBeCalledTimes(2);
+      expect(db().orderBy).toHaveBeenNthCalledWith(1, 'rdga_rating', 'desc');
+      expect(db().orderBy).toHaveBeenNthCalledWith(2, 'rdga_number', 'asc');
       expect(db().paginate).toBeCalledTimes(1);
       expect(db().paginate).toBeCalledWith({ perPage: 15, currentPage: 1, isLengthAware: true });
     });
