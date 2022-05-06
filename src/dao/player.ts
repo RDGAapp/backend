@@ -43,15 +43,15 @@ class PlayerDao {
     return player;
   }
 
-  async createPlayer(player: PlayerDb): Promise<number> {
+  async create(player: PlayerDb): Promise<number> {
     const createdPlayer = await db(this.#tableName)
       .insert(player)
       .returning('rdga_number');
-    
+
     return createdPlayer[0].rdga_number;
   }
 
-  async updatePlayer(player: PlayerDb): Promise<PlayerDb> {
+  async update(player: PlayerDb): Promise<PlayerDb> {
     const updatedPlayer = await db(this.#tableName)
       .where({ rdga_number: player.rdga_number })
       .update(player)
@@ -60,10 +60,19 @@ class PlayerDao {
     return updatedPlayer[0];
   }
 
-  async deletePlayer(rdgaNumber: number): Promise<void> {
+  async delete(rdgaNumber: number): Promise<void> {
     await db(this.#tableName)
       .where({ rdga_number: rdgaNumber })
       .del();
+  }
+
+  async updateRdgaRating(rdgaNumber: number, rdgaRating: number, ratingDifference: number): Promise<PlayerDb> {
+    const updatedPlayer = await db(this.#tableName)
+      .where({ rdga_number: rdgaNumber })
+      .update({ rdga_rating: rdgaRating, rdga_rating_change: ratingDifference })
+      .returning('*');
+
+    return updatedPlayer[0];
   }
 }
 

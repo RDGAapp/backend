@@ -28,3 +28,7 @@ export const playerPutSchema: Joi.ObjectSchema<Partial<Player>> = Joi.object().k
   metrixRating: Joi.number().optional().allow(null),
   priority: Joi.number().optional(),
 });
+
+export const playerUpdateRatingSchema: Joi.ObjectSchema<{ rating: number }> = Joi.object().keys({
+  rating: Joi.number().required(),
+});
