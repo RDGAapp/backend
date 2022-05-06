@@ -14,18 +14,18 @@ describe('Player endpoints', () => {
     metrixRating: null,
   };
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await db.migrate.latest();
   });
 
-  afterEach(async() => {
+  afterEach(async () => {
     await db.migrate.rollback();
   });
 
   describe('GET /players', () => {
-    test('should return 200 with empty array', async() => {
+    test('should return 200 with empty array', async () => {
       const response = await request(app).get('/players');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [],
@@ -33,10 +33,10 @@ describe('Player endpoints', () => {
       });
     });
 
-    test('should return 200 with someData', async() => {
+    test('should return 200 with someData', async () => {
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).get('/players');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer],
@@ -44,14 +44,14 @@ describe('Player endpoints', () => {
       });
     });
 
-    test('should return 200 sorted by rating and then by number', async() => {
+    test('should return 200 sorted by rating and then by number', async () => {
       const testPlayer2 = { ...testPlayer, rdgaNumber: 2, metrixNumber: 2, pdgaNumber: 2 };
       const testPlayer3 = { ...testPlayer, rdgaNumber: 3, rdgaRating: 10001, metrixNumber: 3, pdgaNumber: 3 };
       await request(app).post('/players').send(testPlayer2);
       await request(app).post('/players').send(testPlayer3);
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).get('/players');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer3, testPlayer, testPlayer2],
@@ -61,24 +61,24 @@ describe('Player endpoints', () => {
   });
 
   describe('GET /players/:rdgaNumber', () => {
-    test('should return 200 with player', async() => {
+    test('should return 200 with player', async () => {
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).get('/players/1');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual(testPlayer);
     });
 
-    test('should return 404 if player does not exist', async() => {
+    test('should return 404 if player does not exist', async () => {
       const response = await request(app).get('/players/1');
-      
+
       expect(response.status).toBe(404);
       expect(response.text).toEqual('Игрок с таким номером РДГА не найден');
     });
 
-    test('should return 400 if rdgaNumber is not a number', async() => {
+    test('should return 400 if rdgaNumber is not a number', async () => {
       const response = await request(app).get('/players/test');
-      
+
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Номер РДГА должен быть числом');
     });
@@ -86,36 +86,36 @@ describe('Player endpoints', () => {
   });
 
   describe('POST /players', () => {
-    test('should return 200 and create player', async() => {
+    test('should return 200 and create player', async () => {
       const response = await request(app).post('/players').send(testPlayer);
       expect(response.status).toBe(200);
       expect(response.text).toBe('Игрок с номером РДГА 1 создан');
-      
+
       const getAllResponse = await request(app).get('/players');
       expect(getAllResponse.status).toBe(200);
       expect(getAllResponse.body.data).toEqual([testPlayer]);
     });
 
-    test('should return 500 if player already exists', async() => {
+    test('should return 500 if player already exists', async () => {
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).post('/players').send(testPlayer);
-      
+
       expect(response.status).toBe(500);
       expect(response.text).toEqual('Что-то пошло не так: Error: Игрок с таким номером RDGA, PDGA или Metrix уже существует');
     });
 
-    test('should return 400 if any of the data is corrupted', async() => {
+    test('should return 400 if any of the data is corrupted', async () => {
       const response = await request(app).post('/players').send({ ...testPlayer, rdgaNumber: 'test' });
-      
+
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Проверьте данные: "rdgaNumber" must be a number');
     });
 
-    test('should return 200 and create player with null fields', async() => {
+    test('should return 200 and create player with null fields', async () => {
       const response = await request(app).post('/players').send(nullablePlayer);
       expect(response.status).toBe(200);
       expect(response.text).toBe('Игрок с номером РДГА 1 создан');
-      
+
       const getAllResponse = await request(app).get('/players');
       expect(getAllResponse.status).toBe(200);
       expect(getAllResponse.body.data).toEqual([nullablePlayer]);
@@ -123,7 +123,7 @@ describe('Player endpoints', () => {
   });
 
   describe('PUT /players/:rdgaNumber', () => {
-    beforeEach(async() => {
+    beforeEach(async () => {
       await request(app).post('/players').send(testPlayer);
     });
 
@@ -133,40 +133,40 @@ describe('Player endpoints', () => {
     const nullablePlayerToUpdate: Partial<typeof testPlayer> = { ...nullablePlayer, name: 'Test1' };
     delete nullablePlayerToUpdate.rdgaNumber;
 
-    test('should return 200 and update player', async() => {
+    test('should return 200 and update player', async () => {
       const response = await request(app).put('/players/1').send(playerToUpdate);
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ ...playerToUpdate, rdgaNumber: 1 });
     });
 
-    test('should return 400 if rdgaNumber is not a number', async() => {
+    test('should return 400 if rdgaNumber is not a number', async () => {
       const response = await request(app).put('/players/test').send(playerToUpdate);
-      
+
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Номер РДГА должен быть числом');
     });
 
-    test('should return 400 if data is corrupted', async() => {
+    test('should return 400 if data is corrupted', async () => {
       const response = await request(app).put('/players/1').send({ ...playerToUpdate, pdgaNumber: 'test' });
-      
+
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Проверьте данные: "pdgaNumber" must be a number');
     });
 
-    test('should return 200 and update player with null fields', async() => {
+    test('should return 200 and update player with null fields', async () => {
       const response = await request(app).put('/players/1').send(nullablePlayerToUpdate);
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ ...nullablePlayerToUpdate, rdgaNumber: 1 });
     });
   });
 
   describe('DELETE /players/:rdgaNumber', () => {
-    test('should return 200 and delete player', async() => {
+    test('should return 200 and delete player', async () => {
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).del('/players/1');
-      
+
       expect(response.status).toBe(200);
       expect(response.text).toEqual('Игрок с номером РДГА 1 удален');
 
@@ -174,19 +174,56 @@ describe('Player endpoints', () => {
       expect(getResponse.status).toBe(404);
     });
 
-    test('should return 500 if player does not exist', async() => {
+    test('should return 500 if player does not exist', async () => {
       const response = await request(app).del('/players/1');
-      
+
       expect(response.status).toBe(500);
       expect(response.text).toEqual('Что-то пошло не так: Error: Игрока с таким номером РДГА нет в базе');
     });
 
-    test('should return 400 if rdgaNumber is not a number', async() => {
+    test('should return 400 if rdgaNumber is not a number', async () => {
       const response = await request(app).del('/players/test');
-      
+
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Номер РДГА должен быть числом');
     });
 
+  });
+
+  describe('PATCH /players/:rdgaNumber/rdgaRating', () => {
+    test("should return 200 and update player's rating", async () => {
+      await request(app).post('/players').send(testPlayer);
+
+      const response = await request(app).patch('/players/1/rdgaRating').send({ rating: 900 });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ ...testPlayer, rdgaRating: 900, rdgaRatingChange: -9100 });
+    });
+
+    test('should return 400 if rdgaNumber is not a number', async () => {
+      const response = await request(app).patch('/players/test/rdgaRating').send({ rating: 900 });
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual('Номер РДГА должен быть числом');
+    });
+
+    test('should return 400 if rating is not a number', async () => {
+      const response = await request(app).patch('/players/1/rdgaRating').send({ rating: 'test' });
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual('Проверьте данные: "rating" must be a number');
+    });
+
+    test('should return 200 and update player with null rating', async () => {
+      const playerToCreate = { ...testPlayer };
+      delete playerToCreate.rdgaRating;
+
+      await request(app).post('/players').send({ ...playerToCreate });
+
+      const response = await request(app).patch('/players/1/rdgaRating').send({ rating: 900 });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ ...testPlayer, rdgaRating: 900, rdgaRatingChange: 900 });
+    });
   });
 });
