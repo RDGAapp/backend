@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "./dist"
   },
-  "extends": "@tsconfig/node17/tsconfig.json",
+  "extends": "@tsconfig/node18/tsconfig.json",
   "include": [
     "src/**/*"
   ],
