@@ -14,7 +14,7 @@ describe('Player Controller', () => {
   describe('getAll', () => {
     const request = { query: {} } as Request;
 
-    test('should response 200 with controller result ', async() => {
+    test('should response 200 with controller result ', async () => {
       (playerService.getAll as jest.Mock).mockReturnValueOnce([]);
 
       await playerController.getAll(request, response);
@@ -26,7 +26,7 @@ describe('Player Controller', () => {
       expect(response.json).toBeCalledWith([]);
     });
 
-    test('should handle service throw with 500', async() => {
+    test('should handle service throw with 500', async () => {
       (playerService.getAll as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
@@ -43,7 +43,7 @@ describe('Player Controller', () => {
   });
 
   describe('getByRdgaNumber', () => {
-    test('should response 200 if player found', async() => {
+    test('should response 200 if player found', async () => {
       const request = { params: { rdgaNumber: '24' } } as unknown as Request;
       (playerService.getByRdgaNumber as jest.Mock).mockReturnValueOnce(testPlayer);
 
@@ -57,7 +57,7 @@ describe('Player Controller', () => {
       expect(response.json).toBeCalledWith(testPlayer);
     });
 
-    test('should response 400 if id is not a number', async() => {
+    test('should response 400 if id is not a number', async () => {
       const request = { params: { id: 'some-string' } } as unknown as Request;
 
       await playerController.getByRdgaNumber(request, response);
@@ -69,7 +69,7 @@ describe('Player Controller', () => {
       expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(0);
     });
 
-    test('should response 404 if player wasn\'t found', async() => {
+    test('should response 404 if player wasn\'t found', async () => {
       const request = { params: { rdgaNumber: '24' } } as unknown as Request;
       (playerService.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
 
@@ -83,7 +83,7 @@ describe('Player Controller', () => {
       expect(response.send).toBeCalledWith('Игрок с таким номером РДГА не найден');
     });
 
-    test('should handle service throw with 500', async() => {
+    test('should handle service throw with 500', async () => {
       const request = { params: { rdgaNumber: '24' } } as unknown as Request;
       (playerService.getByRdgaNumber as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
@@ -101,43 +101,43 @@ describe('Player Controller', () => {
     });
   });
 
-  describe('createPlayer', () => {
-    test('should create with 200 response', async() => {
+  describe('create', () => {
+    test('should create with 200 response', async () => {
       const request = { body: { ...testPlayer } } as unknown as Request;
-      (playerService.createPlayer as jest.Mock).mockReturnValueOnce(1);
+      (playerService.create as jest.Mock).mockReturnValueOnce(1);
 
-      await playerController.createPlayer(request, response);
+      await playerController.create(request, response);
 
-      expect(playerService.createPlayer).toBeCalledTimes(1);
-      expect(playerService.createPlayer).toBeCalledWith(testPlayer);
+      expect(playerService.create).toBeCalledTimes(1);
+      expect(playerService.create).toBeCalledWith(testPlayer);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(200);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Игрок с номером РДГА 1 создан');
     });
 
-    test('should return 500 if something went wrong', async() => {
+    test('should return 500 if something went wrong', async () => {
       const request = { body: { ...testPlayer } } as unknown as Request;
-      (playerService.createPlayer as jest.Mock).mockImplementationOnce(() => {
+      (playerService.create as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
-      await playerController.createPlayer(request, response);
+      await playerController.create(request, response);
 
-      expect(playerService.createPlayer).toBeCalledTimes(1);
-      expect(playerService.createPlayer).toBeCalledWith(testPlayer);
+      expect(playerService.create).toBeCalledTimes(1);
+      expect(playerService.create).toBeCalledWith(testPlayer);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(500);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
     });
 
-    test('should return 400 if data is corrupted', async() => {
+    test('should return 400 if data is corrupted', async () => {
       const request = { body: { ...testPlayer, pdgaNumber: 'test' } } as unknown as Request;
 
-      await playerController.createPlayer(request, response);
+      await playerController.create(request, response);
 
-      expect(playerService.createPlayer).toBeCalledTimes(0);
+      expect(playerService.create).toBeCalledTimes(0);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
@@ -145,33 +145,33 @@ describe('Player Controller', () => {
     });
   });
 
-  describe('updatePlayer', () => {
-    test('should update with 200 response', async() => {
+  describe('update', () => {
+    test('should update with 200 response', async () => {
       const request = { body: { ...testPlayer }, params: { rdgaNumber: 1 } } as unknown as Request;
       delete request.body.rdgaNumber;
-      (playerService.updatePlayer as jest.Mock).mockReturnValueOnce(testPlayer);
+      (playerService.update as jest.Mock).mockReturnValueOnce(testPlayer);
 
-      await playerController.updatePlayer(request, response);
+      await playerController.update(request, response);
 
-      expect(playerService.updatePlayer).toBeCalledTimes(1);
-      expect(playerService.updatePlayer).toBeCalledWith(testPlayer);
+      expect(playerService.update).toBeCalledTimes(1);
+      expect(playerService.update).toBeCalledWith(testPlayer);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(200);
       expect(response.json).toBeCalledTimes(1);
       expect(response.json).toBeCalledWith(testPlayer);
     });
 
-    test('should return 500 if something went wrong', async() => {
+    test('should return 500 if something went wrong', async () => {
       const request = { body: { ...testPlayer }, params: { rdgaNumber: 1 } } as unknown as Request;
       delete request.body.rdgaNumber;
-      (playerService.updatePlayer as jest.Mock).mockImplementationOnce(() => {
+      (playerService.update as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
-      await playerController.updatePlayer(request, response);
+      await playerController.update(request, response);
 
-      expect(playerService.updatePlayer).toBeCalledTimes(1);
-      expect(playerService.updatePlayer).toBeCalledWith(testPlayer);
+      expect(playerService.update).toBeCalledTimes(1);
+      expect(playerService.update).toBeCalledWith(testPlayer);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(500);
       expect(response.json).toBeCalledTimes(0);
@@ -179,24 +179,24 @@ describe('Player Controller', () => {
       expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
     });
 
-    test('should return 400 if data is corrupted', async() => {
+    test('should return 400 if data is corrupted', async () => {
       const request = { body: { ...testPlayer, pdgaNumber: 'test' }, params: { rdgaNumber: 1 } } as unknown as Request;
 
-      await playerController.updatePlayer(request, response);
+      await playerController.update(request, response);
 
-      expect(playerService.updatePlayer).toBeCalledTimes(0);
+      expect(playerService.update).toBeCalledTimes(0);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Проверьте данные: "pdgaNumber" must be a number');
     });
 
-    test('should return 400 if rdgaNumber is not valid number', async() => {
+    test('should return 400 if rdgaNumber is not valid number', async () => {
       const request = { body: { ...testPlayer, dateOfBirth: 'test' }, params: { rdgaNumber: 'test' } } as unknown as Request;
 
-      await playerController.updatePlayer(request, response);
+      await playerController.update(request, response);
 
-      expect(playerService.updatePlayer).toBeCalledTimes(0);
+      expect(playerService.update).toBeCalledTimes(0);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
@@ -204,47 +204,104 @@ describe('Player Controller', () => {
     });
   });
 
-  describe('deletePlayer', () => {
-    test('should response 200 if player found and deleted', async() => {
+  describe('delete', () => {
+    test('should response 200 if player found and deleted', async () => {
       const request = { params: { rdgaNumber: '24' } } as unknown as Request;
 
-      await playerController.deletePlayer(request, response);
+      await playerController.delete(request, response);
 
-      expect(playerService.deletePlayer).toBeCalledTimes(1);
-      expect(playerService.deletePlayer).toBeCalledWith(24);
+      expect(playerService.delete).toBeCalledTimes(1);
+      expect(playerService.delete).toBeCalledWith(24);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(200);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Игрок с номером РДГА 24 удален');
     });
 
-    test('should response 400 if id is not a number', async() => {
+    test('should response 400 if id is not a number', async () => {
       const request = { params: { id: 'some-string' } } as unknown as Request;
 
-      await playerController.deletePlayer(request, response);
+      await playerController.delete(request, response);
 
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Номер РДГА должен быть числом');
-      expect(playerService.deletePlayer).toHaveBeenCalledTimes(0);
+      expect(playerService.delete).toHaveBeenCalledTimes(0);
     });
 
-    test('should handle service throw with 500', async() => {
+    test('should handle service throw with 500', async () => {
       const request = { params: { rdgaNumber: '24' } } as unknown as Request;
-      (playerService.deletePlayer as jest.Mock).mockImplementationOnce(() => {
+      (playerService.delete as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
-      await playerController.deletePlayer(request, response);
+      await playerController.delete(request, response);
 
-      expect(playerService.deletePlayer).toBeCalledTimes(1);
-      expect(playerService.deletePlayer).toBeCalledWith(24);
+      expect(playerService.delete).toBeCalledTimes(1);
+      expect(playerService.delete).toBeCalledWith(24);
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(500);
       expect(response.json).toBeCalledTimes(0);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
+  });
+
+  describe('updateRdgaRating', () => {
+    test('should update with 200 response', async () => {
+      const request = { body: { rating: 900 }, params: { rdgaNumber: 1 } } as unknown as Request;
+      (playerService.updateRdgaRating as jest.Mock).mockReturnValueOnce(testPlayer);
+
+      await playerController.updateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
+      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith(testPlayer);
+    });
+
+    test('should return 500 if something went wrong', async () => {
+      const request = { body: { rating: 900 }, params: { rdgaNumber: 1 } } as unknown as Request;
+      (playerService.updateRdgaRating as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.updateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
+      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
+
+    test('should return 400 if data is corrupted', async () => {
+      const request = { body: { rating: 'test' }, params: { rdgaNumber: 1 } } as unknown as Request;
+
+      await playerController.updateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(0);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(400);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Проверьте данные: "rating" must be a number');
+    });
+
+    test('should return 400 if rdgaNumber is not valid number', async () => {
+      const request = { body: { rating: 900 }, params: { rdgaNumber: 'test' } } as unknown as Request;
+
+      await playerController.updateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(0);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(400);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Номер РДГА должен быть числом');
     });
   });
 });

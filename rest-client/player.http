@@ -49,3 +49,11 @@ Content-Type: application/json
 ### Delete player
 
 DELETE {{host}}/players/1
+
+### Update player
+PATCH {{host}}/players/1/rdgaRating
+Content-Type: application/json
+
+{
+  "rating": 1000
+}

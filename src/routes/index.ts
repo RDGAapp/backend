@@ -10,8 +10,9 @@ router.get('/coffee', (req: Request, res: Response) => {
 /* Player routes */
 router.get('/players', playerController.getAll);
 router.get('/players/:rdgaNumber', playerController.getByRdgaNumber);
-router.post('/players', playerController.createPlayer);
-router.put('/players/:rdgaNumber', playerController.updatePlayer);
-router.delete('/players/:rdgaNumber', playerController.deletePlayer);
+router.post('/players', playerController.create);
+router.put('/players/:rdgaNumber', playerController.update);
+router.delete('/players/:rdgaNumber', playerController.delete);
+router.patch('/players/:rdgaNumber/rdgaRating', playerController.updateRdgaRating);
 
 export default router;
