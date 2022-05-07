@@ -90,7 +90,7 @@ describe('Player Controller', () => {
   });
 
   describe('create', () => {
-    test('should create with 200 response', async () => {
+    test('should create with 201 response', async () => {
       const request = { body: { ...testPlayer } } as unknown as Request;
       (playerService.create as jest.Mock).mockReturnValueOnce(1);
 
@@ -99,7 +99,7 @@ describe('Player Controller', () => {
       expect(playerService.create).toBeCalledTimes(1);
       expect(playerService.create).toBeCalledWith(testPlayer);
       expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
+      expect(response.status).toBeCalledWith(201);
       expect(response.send).toBeCalledTimes(1);
       expect(response.send).toBeCalledWith('Игрок с номером РДГА 1 создан');
     });

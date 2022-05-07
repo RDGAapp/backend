@@ -86,9 +86,9 @@ describe('Player endpoints', () => {
   });
 
   describe('POST /players', () => {
-    test('should return 200 and create player', async () => {
+    test('should return 201 and create player', async () => {
       const response = await request(app).post('/players').send(testPlayer);
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(201);
       expect(response.text).toBe('Игрок с номером РДГА 1 создан');
 
       const getAllResponse = await request(app).get('/players');
@@ -113,7 +113,7 @@ describe('Player endpoints', () => {
 
     test('should return 200 and create player with null fields', async () => {
       const response = await request(app).post('/players').send(nullablePlayer);
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(201);
       expect(response.text).toBe('Игрок с номером РДГА 1 создан');
 
       const getAllResponse = await request(app).get('/players');

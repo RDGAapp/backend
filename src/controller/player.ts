@@ -40,7 +40,7 @@ class PlayerController {
     try {
       const playerRdgaNumber = await playerService.create(playerToCreate)
 
-      response.status(200).send(`Игрок с номером РДГА ${playerRdgaNumber} создан`);
+      response.status(201).send(`Игрок с номером РДГА ${playerRdgaNumber} создан`);
     } catch (error) {
       return response500(response, error);
     }
