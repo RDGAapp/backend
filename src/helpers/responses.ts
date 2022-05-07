@@ -2,9 +2,9 @@ import { Response } from 'express';
 import { ValidationError } from 'joi';
 
 const rusHaveToBe = {
-  he: 'должен быть',
-  she: 'должна быть',
-  it: 'должно быть',
+  м: 'должен быть',
+  ж: 'должна быть',
+  ср: 'должно быть',
 };
 
 export const response500 = (response: Response, error: unknown) => response
@@ -19,5 +19,5 @@ export const response400Joi = (response: Response, error: ValidationError) => re
  * @param fieldType - тип поля в творительном падеже
  * @param fieldNameGender - мужской/женский/средний род названия поля
 */
-export const response400 = (response: Response, fieldName: string, fieldType: string, fieldNameGender: 'he' | 'she' | 'it') => response
+export const response400 = (response: Response, fieldName: string, fieldType: string, fieldNameGender: 'м' | 'ж' | 'ср') => response
   .status(400).send(`${fieldName} ${rusHaveToBe[fieldNameGender]} ${fieldType}`);

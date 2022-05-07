@@ -32,8 +32,8 @@ describe('handleGlobalError helper', () => {
   });
 
   describe('response400', () => {
-    test('should response 400 with message for he', () => {
-      response400(response, 'Test', 'not test', 'he');
+    test('should response 400 with message for м', () => {
+      response400(response, 'Test', 'not test', 'м');
 
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
@@ -41,8 +41,8 @@ describe('handleGlobalError helper', () => {
       expect(response.send).toBeCalledWith('Test должен быть not test');
     });
 
-    test('should response 400 with message for she', () => {
-      response400(response, 'Test', 'not test', 'she');
+    test('should response 400 with message for ж', () => {
+      response400(response, 'Test', 'not test', 'ж');
 
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
@@ -50,8 +50,8 @@ describe('handleGlobalError helper', () => {
       expect(response.send).toBeCalledWith('Test должна быть not test');
     });
 
-    test('should response 400 with message for it', () => {
-      response400(response, 'Test', 'not test', 'it');
+    test('should response 400 with message for ср', () => {
+      response400(response, 'Test', 'not test', 'ср');
 
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(400);
