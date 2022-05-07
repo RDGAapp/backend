@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import playerService from 'service/player';
 import { playerSchema, playerPutSchema, playerUpdateRatingSchema } from 'joiSchemas';
-import { response500, response400Joi, response400 } from 'helpers/responses';
+import { response500, response400Joi } from 'helpers/responses';
 
 class PlayerController {
   async getAll(request: Request, response: Response) {
@@ -16,8 +16,7 @@ class PlayerController {
   }
 
   async getByRdgaNumber(request: Request, response: Response) {
-    const rdgaNumber = Number(request.params.rdgaNumber);
-    if (isNaN(rdgaNumber)) return response400(response, 'Номер РДГА', 'числом', 'he');
+    const { rdgaNumber } = request;
 
     try {
       const player = await playerService.getByRdgaNumber(rdgaNumber);
@@ -41,15 +40,14 @@ class PlayerController {
     try {
       const playerRdgaNumber = await playerService.create(playerToCreate)
 
-      response.status(200).send(`Игрок с номером РДГА ${playerRdgaNumber} создан`);
+      response.status(201).send(`Игрок с номером РДГА ${playerRdgaNumber} создан`);
     } catch (error) {
       return response500(response, error);
     }
   }
 
   async update(request: Request, response: Response) {
-    const rdgaNumber = Number(request.params.rdgaNumber);
-    if (isNaN(rdgaNumber)) return response400(response, 'Номер РДГА', 'числом', 'he');
+    const { rdgaNumber } = request;
 
     const { error, value: playerToUpdate } = playerPutSchema.validate(request.body);
 
@@ -67,8 +65,7 @@ class PlayerController {
   }
 
   async delete(request: Request, response: Response) {
-    const rdgaNumber = Number(request.params.rdgaNumber);
-    if (isNaN(rdgaNumber)) return response400(response, 'Номер РДГА', 'числом', 'he');
+    const { rdgaNumber } = request;
 
     try {
       await playerService.delete(rdgaNumber);
@@ -80,8 +77,7 @@ class PlayerController {
   }
 
   async updateRdgaRating(request: Request, response: Response) {
-    const rdgaNumber = Number(request.params.rdgaNumber);
-    if (isNaN(rdgaNumber)) return response400(response, 'Номер РДГА', 'числом', 'he');
+    const { rdgaNumber } = request;
 
     const { error, value } = playerUpdateRatingSchema.validate(request.body);
     if (error) {
