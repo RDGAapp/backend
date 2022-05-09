@@ -50,7 +50,7 @@ Content-Type: application/json
 
 DELETE {{host}}/players/1
 
-### Update player
+### Update player rating
 PATCH {{host}}/players/1/rdgaRating
 Content-Type: application/json
 
