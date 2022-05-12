@@ -6,8 +6,11 @@ import { response500, response400Joi } from 'helpers/responses';
 class PlayerController {
   async getAll(request: Request, response: Response) {
     const pageNumber = Number(request.query.page) || 1;
+    const surname = request.query.surname as string || '';
+    const town = request.query.town as string || '';
+
     try {
-      const players = await playerService.getAll(pageNumber);
+      const players = await playerService.getAll(pageNumber, surname, town);
 
       return response.status(200).json(players);
     } catch (error) {

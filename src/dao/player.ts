@@ -9,8 +9,17 @@ class PlayerDao {
     this.#tableName = 'player';
   }
 
-  async getAll(pageNumber: number): Promise<IWithPagination<Player[]>> {
-    return db(this.#tableName)
+  async getAll(pageNumber: number, surname: string, town: string): Promise<IWithPagination<Player[]>> {
+    let query = db(this.#tableName);
+
+    if(surname) {
+      query = query.where('surname', 'ilike', `%${surname}%`);
+    }
+    if (town) {
+      query = query.where({ town });
+    }
+
+    return query
       .select(playerMapping)
       .orderBy('rdga_rating', 'desc')
       .orderBy('rdga_number', 'asc')
