@@ -25,7 +25,6 @@ describe('Player endpoints', () => {
   describe('GET /players', () => {
     test('should return 200 with empty array', async () => {
       const response = await request(app).get('/players');
-      console.log(response.text);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
