@@ -13,11 +13,14 @@ describe('Player Dao', () => {
 
   describe('getAll', () => {
     test('should use select from table player ', async () => {
-      await playerDao.getAll(1);
+      await playerDao.getAll(1, 'testSurname', 'testTown');
       expect(db).toBeCalledTimes(1);
       expect(db).toBeCalledWith('player');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
+      expect(db().where).toBeCalledTimes(2);
+      expect(db().where).toHaveBeenNthCalledWith(1, 'surname', 'ilike', '%testSurname%');
+      expect(db().where).toHaveBeenNthCalledWith(2, { town: 'testTown' });
       expect(db().orderBy).toBeCalledTimes(2);
       expect(db().orderBy).toHaveBeenNthCalledWith(1, 'rdga_rating', 'desc');
       expect(db().orderBy).toHaveBeenNthCalledWith(2, 'rdga_number', 'asc');
@@ -73,6 +76,22 @@ describe('Player Dao', () => {
       expect(db().orWhere).toBeCalledTimes(2);
       expect(db().orWhere).toHaveBeenNthCalledWith(1, { pdga_number: 24 });
       expect(db().orWhere).toHaveBeenNthCalledWith(2, { metrix_number: 24 });
+    });
+
+    test('should replace with 0 if number not stated', async () => {
+      jest.clearAllMocks();
+
+      await playerDao.getByRdgaPdgaMetrixNumber(24);
+
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('player');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(playerMapping);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ rdga_number: 24 });
+      expect(db().orWhere).toBeCalledTimes(2);
+      expect(db().orWhere).toHaveBeenNthCalledWith(1, { pdga_number: 0 });
+      expect(db().orWhere).toHaveBeenNthCalledWith(2, { metrix_number: 0 });
     });
 
     test('should return null if it was found', async () => {

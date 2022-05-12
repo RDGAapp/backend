@@ -14,12 +14,27 @@ describe('Player Controller', () => {
   describe('getAll', () => {
     const request = { query: {} } as Request;
 
-    test('should response 200 with controller result ', async () => {
+    test('should response 200 and replace query with default values', async () => {
       (playerService.getAll as jest.Mock).mockReturnValueOnce([]);
 
       await playerController.getAll(request, response);
 
       expect(playerService.getAll).toBeCalledTimes(1);
+      expect(playerService.getAll).toBeCalledWith(1, '', '');
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith([]);
+    });
+
+    test('should response 200 and use query values', async () => {
+      (playerService.getAll as jest.Mock).mockReturnValueOnce([]);
+      const request = { query: { page: 2, surname: 'testSurname', town: 'Somewhere' } } as unknown as Request;
+
+      await playerController.getAll(request, response);
+
+      expect(playerService.getAll).toBeCalledTimes(1);
+      expect(playerService.getAll).toBeCalledWith(2, 'testSurname', 'Somewhere');
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(200);
       expect(response.json).toBeCalledTimes(1);

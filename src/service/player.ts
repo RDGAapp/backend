@@ -12,8 +12,8 @@ class PlayerService {
     return existingPlayer[0];
   }
 
-  async getAll(pageNumber: number): Promise<IWithPagination<Player[]>> {
-    const playersDao = await playerDao.getAll(pageNumber);
+  async getAll(pageNumber: number, surname: string, town: string): Promise<IWithPagination<Player[]>> {
+    const playersDao = await playerDao.getAll(pageNumber, surname, town);
 
     return playersDao;
   }
