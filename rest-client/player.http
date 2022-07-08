@@ -4,7 +4,7 @@
 @host = {{protocol}}://{{hostname}}:{{port}}
 
 ### Get all players
-GET {{host}}/players
+GET {{host}}/players?pageNumber=1&surname=test&town=Нижний Новгород
 
 ### Get player by RDGA number
 GET {{host}}/players/1
