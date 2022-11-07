@@ -142,7 +142,7 @@ describe('Player Service', () => {
 
       const testFunction = async () => await playerService.updateRdgaRating(1, 1000);
 
-      expect(testFunction).rejects.toThrow('Игрока с таким номером РДГА нет в базе');
+      expect(testFunction).rejects.toThrow('Игрока с номером РДГА 1 нет в базе');
       expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
       expect(playerDao.create).toBeCalledTimes(0);
     });

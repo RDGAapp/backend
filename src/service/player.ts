@@ -53,7 +53,7 @@ class PlayerService {
 
   async updateRdgaRating(rdgaNumber: number, rdgaRating: number): Promise<Player> {
     const existingPlayer = await this.checkIfPlayerExist({ rdgaNumber });
-    if (!existingPlayer) throw Error('Игрока с таким номером РДГА нет в базе');
+    if (!existingPlayer) throw Error(`Игрока с номером РДГА ${rdgaNumber} нет в базе`);
 
     const ratingDifference = rdgaRating - (existingPlayer.rdgaRating || 0);
 
