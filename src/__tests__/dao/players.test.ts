@@ -1,5 +1,5 @@
 import db from 'database';
-import playerDao from 'dao/player';
+import playerDao from 'dao/players';
 import playerMapping from 'mapping/player';
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
@@ -15,17 +15,26 @@ describe('Player Dao', () => {
     test('should use select from table player ', async () => {
       await playerDao.getAll(1, 'testSurname', 'testTown');
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(2);
-      expect(db().where).toHaveBeenNthCalledWith(1, 'surname', 'ilike', '%testSurname%');
+      expect(db().where).toHaveBeenNthCalledWith(
+        1,
+        'surname',
+        'ilike',
+        '%testSurname%',
+      );
       expect(db().where).toHaveBeenNthCalledWith(2, { town: 'testTown' });
       expect(db().orderBy).toBeCalledTimes(2);
       expect(db().orderBy).toHaveBeenNthCalledWith(1, 'rdga_rating', 'desc');
       expect(db().orderBy).toHaveBeenNthCalledWith(2, 'rdga_number', 'asc');
       expect(db().paginate).toBeCalledTimes(1);
-      expect(db().paginate).toBeCalledWith({ perPage: 15, currentPage: 1, isLengthAware: true });
+      expect(db().paginate).toBeCalledWith({
+        perPage: 15,
+        currentPage: 1,
+        isLengthAware: true,
+      });
     });
   });
 
@@ -37,7 +46,7 @@ describe('Player Dao', () => {
       const player = await playerDao.getByRdgaNumber(24);
 
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
@@ -52,7 +61,7 @@ describe('Player Dao', () => {
       const player = await playerDao.getByRdgaNumber(24);
 
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
@@ -68,7 +77,7 @@ describe('Player Dao', () => {
       await playerDao.getByRdgaPdgaMetrixNumber(24, 24, 24);
 
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
@@ -84,7 +93,7 @@ describe('Player Dao', () => {
       await playerDao.getByRdgaPdgaMetrixNumber(24);
 
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
@@ -101,7 +110,7 @@ describe('Player Dao', () => {
       const player = await playerDao.getByRdgaNumber(24);
 
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(playerMapping);
       expect(db().where).toBeCalledTimes(1);
@@ -119,7 +128,7 @@ describe('Player Dao', () => {
 
       expect(playerRdgaNumber).toBe(1);
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().insert).toBeCalledTimes(1);
       expect(db().insert).toBeCalledWith(testPlayerDb);
       expect(db().returning).toBeCalledTimes(1);
@@ -136,7 +145,7 @@ describe('Player Dao', () => {
 
       expect(updatedPlayer).toEqual(testPlayerDb);
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().update).toBeCalledTimes(1);
       expect(db().update).toBeCalledWith(testPlayerDb);
       expect(db().returning).toBeCalledTimes(1);
@@ -149,7 +158,7 @@ describe('Player Dao', () => {
       await playerDao.delete(1);
 
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().where).toBeCalledTimes(1);
       expect(db().where).toBeCalledWith({ rdga_number: 1 });
       expect(db().del).toBeCalledTimes(1);
@@ -166,11 +175,14 @@ describe('Player Dao', () => {
 
       expect(updatedPlayer).toEqual(testPlayerDb);
       expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('player');
+      expect(db).toBeCalledWith('players');
       expect(db().where).toBeCalledTimes(1);
       expect(db().where).toBeCalledWith({ rdga_number: 1 });
       expect(db().update).toBeCalledTimes(1);
-      expect(db().update).toBeCalledWith({ rdga_rating: 1000, rdga_rating_change: 200 });
+      expect(db().update).toBeCalledWith({
+        rdga_rating: 1000,
+        rdga_rating_change: 200,
+      });
       expect(db().returning).toBeCalledTimes(1);
       expect(db().returning).toBeCalledWith('*');
     });

@@ -1,9 +1,9 @@
-import playerService from 'service/player';
-import playerDao from 'dao/player';
+import playerService from 'service/players';
+import playerDao from 'dao/players';
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
 
-jest.mock('dao/player');
+jest.mock('dao/players');
 
 describe('Player Service', () => {
   afterEach(() => {
@@ -40,14 +40,18 @@ describe('Player Service', () => {
 
   describe('checkIfPlayerExist', () => {
     test('should return false if no match found', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
+        [],
+      );
 
       const exist = await playerService.checkIfPlayerExist(testPlayer);
       expect(exist).toBe(null);
     });
 
     test('should return true if player was found', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([testPlayer]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
+        testPlayer,
+      ]);
 
       const exist = await playerService.checkIfPlayerExist(testPlayer);
       expect(exist).toBe(testPlayer);
@@ -56,7 +60,9 @@ describe('Player Service', () => {
 
   describe('create', () => {
     test('should return id', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
+        [],
+      );
       (playerDao.create as jest.Mock).mockReturnValueOnce(1);
 
       const playerId = await playerService.create(testPlayer);
@@ -68,11 +74,15 @@ describe('Player Service', () => {
     });
 
     test('should throw', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
+        { ...testPlayer },
+      ]);
 
       const testFunction = async () => await playerService.create(testPlayer);
 
-      expect(testFunction).rejects.toThrow('Игрок с таким номером RDGA, PDGA или Metrix уже существует');
+      expect(testFunction).rejects.toThrow(
+        'Игрок с таким номером RDGA, PDGA или Metrix уже существует',
+      );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
       expect(playerDao.create).toBeCalledTimes(0);
     });
@@ -92,7 +102,9 @@ describe('Player Service', () => {
 
   describe('delete', () => {
     test('should call dao delete player', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([{ ...testPlayer }]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
+        { ...testPlayer },
+      ]);
 
       await playerService.delete(1);
 
@@ -101,48 +113,73 @@ describe('Player Service', () => {
     });
 
     test('should throw if player not exist', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
+        [],
+      );
 
       const testFunction = async () => await playerService.delete(1);
 
-      expect(testFunction).rejects.toThrow('Игрока с таким номером РДГА нет в базе');
+      expect(testFunction).rejects.toThrow(
+        'Игрока с таким номером РДГА нет в базе',
+      );
       expect(playerDao.delete).toBeCalledTimes(0);
     });
   });
 
   describe('updateRdgaRating', () => {
     test('should return player and count difference if rating already exists', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([testPlayer]);
-      (playerDao.updateRdgaRating as jest.Mock).mockReturnValueOnce(testPlayerDb);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
+        testPlayer,
+      ]);
+      (playerDao.updateRdgaRating as jest.Mock).mockReturnValueOnce(
+        testPlayerDb,
+      );
 
       const updatedPlayer = await playerService.updateRdgaRating(1, 900);
 
       expect(updatedPlayer).toEqual(testPlayer);
       expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(1, undefined, undefined);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(
+        1,
+        undefined,
+        undefined,
+      );
       expect(playerDao.updateRdgaRating).toBeCalledTimes(1);
       expect(playerDao.updateRdgaRating).toBeCalledWith(1, 900, -9100);
     });
 
     test("should return player and count difference if rating doesn't already exists", async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([{ ...testPlayer, rdgaRating: null }]);
-      (playerDao.updateRdgaRating as jest.Mock).mockReturnValueOnce(testPlayerDb);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
+        { ...testPlayer, rdgaRating: null },
+      ]);
+      (playerDao.updateRdgaRating as jest.Mock).mockReturnValueOnce(
+        testPlayerDb,
+      );
 
       const updatedPlayer = await playerService.updateRdgaRating(1, 900);
 
       expect(updatedPlayer).toEqual(testPlayer);
       expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(1, undefined, undefined);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(
+        1,
+        undefined,
+        undefined,
+      );
       expect(playerDao.updateRdgaRating).toBeCalledTimes(1);
       expect(playerDao.updateRdgaRating).toBeCalledWith(1, 900, 900);
     });
 
     test('should throw', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([]);
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
+        [],
+      );
 
-      const testFunction = async () => await playerService.updateRdgaRating(1, 1000);
+      const testFunction = async () =>
+        await playerService.updateRdgaRating(1, 1000);
 
-      expect(testFunction).rejects.toThrow('Игрока с номером РДГА 1 нет в базе');
+      expect(testFunction).rejects.toThrow(
+        'Игрока с номером РДГА 1 нет в базе',
+      );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
       expect(playerDao.create).toBeCalledTimes(0);
     });

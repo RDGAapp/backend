@@ -3,16 +3,20 @@ import { IWithPagination } from 'knex-paginate';
 import playerMapping from 'mapping/player';
 
 class PlayerDao {
-  #tableName
+  #tableName;
 
   constructor() {
-    this.#tableName = 'player';
+    this.#tableName = 'players';
   }
 
-  async getAll(pageNumber: number, surname: string, town: string): Promise<IWithPagination<Player[]>> {
+  async getAll(
+    pageNumber: number,
+    surname: string,
+    town: string,
+  ): Promise<IWithPagination<Player[]>> {
     let query = db(this.#tableName);
 
-    if(surname) {
+    if (surname) {
       query = query.where('surname', 'ilike', `%${surname}%`);
     }
     if (town) {
@@ -41,13 +45,13 @@ class PlayerDao {
   async getByRdgaPdgaMetrixNumber(
     rdgaNumber?: number,
     pdgaNumber?: number | null,
-    metrixNumber?: number | null
+    metrixNumber?: number | null,
   ): Promise<Player[]> {
     const player = await db(this.#tableName)
       .select(playerMapping)
       .where({ rdga_number: rdgaNumber })
-      .orWhere({ pdga_number: (pdgaNumber || 0) })
-      .orWhere({ metrix_number: (metrixNumber || 0) });
+      .orWhere({ pdga_number: pdgaNumber || 0 })
+      .orWhere({ metrix_number: metrixNumber || 0 });
 
     return player;
   }
@@ -70,12 +74,14 @@ class PlayerDao {
   }
 
   async delete(rdgaNumber: number): Promise<void> {
-    await db(this.#tableName)
-      .where({ rdga_number: rdgaNumber })
-      .del();
+    await db(this.#tableName).where({ rdga_number: rdgaNumber }).del();
   }
 
-  async updateRdgaRating(rdgaNumber: number, rdgaRating: number, ratingDifference: number): Promise<PlayerDb> {
+  async updateRdgaRating(
+    rdgaNumber: number,
+    rdgaRating: number,
+    ratingDifference: number,
+  ): Promise<PlayerDb> {
     const updatedPlayer = await db(this.#tableName)
       .where({ rdga_number: rdgaNumber })
       .update({ rdga_rating: rdgaRating, rdga_rating_change: ratingDifference })
