@@ -26,11 +26,14 @@ describe('Tournaments Service', () => {
     test('should return name', async () => {
       (tournamentsDao.create as jest.Mock).mockReturnValueOnce('Test');
 
-      const tournamentName = await tournamentsService.create(testTournament);
+      const testTournamentToCreate = testTournament;
+      const testTournamentDbToCreate = testTournamentDb;
+
+      const tournamentName = await tournamentsService.create(testTournamentToCreate);
 
       expect(tournamentName).toBe('Test');
       expect(tournamentsDao.create).toBeCalledTimes(1);
-      expect(tournamentsDao.create).toBeCalledWith(testTournamentDb);
+      expect(tournamentsDao.create).toBeCalledWith(testTournamentDbToCreate);
     });
   });
 });
