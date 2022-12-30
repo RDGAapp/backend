@@ -4,8 +4,8 @@ import { response400 } from 'helpers/responses';
 
 const router = Router();
 
-router.get('/', playerController.getAll);
-router.post('/', playerController.create);
+router.route('/').get(playerController.getAll).post(playerController.create);
+
 router.patch('/:rdgaNumber/rdgaRating', playerController.updateRdgaRating);
 
 router

@@ -1,4 +1,4 @@
-const playerServiceMock = {
+const playersServiceMock = {
   getAll: jest.fn(),
   getByRdgaNumber: jest.fn(),
   create: jest.fn(),
@@ -7,4 +7,4 @@ const playerServiceMock = {
   updateRdgaRating: jest.fn(),
 };
 
-export default playerServiceMock;
+export default playersServiceMock;
