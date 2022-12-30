@@ -1,4 +1,4 @@
-import TournamentType from 'enums/TournamentType';
+import TournamentType from '../../enums/TournamentType';
 import { Knex } from 'knex';
 
 const tableName = 'tournaments';
