@@ -21,15 +21,17 @@ describe('Tournaments endpoints', () => {
     });
 
     test('should return 200 with someData', async () => {
-      await request(app).post('/tournaments').send(testTournament);
+      const tournamentToCreate = testTournament;
+      await request(app).post('/tournaments').send(tournamentToCreate);
+
       const response = await request(app).get('/tournaments');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual([
         {
-          ...testTournament,
-          startDate: testTournament.startDate.toISOString(),
-          endDate: testTournament.endDate.toISOString(),
+          ...tournamentToCreate,
+          startDate: tournamentToCreate.startDate.toISOString(),
+          endDate: tournamentToCreate.endDate.toISOString(),
         },
       ]);
     });
