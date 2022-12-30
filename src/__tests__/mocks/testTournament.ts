@@ -1,11 +1,10 @@
 import TournamentType from 'enums/TournamentType';
-import { addDays } from '../../helpers/dateHelper';
 
 export default {
   code: 'test',
   name: 'Test',
   town: 'Тестово',
-  startDate: addDays(new Date(), -1),
-  endDate: addDays(new Date(), 10),
+  startDate: new Date('2000-1-1'),
+  endDate: new Date('3000-1-1'),
   tournamentType: TournamentType.AllStar,
 } as Tournament;
