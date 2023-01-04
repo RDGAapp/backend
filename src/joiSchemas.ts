@@ -52,3 +52,18 @@ export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
     ).required(),
   },
 );
+export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> = Joi.object().keys(
+  {
+    name: Joi.string().required(),
+    town: Joi.string().required(),
+    startDate: Joi.date().required(),
+    endDate: Joi.date().required(),
+    tournamentType: Joi.string().valid(
+      TournamentType.AllStar,
+      TournamentType.BagTag,
+      TournamentType.League,
+      TournamentType.National,
+      TournamentType.Regional,
+    ).required(),
+  },
+);

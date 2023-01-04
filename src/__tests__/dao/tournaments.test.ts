@@ -49,4 +49,34 @@ describe('Tournaments Dao', () => {
       expect(db().returning).toBeCalledWith('name');
     });
   });
+
+  describe('update', () => {
+    test('should return updated tournament', async () => {
+      (db().returning as jest.Mock).mockReturnValueOnce([testTournamentDb]);
+      jest.clearAllMocks();
+
+      const updatedTournament = await tournamentDao.update(testTournamentDb);
+
+      expect(updatedTournament).toEqual(testTournamentDb);
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('tournaments');
+      expect(db().update).toBeCalledTimes(1);
+      expect(db().update).toBeCalledWith(testTournamentDb);
+      expect(db().returning).toBeCalledTimes(1);
+      expect(db().returning).toBeCalledWith('*');
+    });
+  });
+
+  describe('delete', () => {
+    test('should delete player', async () => {
+      await tournamentDao.delete('test');
+
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('tournaments');
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ code: 'test' });
+      expect(db().del).toBeCalledTimes(1);
+      expect(db().del).toBeCalledWith();
+    });
+  });
 });

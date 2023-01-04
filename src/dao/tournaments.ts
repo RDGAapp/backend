@@ -25,6 +25,19 @@ class TournamentDao {
 
     return createdTournament[0].name;
   }
+
+  async update(tournament: TournamentDb): Promise<TournamentDb> {
+    const updatedTournament = await db(this.#tableName)
+      .where({ code: tournament.code })
+      .update(tournament)
+      .returning('*');
+
+    return updatedTournament[0];
+  }
+
+  async delete(code: string): Promise<void> {
+    await db(this.#tableName).where({ code }).del();
+  }
 }
 
 export default new TournamentDao();
