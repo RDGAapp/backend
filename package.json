@@ -48,7 +48,7 @@
     "seed:run": "knex seed:run --knexfile src/database/knexfile.ts",
     "lint": "eslint . --ext .ts",
     "types:check": "tsc --noEmit",
-    "test": "jest --runInBand --forceExit --detectOpenHandles",
-    "test:coverage": "jest --coverage --runInBand --forceExit --detectOpenHandles"
+    "test": "TZ=UTC jest --runInBand --forceExit --detectOpenHandles",
+    "test:coverage": "TZ=UTC jest --coverage --runInBand --forceExit --detectOpenHandles"
   }
 }
