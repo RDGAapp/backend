@@ -2,6 +2,7 @@ import db from 'database';
 import tournamentDao from 'dao/tournaments';
 import tournamentMapping from 'mapping/tournament';
 import testTournamentDb from '__tests__/mocks/testTournamentDb';
+import { getMonday } from '../../helpers/dateHelpers';
 
 jest.mock('database');
 
@@ -20,16 +21,16 @@ describe('Tournaments Dao', () => {
     });
 
     test('should use select from table tournaments ', async () => {
-      const now = new Date().toISOString();
+      const now = new Date();
+      const monday = getMonday(now);
 
       await tournamentDao.getAll();
       expect(db).toBeCalledTimes(1);
       expect(db).toBeCalledWith('tournaments');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(tournamentMapping);
-      expect(db().where).toBeCalledTimes(2);
-      expect(db().where).toHaveBeenNthCalledWith(1, 'start_date', '<=', now);
-      expect(db().where).toHaveBeenNthCalledWith(2, 'end_date', '>=', now);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith('end_date', '>=', monday.toISOString());
     });
   });
 

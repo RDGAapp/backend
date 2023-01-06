@@ -1,5 +1,6 @@
 import db from 'database';
 import tournamentMapping from 'mapping/tournament';
+import { getMonday } from 'helpers/dateHelpers';
 
 class TournamentDao {
   #tableName;
@@ -11,11 +12,11 @@ class TournamentDao {
   async getAll(): Promise<Tournament[]> {
     const query = db(this.#tableName);
     const now = new Date();
+    const monday = getMonday(now);
 
     return query
       .select(tournamentMapping)
-      .where('start_date', '<=', now.toISOString())
-      .where('end_date', '>=', now.toISOString());
+      .where('end_date', '>=', monday.toISOString());
   }
 
   async create(tournament: TournamentDb): Promise<string> {
