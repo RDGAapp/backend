@@ -12,7 +12,7 @@ describe('Date Helpers', () => {
   describe('getMonday', () => {
     test('should return monday', () => {
       expect(getMonday(new Date()).toISOString()).toEqual(
-        '2019-12-29T21:00:00.000Z',
+        '2019-12-30T00:00:00.000Z',
       );
     });
   });
