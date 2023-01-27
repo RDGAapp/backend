@@ -1,0 +1,24 @@
+@hostname = localhost
+@port = 8080
+@protocol = http
+@host = {{protocol}}://{{hostname}}:{{port}}
+
+### Get all tournaments
+GET {{host}}/tournaments
+
+### Create tournament
+POST {{host}}/tournaments
+Content-Type: application/json
+
+{
+  "code": "test",
+  "name": "Национальный тур №6",
+  "startDate": "2023-08-26T07:00:00.000Z",
+  "endDate": "2023-08-28T14:00:00.000Z",
+  "tournamentType": "национальный тур",
+  "town": "Санкт-Петербург"
+}
+
+### Delete tournament
+
+DELETE {{host}}/tournaments/test
