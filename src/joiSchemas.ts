@@ -49,6 +49,8 @@ export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
       TournamentType.League,
       TournamentType.National,
       TournamentType.Regional,
+      TournamentType.RussianChampionship,
+      TournamentType.Federal,
     ).required(),
   },
 );
