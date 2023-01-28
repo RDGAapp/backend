@@ -31,7 +31,7 @@ describe('Player Dao', () => {
       expect(db().orderBy).toHaveBeenNthCalledWith(2, 'rdga_number', 'asc');
       expect(db().paginate).toBeCalledTimes(1);
       expect(db().paginate).toBeCalledWith({
-        perPage: 15,
+        perPage: 30,
         currentPage: 1,
         isLengthAware: true,
       });

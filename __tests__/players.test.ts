@@ -29,7 +29,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [],
-        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 15, to: 0, total: 0 }
+        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 30, to: 0, total: 0 }
       });
     });
 
@@ -40,7 +40,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 1, total: 1 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 1, total: 1 }
       });
     });
 
@@ -55,7 +55,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer3, testPlayer, testPlayer2],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 3, total: 3 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 3, total: 3 }
       });
     });
 
@@ -70,7 +70,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer2],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 1, total: 1 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 1, total: 1 }
       });
     });
 
@@ -85,14 +85,14 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [],
-        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 15, to: 0, total: 0 }
+        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 30, to: 0, total: 0 }
       });
 
       const responseAll = await request(app).get('/players');
       expect(responseAll.status).toBe(200);
       expect(responseAll.body).toEqual({
         data: [testPlayer3, testPlayer, testPlayer2],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 3, total: 3 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 3, total: 3 }
       });
     });
 
@@ -107,7 +107,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer2],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 1, total: 1 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 1, total: 1 }
       });
     });
 
@@ -122,7 +122,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [testPlayer3, testPlayer, testPlayer2],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 3, total: 3 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 3, total: 3 }
       });
     });
 
@@ -137,14 +137,14 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [],
-        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 15, to: 0, total: 0 }
+        pagination: { currentPage: 1, from: 0, lastPage: 0, perPage: 30, to: 0, total: 0 }
       });
 
       const responseAll = await request(app).get('/players');
       expect(responseAll.status).toBe(200);
       expect(responseAll.body).toEqual({
         data: [testPlayer3, testPlayer, testPlayer2],
-        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 15, to: 3, total: 3 }
+        pagination: { currentPage: 1, from: 0, lastPage: 1, perPage: 30, to: 3, total: 3 }
       });
     });
   });

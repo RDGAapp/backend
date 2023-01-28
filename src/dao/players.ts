@@ -28,7 +28,7 @@ class PlayerDao {
       .orderBy('rdga_rating', 'desc')
       .orderBy('rdga_number', 'asc')
       .paginate({
-        perPage: 15,
+        perPage: 30,
         currentPage: pageNumber,
         isLengthAware: true,
       });
