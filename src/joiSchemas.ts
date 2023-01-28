@@ -64,6 +64,8 @@ export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> = Joi.ob
       TournamentType.League,
       TournamentType.National,
       TournamentType.Regional,
+      TournamentType.RussianChampionship,
+      TournamentType.Federal,
     ).required(),
   },
 );
