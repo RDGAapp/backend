@@ -39,6 +39,14 @@ class TournamentDao {
   async delete(code: string): Promise<void> {
     await db(this.#tableName).where({ code }).del();
   }
+
+  async getByCode(code: string): Promise<Tournament> {
+    const tournament = await db(this.#tableName)
+      .select(tournamentMapping)
+      .where({ code });
+
+      return tournament[0];
+  }
 }
 
 export default new TournamentDao();

@@ -69,7 +69,7 @@ describe('Tournaments Dao', () => {
   });
 
   describe('delete', () => {
-    test('should delete player', async () => {
+    test('should delete tournament', async () => {
       await tournamentDao.delete('test');
 
       expect(db).toBeCalledTimes(1);
@@ -78,6 +78,19 @@ describe('Tournaments Dao', () => {
       expect(db().where).toBeCalledWith({ code: 'test' });
       expect(db().del).toBeCalledTimes(1);
       expect(db().del).toBeCalledWith();
+    });
+  });
+
+  describe('getByCode', () => {
+    test('should getByCode tournament', async () => {
+      await tournamentDao.getByCode('test');
+
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('tournaments');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(tournamentMapping);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ code: 'test' });
     });
   });
 });

@@ -11,6 +11,7 @@ router
 
 router
   .route('/:tournamentCode')
+  .get(tournamentsController.getByCode)
   .put(tournamentsController.update)
   .delete(tournamentsController.delete);
 

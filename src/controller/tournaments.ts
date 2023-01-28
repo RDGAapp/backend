@@ -69,6 +69,18 @@ class PlayerController {
       return response500(response, error);
     }
   }
+
+  async getByCode(request: Request, response: Response) {
+    const { tournamentCode } = request;
+
+    try {
+      const tournament = await tournamentsService.getByCode(tournamentCode);
+
+      return response.status(200).json(tournament);
+    } catch (error) {
+      return response500(response, error);
+    }
+  }
 }
 
 export default new PlayerController();

@@ -141,4 +141,19 @@ describe('Tournaments endpoints', () => {
       expect(getResponse.body.length).toBe(0);
     });
   });
+
+  describe('GET /tournaments/:tournamentCode', () => {
+    test('should return 200 and get tournament', async () => {
+      const tournamentToCreate = testTournament;
+      await request(app).post('/tournaments').send(tournamentToCreate);
+      const response = await request(app).get('/tournaments/test');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...tournamentToCreate,
+        startDate: tournamentToCreate.startDate.toISOString(),
+        endDate: tournamentToCreate.endDate.toISOString(),
+      });
+    });
+  });
 });

@@ -160,7 +160,7 @@ describe('Tournaments Controller', () => {
   });
 
   describe('delete', () => {
-    test('should response 200 if player found and deleted', async () => {
+    test('should response 200 if tournament found and deleted', async () => {
       const request = { tournamentCode: 'test' } as unknown as Request;
 
       await tournamentsController.delete(request, response);
@@ -183,6 +183,39 @@ describe('Tournaments Controller', () => {
 
       expect(tournamentsService.delete).toBeCalledTimes(1);
       expect(tournamentsService.delete).toBeCalledWith('test');
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
+  });
+
+  describe('getByCode', () => {
+    test('should response 200 if tournament found', async () => {
+      (tournamentsService.getByCode as jest.Mock).mockReturnValueOnce({ code: 'test' });
+      const request = { tournamentCode: 'test' } as unknown as Request;
+
+      await tournamentsController.getByCode(request, response);
+
+      expect(tournamentsService.getByCode).toBeCalledTimes(1);
+      expect(tournamentsService.getByCode).toBeCalledWith('test');
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith({ code: 'test' });
+    });
+
+    test('should handle service throw with 500', async () => {
+      const request = { tournamentCode: 'test' } as unknown as Request;
+      (tournamentsService.getByCode as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await tournamentsController.getByCode(request, response);
+
+      expect(tournamentsService.getByCode).toBeCalledTimes(1);
+      expect(tournamentsService.getByCode).toBeCalledWith('test');
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(500);
       expect(response.json).toBeCalledTimes(0);

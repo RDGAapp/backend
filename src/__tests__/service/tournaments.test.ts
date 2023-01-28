@@ -11,7 +11,7 @@ describe('Tournaments Service', () => {
   });
 
   describe('getAll', () => {
-    test('should return whatever playerDao returns', async () => {
+    test('should return whatever tournamentDao returns', async () => {
       (tournamentsDao.getAll as jest.Mock).mockReturnValueOnce([]);
 
       const tournaments = await tournamentsService.getAll();
@@ -38,7 +38,7 @@ describe('Tournaments Service', () => {
   });
 
   describe('update', () => {
-    test('should return updated player', async () => {
+    test('should return updated tournament', async () => {
       (tournamentsDao.update as jest.Mock).mockReturnValueOnce(testTournamentDb);
 
       const updatedPlayer = await tournamentsService.update(testTournament);
@@ -50,11 +50,20 @@ describe('Tournaments Service', () => {
   });
 
   describe('delete', () => {
-    test('should call dao delete player', async () => {
+    test('should call dao delete tournament', async () => {
       await tournamentsService.delete('test');
 
       expect(tournamentsDao.delete).toBeCalledTimes(1);
       expect(tournamentsDao.delete).toBeCalledWith('test');
+    });
+  });
+
+  describe('getByCode', () => {
+    test('should call dao getByCode tournament', async () => {
+      await tournamentsService.getByCode('test');
+
+      expect(tournamentsDao.getByCode).toBeCalledTimes(1);
+      expect(tournamentsDao.getByCode).toBeCalledWith('test');
     });
   });
 });

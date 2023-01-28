@@ -4,8 +4,6 @@ import objectToDbObject from 'helpers/objectToDbObject';
 import tournamentMapping from 'mapping/tournament';
 
 class PlayerService {
-  // TODO: get by code and add some checks to the requests
-
   async getAll(): Promise<Tournament[]> {
     const tournamentsDao = await tournamentDao.getAll();
 
@@ -37,6 +35,10 @@ class PlayerService {
 
   async delete(code: string): Promise<void> {
     await tournamentDao.delete(code);
+  }
+
+  async getByCode(code: string): Promise<Tournament> {
+    return tournamentDao.getByCode(code);
   }
 }
 
