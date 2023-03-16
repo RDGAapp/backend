@@ -5,6 +5,7 @@
 enum TournamentType {
   RussianChampionship = 'ЧР',
   National = 'национальный тур',
+  Pro = 'про тур',
   AllStar = 'МВЗ',
   Regional = 'региональный',
   Federal = 'федеральный',
@@ -13,3 +14,4 @@ enum TournamentType {
 }
 
 export default TournamentType;
+
