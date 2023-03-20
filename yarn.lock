@@ -2655,10 +2655,10 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knex-paginate@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/knex-paginate/-/knex-paginate-3.0.2.tgz#9db1211a0acf9807ab4de46efaf73f80352b9024"
-  integrity sha512-0M8bFlAb+vh2VXjI73gJsD6ffR2AunYe8i3xc0OEzXr+ynIx+cD7OBEqb0NKzmVNCi0pB0B6Bh/vXjov420sIQ==
+knex-paginate@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/knex-paginate/-/knex-paginate-3.1.0.tgz#ef802d9f999fc60df798245150cac3bbf4e502f5"
+  integrity sha512-3FTimPOWGfdJWgLHzRhrU32qUdtRsp7ZObO26ZTXppNJNtV/kSI3ReHaOUBHBNTH5ftiBWew8WxPwjDVB36x+g==
 
 knex@2.4.2:
   version "2.4.2"
