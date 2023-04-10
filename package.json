@@ -14,7 +14,7 @@
     "knex": "2.4.2",
     "knex-paginate": "3.0.2",
     "pg": "8.10.0",
-    "typescript": "5.0.2"
+    "typescript": "5.0.4"
   },
   "devDependencies": {
     "@types/jest": "29.5.0",
