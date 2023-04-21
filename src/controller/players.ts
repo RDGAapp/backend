@@ -116,6 +116,20 @@ class PlayerController {
       return response500(response, error);
     }
   }
+
+  async activatePlayerForCurrentYear(request: Request, response: Response) {
+    const { rdgaNumber } = request;
+
+    try {
+      const updatedPlayer = await playerService.activatePlayerForCurrentYear(
+        rdgaNumber,
+      );
+
+      return response.status(200).json(updatedPlayer);
+    } catch (error) {
+      return response500(response, error);
+    }
+  }
 }
 
 export default new PlayerController();

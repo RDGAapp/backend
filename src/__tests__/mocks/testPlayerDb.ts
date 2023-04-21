@@ -11,6 +11,7 @@ const mockPlayerDb: PlayerDb = {
   metrix_number: 1,
   metrix_rating: 10000,
   priority: 0,
+  active_to: new Date(`${new Date().getFullYear()}-04-01T00:00:00.000Z`),
 };
 
 export default mockPlayerDb;

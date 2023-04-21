@@ -11,4 +11,5 @@ interface PlayerDb {
   metrix_number?: number;
   metrix_rating?: number;
   priority?: number;
+  active_to: Date;
 }

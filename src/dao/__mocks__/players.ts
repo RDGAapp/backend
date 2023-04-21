@@ -6,6 +6,7 @@ const playersDaoMock = {
   update: jest.fn(),
   delete: jest.fn(),
   updateRdgaRating: jest.fn(),
+  activatePlayerForCurrentYear: jest.fn(),
 };
 
 export default playersDaoMock;

@@ -187,4 +187,25 @@ describe('Player Dao', () => {
       expect(db().returning).toBeCalledWith('*');
     });
   });
+
+  describe('activatePlayerForCurrentYear', () => {
+    test('should return updated player', async () => {
+      (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);
+      jest.clearAllMocks();
+
+      const updatedPlayer = await playerDao.activatePlayerForCurrentYear(1);
+
+      expect(updatedPlayer).toEqual(testPlayerDb);
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('players');
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toBeCalledWith({ rdga_number: 1 });
+      expect(db().update).toBeCalledTimes(1);
+      expect(db().update).toBeCalledWith({
+        active_to: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z`,
+      });
+      expect(db().returning).toBeCalledTimes(1);
+      expect(db().returning).toBeCalledWith('*');
+    });
+  });
 });

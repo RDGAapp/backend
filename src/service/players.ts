@@ -82,6 +82,18 @@ class PlayerService {
 
     return player;
   }
+
+  async activatePlayerForCurrentYear(rdgaNumber: number): Promise<Player> {
+    const existingPlayer = await this.checkIfPlayerExist({ rdgaNumber });
+    if (!existingPlayer)
+      throw Error(`Игрока с номером РДГА ${rdgaNumber} нет в базе`);
+
+    const playerDb = await playerDao.activatePlayerForCurrentYear(rdgaNumber);
+
+    const player = dbObjectToObject<PlayerDb, Player>(playerDb, playerMapping);
+
+    return player;
+  }
 }
 
 export default new PlayerService();

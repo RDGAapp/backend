@@ -7,6 +7,10 @@ const router = Router();
 router.route('/').get(playerController.getAll).post(playerController.create);
 
 router.patch('/:rdgaNumber/rdgaRating', playerController.updateRdgaRating);
+router.patch(
+  '/:rdgaNumber/activate',
+  playerController.activatePlayerForCurrentYear,
+);
 
 router
   .route('/:rdgaNumber')

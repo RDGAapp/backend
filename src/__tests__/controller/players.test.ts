@@ -313,4 +313,45 @@ describe('Player Controller', () => {
       );
     });
   });
+
+  describe('activatePlayerForCurrentYear', () => {
+    test('should activate with 200 response', async () => {
+      const request = {
+        rdgaNumber: 1,
+      } as unknown as Request;
+      (
+        playerService.activatePlayerForCurrentYear as jest.Mock
+      ).mockReturnValueOnce(testPlayer);
+
+      await playerController.activatePlayerForCurrentYear(request, response);
+
+      expect(playerService.activatePlayerForCurrentYear).toBeCalledTimes(1);
+      expect(playerService.activatePlayerForCurrentYear).toBeCalledWith(1);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith(testPlayer);
+    });
+
+    test('should return 500 if something went wrong', async () => {
+      const request = {
+        rdgaNumber: 1,
+      } as unknown as Request;
+      (
+        playerService.activatePlayerForCurrentYear as jest.Mock
+      ).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.activatePlayerForCurrentYear(request, response);
+
+      expect(playerService.activatePlayerForCurrentYear).toBeCalledTimes(1);
+      expect(playerService.activatePlayerForCurrentYear).toBeCalledWith(1);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(500);
+      expect(response.json).toBeCalledTimes(0);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+    });
+  });
 });

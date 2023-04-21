@@ -11,4 +11,5 @@ interface Player {
   metrixNumber?: number | null;
   metrixRating?: number | null;
   priority?: number;
+  activeTo: Date;
 }

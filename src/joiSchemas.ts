@@ -14,6 +14,7 @@ export const playerSchema: Joi.ObjectSchema<Player> = Joi.object().keys({
   metrixNumber: Joi.number().optional().min(1).allow(null),
   metrixRating: Joi.number().optional().allow(null),
   priority: Joi.number().optional(),
+  activeTo: Joi.date().required(),
 });
 
 export const playerPutSchema: Joi.ObjectSchema<Partial<Player>> =
@@ -29,6 +30,7 @@ export const playerPutSchema: Joi.ObjectSchema<Partial<Player>> =
     metrixNumber: Joi.number().optional().min(1).allow(null),
     metrixRating: Joi.number().optional().allow(null),
     priority: Joi.number().optional(),
+    activeTo: Joi.date().required(),
   });
 
 export const playerUpdateRatingSchema: Joi.ObjectSchema<{ rating: number }> =
@@ -43,31 +45,34 @@ export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
     town: Joi.string().required(),
     startDate: Joi.date().required(),
     endDate: Joi.date().required(),
-    tournamentType: Joi.string().valid(
-      TournamentType.AllStar,
-      TournamentType.BagTag,
-      TournamentType.League,
-      TournamentType.National,
-      TournamentType.Regional,
-      TournamentType.RussianChampionship,
-      TournamentType.Federal,
-    ).required(),
+    tournamentType: Joi.string()
+      .valid(
+        TournamentType.AllStar,
+        TournamentType.BagTag,
+        TournamentType.League,
+        TournamentType.National,
+        TournamentType.Regional,
+        TournamentType.RussianChampionship,
+        TournamentType.Federal,
+      )
+      .required(),
   },
 );
-export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> = Joi.object().keys(
-  {
+export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> =
+  Joi.object().keys({
     name: Joi.string().required(),
     town: Joi.string().required(),
     startDate: Joi.date().required(),
     endDate: Joi.date().required(),
-    tournamentType: Joi.string().valid(
-      TournamentType.AllStar,
-      TournamentType.BagTag,
-      TournamentType.League,
-      TournamentType.National,
-      TournamentType.Regional,
-      TournamentType.RussianChampionship,
-      TournamentType.Federal,
-    ).required(),
-  },
-);
+    tournamentType: Joi.string()
+      .valid(
+        TournamentType.AllStar,
+        TournamentType.BagTag,
+        TournamentType.League,
+        TournamentType.National,
+        TournamentType.Regional,
+        TournamentType.RussianChampionship,
+        TournamentType.Federal,
+      )
+      .required(),
+  });

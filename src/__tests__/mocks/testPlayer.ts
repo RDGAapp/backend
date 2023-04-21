@@ -11,6 +11,7 @@ const testPlayer: Player = {
   metrixNumber: 1,
   metrixRating: 10000,
   priority: 0,
+  activeTo: new Date(`${new Date().getFullYear()}-04-01T00:00:00.000Z`),
 };
 
 export default testPlayer;

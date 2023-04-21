@@ -89,6 +89,15 @@ class PlayerDao {
 
     return updatedPlayer[0];
   }
+
+  async activatePlayerForCurrentYear(rdgaNumber: number): Promise<PlayerDb> {
+    const updatedPlayer = await db(this.#tableName)
+      .where({ rdga_number: rdgaNumber })
+      .update({ active_to: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z` })
+      .returning('*');
+
+    return updatedPlayer[0];
+  }
 }
 
 export default new PlayerDao();

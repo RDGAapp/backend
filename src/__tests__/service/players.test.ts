@@ -181,6 +181,44 @@ describe('Player Service', () => {
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
+      expect(playerDao.updateRdgaRating).toBeCalledTimes(0);
+    });
+  });
+
+  describe('activatePlayerForCurrentYear', () => {
+    test('should return player', async () => {
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
+        { ...testPlayer },
+      ]);
+      (playerDao.activatePlayerForCurrentYear as jest.Mock).mockReturnValueOnce(
+        testPlayerDb,
+      );
+
+      const updatedPlayer = await playerService.activatePlayerForCurrentYear(1);
+
+      expect(updatedPlayer).toEqual(testPlayer);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(
+        1,
+        undefined,
+        undefined,
+      );
+      expect(playerDao.activatePlayerForCurrentYear).toBeCalledTimes(1);
+      expect(playerDao.activatePlayerForCurrentYear).toBeCalledWith(1);
+    });
+
+    test('should throw', async () => {
+      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
+        [],
+      );
+
+      const testFunction = async () =>
+        await playerService.activatePlayerForCurrentYear(1);
+
+      expect(testFunction).rejects.toThrow(
+        'Игрока с номером РДГА 1 нет в базе',
+      );
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
       expect(playerDao.create).toBeCalledTimes(0);
     });
   });
