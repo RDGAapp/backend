@@ -46,6 +46,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 0,
           total: 0,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -64,6 +66,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 1,
           total: 1,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -97,6 +101,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 3,
           total: 3,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -132,6 +138,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 1,
           total: 1,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -169,6 +177,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 0,
           total: 0,
+          nextPage: null,
+          prevPage: null,
         },
       });
 
@@ -183,6 +193,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 3,
           total: 3,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -218,6 +230,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 1,
           total: 1,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -253,6 +267,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 3,
           total: 3,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
@@ -290,6 +306,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 0,
           total: 0,
+          nextPage: null,
+          prevPage: null,
         },
       });
 
@@ -304,6 +322,8 @@ describe('Player endpoints', () => {
           perPage: 30,
           to: 3,
           total: 3,
+          nextPage: null,
+          prevPage: null,
         },
       });
     });
