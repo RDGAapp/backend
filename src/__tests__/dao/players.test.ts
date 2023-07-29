@@ -13,7 +13,7 @@ describe('Player Dao', () => {
 
   describe('getAll', () => {
     test('should use select from table player ', async () => {
-      await playerDao.getAll(1, 'testSurname', 'testTown');
+      await playerDao.getAll(1, 'testSurname', 'testTown', false);
       expect(db).toBeCalledTimes(1);
       expect(db).toBeCalledWith('players');
       expect(db().select).toBeCalledTimes(1);
