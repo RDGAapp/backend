@@ -13,10 +13,10 @@ describe('Player Service', () => {
   describe('getAll', () => {
     test('should return whatever playerDao returns', async () => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([]);
-      const players = await playerService.getAll(1, 'testSurname', 'testTown');
+      const players = await playerService.getAll(1, 'testSurname', 'testTown', false);
       expect(players).toEqual([]);
       expect(playerDao.getAll).toBeCalledTimes(1);
-      expect(playerDao.getAll).toBeCalledWith(1, 'testSurname', 'testTown');
+      expect(playerDao.getAll).toBeCalledWith(1, 'testSurname', 'testTown', false);
     });
   });
 

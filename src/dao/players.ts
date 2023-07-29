@@ -13,6 +13,7 @@ class PlayerDao {
     pageNumber: number,
     surname: string,
     town: string,
+    onlyActive: boolean,
   ): Promise<IWithPagination<Player[]>> {
     let query = db(this.#tableName);
 
@@ -21,6 +22,10 @@ class PlayerDao {
     }
     if (town) {
       query = query.where({ town });
+    }
+
+    if (onlyActive) {
+      query = query.where('active_to', '>', 'now()');
     }
 
     return query

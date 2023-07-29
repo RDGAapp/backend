@@ -19,8 +19,14 @@ class PlayerService {
     pageNumber: number,
     surname: string,
     town: string,
+    onlyActive: boolean,
   ): Promise<IWithPagination<Player[]>> {
-    const playersDao = await playerDao.getAll(pageNumber, surname, town);
+    const playersDao = await playerDao.getAll(
+      pageNumber,
+      surname,
+      town,
+      onlyActive,
+    );
 
     return playersDao;
   }

@@ -12,9 +12,15 @@ class PlayerController {
     const pageNumber = Number(request.query.page) || 1;
     const surname = (request.query.surname as string) || '';
     const town = (request.query.town as string) || '';
+    const onlyActive = Boolean(request.query.onlyActive) ?? false;
 
     try {
-      const players = await playerService.getAll(pageNumber, surname, town);
+      const players = await playerService.getAll(
+        pageNumber,
+        surname,
+        town,
+        onlyActive,
+      );
 
       return response.status(200).json(players);
     } catch (error) {

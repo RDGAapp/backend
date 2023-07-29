@@ -327,6 +327,44 @@ describe('Player endpoints', () => {
         },
       });
     });
+
+    test('should return 200 onlyActive members', async () => {
+      const testPlayer2 = {
+        ...testPlayerResponse,
+        rdgaNumber: 2,
+        metrixNumber: 2,
+        pdgaNumber: 2,
+        surname: 'User2',
+        activeTo: new Date('2000-09-29').toISOString(),
+      };
+      const testPlayer3 = {
+        ...testPlayerResponse,
+        rdgaNumber: 3,
+        rdgaRating: 10001,
+        metrixNumber: 3,
+        pdgaNumber: 3,
+        surname: 'User3',
+        activeTo: new Date('3000-09-29').toISOString(),
+      };
+      await request(app).post('/players').send(testPlayer2);
+      await request(app).post('/players').send(testPlayer3);
+      const response = await request(app).get('/players?onlyActive=true');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        data: [testPlayer3],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 1,
+          perPage: 30,
+          to: 1,
+          total: 1,
+          nextPage: null,
+          prevPage: null,
+        },
+      });
+    });
   });
 
   describe('GET /players/:rdgaNumber', () => {
@@ -550,9 +588,7 @@ describe('Player endpoints', () => {
     test("should return 200 and update player's activeTo", async () => {
       await request(app).post('/players').send(testPlayer);
 
-      const response = await request(app)
-        .patch('/players/1/activate')
-        .send();
+      const response = await request(app).patch('/players/1/activate').send();
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
