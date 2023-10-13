@@ -5,4 +5,5 @@ interface Tournament {
   startDate: Date;
   endDate: Date;
   tournamentType: TournamentType;
+  metrixId: string | null;
 }

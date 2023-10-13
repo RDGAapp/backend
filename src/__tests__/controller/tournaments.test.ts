@@ -13,6 +13,7 @@ describe('Tournaments Controller', () => {
     startDate: testTournament.startDate,
     endDate: testTournament.endDate,
     tournamentType: testTournament.tournamentType,
+    metrixId: testTournament.metrixId,
   };
 
   afterEach(() => {
@@ -28,7 +29,7 @@ describe('Tournaments Controller', () => {
       await tournamentsController.getAll(request, response);
 
       expect(tournamentsService.getAll).toBeCalledTimes(1);
-      expect(tournamentsService.getAll).toBeCalledWith();
+      expect(tournamentsService.getAll).toBeCalledWith('', '');
       expect(response.status).toBeCalledTimes(1);
       expect(response.status).toBeCalledWith(200);
       expect(response.json).toBeCalledTimes(1);
@@ -193,7 +194,9 @@ describe('Tournaments Controller', () => {
 
   describe('getByCode', () => {
     test('should response 200 if tournament found', async () => {
-      (tournamentsService.getByCode as jest.Mock).mockReturnValueOnce({ code: 'test' });
+      (tournamentsService.getByCode as jest.Mock).mockReturnValueOnce({
+        code: 'test',
+      });
       const request = { tournamentCode: 'test' } as unknown as Request;
 
       await tournamentsController.getByCode(request, response);

@@ -24,13 +24,48 @@ describe('Tournaments Dao', () => {
       const now = new Date();
       const monday = getMonday(now);
 
-      await tournamentDao.getAll();
+      await tournamentDao.getAll('', '');
       expect(db).toBeCalledTimes(1);
       expect(db).toBeCalledWith('tournaments');
       expect(db().select).toBeCalledTimes(1);
       expect(db().select).toBeCalledWith(tournamentMapping);
       expect(db().where).toBeCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith('end_date', '>=', monday.toISOString());
+      expect(db().where).toHaveBeenCalledWith(
+        'end_date',
+        '>=',
+        monday.toISOString(),
+      );
+    });
+
+    test('should use select from table tournaments with from', async () => {
+      await tournamentDao.getAll('a', '');
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('tournaments');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(tournamentMapping);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith('start_date', '>=', 'a');
+    });
+
+    test('should use select from table tournaments with to', async () => {
+      await tournamentDao.getAll('', 'b');
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('tournaments');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(tournamentMapping);
+      expect(db().where).toBeCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith('end_date', '<=', 'b');
+    });
+
+    test('should use select from table tournaments with from and to', async () => {
+      await tournamentDao.getAll('a', 'b');
+      expect(db).toBeCalledTimes(1);
+      expect(db).toBeCalledWith('tournaments');
+      expect(db().select).toBeCalledTimes(1);
+      expect(db().select).toBeCalledWith(tournamentMapping);
+      expect(db().where).toBeCalledTimes(2);
+      expect(db().where).toHaveBeenCalledWith('start_date', '>=', 'a');
+      expect(db().where).toHaveBeenCalledWith('end_date', '<=', 'b');
     });
   });
 

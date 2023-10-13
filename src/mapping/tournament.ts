@@ -5,4 +5,5 @@ export default {
   startDate: 'start_date',
   endDate: 'end_date',
   tournamentType: 'tournament_type',
+  metrixId: 'metrix_id'
 };

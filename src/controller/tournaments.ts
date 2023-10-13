@@ -5,8 +5,11 @@ import { tournamentPutSchema, tournamentSchema } from 'joiSchemas';
 
 class PlayerController {
   async getAll(request: Request, response: Response) {
+    const from = (request.query.from as string) || '';
+    const to = (request.query.to as string) || '';
+
     try {
-      const players = await tournamentsService.getAll();
+      const players = await tournamentsService.getAll(from, to);
 
       return response.status(200).json(players);
     } catch (error) {

@@ -7,4 +7,5 @@ export default {
   startDate: new Date('2000-1-1'),
   endDate: new Date('3000-1-1'),
   tournamentType: TournamentType.AllStar,
+  metrixId: 'testMetrixId',
 } as Tournament;

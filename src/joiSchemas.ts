@@ -56,6 +56,7 @@ export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
         TournamentType.Federal,
       )
       .required(),
+    metrixId: Joi.string().optional().allow(null),
   },
 );
 export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> =
@@ -75,4 +76,5 @@ export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> =
         TournamentType.Federal,
       )
       .required(),
+    metrixId: Joi.string().optional().allow(null),
   });

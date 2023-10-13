@@ -9,14 +9,24 @@ class TournamentDao {
     this.#tableName = 'tournaments';
   }
 
-  async getAll(): Promise<Tournament[]> {
+  async getAll(from: string, to: string): Promise<Tournament[]> {
     const query = db(this.#tableName);
     const now = new Date();
     const monday = getMonday(now);
 
-    return query
-      .select(tournamentMapping)
-      .where('end_date', '>=', monday.toISOString());
+    let results = query.select(tournamentMapping);
+    if (from || to) {
+      if (from) {
+        results = results.where('start_date', '>=', from);
+      }
+      if (to) {
+        results = results.where('end_date', '<=', to);
+      }
+
+      return results;
+    }
+
+    return results.where('end_date', '>=', monday.toISOString());
   }
 
   async create(tournament: TournamentDb): Promise<string> {
@@ -45,7 +55,7 @@ class TournamentDao {
       .select(tournamentMapping)
       .where({ code });
 
-      return tournament[0];
+    return tournament[0];
   }
 }
 

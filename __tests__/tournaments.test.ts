@@ -10,6 +10,7 @@ describe('Tournaments endpoints', () => {
     startDate: testTournament.startDate,
     endDate: testTournament.endDate,
     tournamentType: testTournament.tournamentType,
+    metrixId: testTournament.metrixId,
   };
 
   const testTournamentResponse = {
@@ -72,7 +73,7 @@ describe('Tournaments endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Что-то пошло не так: error: insert into "tournaments" ("code", "end_date", "name", "start_date", "tournament_type", "town") values ($1, $2, $3, $4, $5, $6) returning "name" - duplicate key value violates unique constraint "tournaments_pkey"',
+        'Что-то пошло не так: error: insert into "tournaments" ("code", "end_date", "metrix_id", "name", "start_date", "tournament_type", "town") values ($1, $2, $3, $4, $5, $6, $7) returning "name" - duplicate key value violates unique constraint "tournaments_pkey"',
       );
     });
 

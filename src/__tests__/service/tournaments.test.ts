@@ -14,11 +14,21 @@ describe('Tournaments Service', () => {
     test('should return whatever tournamentDao returns', async () => {
       (tournamentsDao.getAll as jest.Mock).mockReturnValueOnce([]);
 
-      const tournaments = await tournamentsService.getAll();
+      const tournaments = await tournamentsService.getAll('', '');
 
       expect(tournaments).toEqual([]);
       expect(tournamentsDao.getAll).toBeCalledTimes(1);
-      expect(tournamentsDao.getAll).toBeCalledWith();
+      expect(tournamentsDao.getAll).toBeCalledWith('', '');
+    });
+
+    test('should pass from and to', async () => {
+      (tournamentsDao.getAll as jest.Mock).mockReturnValueOnce([]);
+
+      const tournaments = await tournamentsService.getAll('a', 'b');
+
+      expect(tournaments).toEqual([]);
+      expect(tournamentsDao.getAll).toBeCalledTimes(1);
+      expect(tournamentsDao.getAll).toBeCalledWith('a', 'b');
     });
   });
 
@@ -29,7 +39,9 @@ describe('Tournaments Service', () => {
       const testTournamentToCreate = testTournament;
       const testTournamentDbToCreate = testTournamentDb;
 
-      const tournamentName = await tournamentsService.create(testTournamentToCreate);
+      const tournamentName = await tournamentsService.create(
+        testTournamentToCreate,
+      );
 
       expect(tournamentName).toBe('Test');
       expect(tournamentsDao.create).toBeCalledTimes(1);
@@ -39,7 +51,9 @@ describe('Tournaments Service', () => {
 
   describe('update', () => {
     test('should return updated tournament', async () => {
-      (tournamentsDao.update as jest.Mock).mockReturnValueOnce(testTournamentDb);
+      (tournamentsDao.update as jest.Mock).mockReturnValueOnce(
+        testTournamentDb,
+      );
 
       const updatedPlayer = await tournamentsService.update(testTournament);
 
