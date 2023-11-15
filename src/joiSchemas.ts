@@ -59,6 +59,7 @@ export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
     metrixId: Joi.string().optional().allow(null),
   },
 );
+
 export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> =
   Joi.object().keys({
     name: Joi.string().required(),
@@ -78,3 +79,12 @@ export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> =
       .required(),
     metrixId: Joi.string().optional().allow(null),
   });
+
+export const multipleRdgaRatingUpdateSchema: Joi.ArraySchema<
+  { rdgaNumber: number; rating: number }[]
+> = Joi.array().items(
+  Joi.object().keys({
+    rdgaNumber: Joi.number().required(),
+    rating: Joi.number().required(),
+  }),
+);

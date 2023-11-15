@@ -606,4 +606,71 @@ describe('Player endpoints', () => {
       expect(response.text).toEqual('Номер РДГА должен быть числом');
     });
   });
+
+  describe('PUT /players/rdgaRating/multiple', () => {
+    test("should return 200 and update player's rating", async () => {
+      await request(app).post('/players').send(testPlayer);
+
+      const response = await request(app)
+        .put('/players/rdgaRating/multiple')
+        .send([{ rdgaNumber: 1, rating: 900 }]);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        errors: [],
+        updatedPlayers: [
+          {
+            ...testPlayerResponse,
+            rdgaRating: 900,
+            rdgaRatingChange: -9100,
+          },
+        ],
+      });
+    });
+
+    test('should return 400 if rdgaNumber is not a number', async () => {
+      const response = await request(app)
+        .put('/players/rdgaRating/multiple')
+        .send([{ rdgaNumber: 'some', rating: 900 }]);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual(
+        'Проверьте данные: "[0].rdgaNumber" must be a number',
+      );
+    });
+
+    test('should return 400 if rating is not a number', async () => {
+      const response = await request(app)
+        .put('/players/rdgaRating/multiple')
+        .send([{ rdgaNumber: 1, rating: 'some' }]);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual(
+        'Проверьте данные: "[0].rating" must be a number',
+      );
+    });
+
+    test('should return 200 and update player with null rating', async () => {
+      const playerToCreate = { ...testPlayer };
+      delete playerToCreate.rdgaRating;
+
+      await request(app).post('/players').send(playerToCreate);
+
+      const response = await request(app)
+        .put('/players/rdgaRating/multiple')
+        .send([{ rdgaNumber: 1, rating: 900 }]);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        errors: [],
+        updatedPlayers: [
+          {
+            ...testPlayerResponse,
+            rdgaRating: 900,
+            rdgaRatingChange: 900,
+          },
+        ],
+      });
+    });
+  });
 });

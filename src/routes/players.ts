@@ -18,6 +18,10 @@ router
   .put(playerController.update)
   .delete(playerController.delete);
 
+router
+  .route('/rdgaRating/multiple')
+  .put(playerController.multipleUpdateRdgaRating);
+
 router.param(
   'rdgaNumber',
   (request: Request, response: Response, next, rdgaNumberParam) => {

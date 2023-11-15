@@ -4,6 +4,7 @@ import {
   playerSchema,
   playerPutSchema,
   playerUpdateRatingSchema,
+  multipleRdgaRatingUpdateSchema,
 } from 'joiSchemas';
 import { response500, response400Joi } from 'helpers/responses';
 
@@ -135,6 +136,36 @@ class PlayerController {
     } catch (error) {
       return response500(response, error);
     }
+  }
+
+  async multipleUpdateRdgaRating(request: Request, response: Response) {
+    const { error, value } = multipleRdgaRatingUpdateSchema.validate(
+      request.body,
+    );
+    if (error) {
+      return response400Joi(response, error);
+    }
+
+    const errors: unknown[] = [];
+    const updatedPlayers: Player[] = [];
+
+    await Promise.all(
+      value.map(async (updateRatingValue) => {
+        try {
+          const { rdgaNumber, rating } = updateRatingValue;
+          const updatedPlayer = await playerService.updateRdgaRating(
+            rdgaNumber,
+            rating,
+          );
+
+          updatedPlayers.push(updatedPlayer);
+        } catch (error) {
+          errors.push(error);
+        }
+      }),
+    );
+
+    return response.status(200).json({ updatedPlayers, errors });
   }
 }
 

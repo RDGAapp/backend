@@ -360,4 +360,66 @@ describe('Player Controller', () => {
       expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
     });
   });
+  describe('multipleUpdateRdgaRating', () => {
+    test('should update with 200 response', async () => {
+      const request = {
+        body: [{ rdgaNumber: 1, rating: 900 }],
+      } as unknown as Request;
+      (playerService.updateRdgaRating as jest.Mock).mockReturnValueOnce(
+        testPlayer,
+      );
+
+      await playerController.multipleUpdateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
+      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith({
+        errors: [],
+        updatedPlayers: [testPlayer],
+      });
+    });
+
+    test('should return 200 with errors array if something went wrong', async () => {
+      const errorToThrow = new Error('Test');
+      const request = {
+        body: [{ rdgaNumber: 1, rating: 900 }],
+      } as unknown as Request;
+      (playerService.updateRdgaRating as jest.Mock).mockImplementationOnce(
+        () => {
+          throw errorToThrow;
+        },
+      );
+
+      await playerController.multipleUpdateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
+      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(200);
+      expect(response.json).toBeCalledTimes(1);
+      expect(response.json).toBeCalledWith({
+        errors: [errorToThrow],
+        updatedPlayers: [],
+      });
+    });
+
+    test('should return 400 if data is corrupted', async () => {
+      const request = {
+        body: [{ rdgaNumber: 1, rating: 'hehe' }],
+      } as unknown as Request;
+
+      await playerController.multipleUpdateRdgaRating(request, response);
+
+      expect(playerService.updateRdgaRating).toBeCalledTimes(0);
+      expect(response.status).toBeCalledTimes(1);
+      expect(response.status).toBeCalledWith(400);
+      expect(response.send).toBeCalledTimes(1);
+      expect(response.send).toBeCalledWith(
+        'Проверьте данные: "[0].rating" must be a number',
+      );
+    });
+  });
 });
