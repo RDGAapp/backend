@@ -17,8 +17,8 @@ describe('Tournaments Service', () => {
       const tournaments = await tournamentsService.getAll('', '');
 
       expect(tournaments).toEqual([]);
-      expect(tournamentsDao.getAll).toBeCalledTimes(1);
-      expect(tournamentsDao.getAll).toBeCalledWith('', '');
+      expect(tournamentsDao.getAll).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.getAll).toHaveBeenCalledWith('', '');
     });
 
     test('should pass from and to', async () => {
@@ -27,8 +27,8 @@ describe('Tournaments Service', () => {
       const tournaments = await tournamentsService.getAll('a', 'b');
 
       expect(tournaments).toEqual([]);
-      expect(tournamentsDao.getAll).toBeCalledTimes(1);
-      expect(tournamentsDao.getAll).toBeCalledWith('a', 'b');
+      expect(tournamentsDao.getAll).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.getAll).toHaveBeenCalledWith('a', 'b');
     });
   });
 
@@ -44,8 +44,10 @@ describe('Tournaments Service', () => {
       );
 
       expect(tournamentName).toBe('Test');
-      expect(tournamentsDao.create).toBeCalledTimes(1);
-      expect(tournamentsDao.create).toBeCalledWith(testTournamentDbToCreate);
+      expect(tournamentsDao.create).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.create).toHaveBeenCalledWith(
+        testTournamentDbToCreate,
+      );
     });
   });
 
@@ -55,11 +57,11 @@ describe('Tournaments Service', () => {
         testTournamentDb,
       );
 
-      const updatedPlayer = await tournamentsService.update(testTournament);
+      const updatedTournament = await tournamentsService.update(testTournament);
 
-      expect(updatedPlayer).toEqual(testTournament);
-      expect(tournamentsDao.update).toBeCalledTimes(1);
-      expect(tournamentsDao.update).toBeCalledWith(testTournamentDb);
+      expect(updatedTournament).toEqual(testTournament);
+      expect(tournamentsDao.update).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.update).toHaveBeenCalledWith(testTournamentDb);
     });
   });
 
@@ -67,8 +69,8 @@ describe('Tournaments Service', () => {
     test('should call dao delete tournament', async () => {
       await tournamentsService.delete('test');
 
-      expect(tournamentsDao.delete).toBeCalledTimes(1);
-      expect(tournamentsDao.delete).toBeCalledWith('test');
+      expect(tournamentsDao.delete).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.delete).toHaveBeenCalledWith('test');
     });
   });
 
@@ -76,8 +78,8 @@ describe('Tournaments Service', () => {
     test('should call dao getByCode tournament', async () => {
       await tournamentsService.getByCode('test');
 
-      expect(tournamentsDao.getByCode).toBeCalledTimes(1);
-      expect(tournamentsDao.getByCode).toBeCalledWith('test');
+      expect(tournamentsDao.getByCode).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.getByCode).toHaveBeenCalledWith('test');
     });
   });
 });

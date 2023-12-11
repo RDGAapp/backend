@@ -19,12 +19,12 @@ describe('Player Controller', () => {
 
       await playerController.getAll(request, response);
 
-      expect(playerService.getAll).toBeCalledTimes(1);
-      expect(playerService.getAll).toBeCalledWith(1, '', '', false);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith([]);
+      expect(playerService.getAll).toHaveBeenCalledTimes(1);
+      expect(playerService.getAll).toHaveBeenCalledWith(1, '', '', false);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith([]);
     });
 
     test('should response 200 and use query values', async () => {
@@ -40,17 +40,17 @@ describe('Player Controller', () => {
 
       await playerController.getAll(request, response);
 
-      expect(playerService.getAll).toBeCalledTimes(1);
-      expect(playerService.getAll).toBeCalledWith(
+      expect(playerService.getAll).toHaveBeenCalledTimes(1);
+      expect(playerService.getAll).toHaveBeenCalledWith(
         2,
         'testSurname',
         'Somewhere',
         true,
       );
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith([]);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith([]);
     });
 
     test('should handle service throw with 500', async () => {
@@ -60,12 +60,14 @@ describe('Player Controller', () => {
 
       await playerController.getAll(request, response);
 
-      expect(playerService.getAll).toBeCalledTimes(1);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.getAll).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
 
@@ -78,12 +80,12 @@ describe('Player Controller', () => {
 
       await playerController.getByRdgaNumber(request, response);
 
-      expect(playerService.getByRdgaNumber).toBeCalledTimes(1);
-      expect(playerService.getByRdgaNumber).toBeCalledWith(24);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith(testPlayer);
+      expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerService.getByRdgaNumber).toHaveBeenCalledWith(24);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith(testPlayer);
     });
 
     test("should response 404 if player wasn't found", async () => {
@@ -92,12 +94,12 @@ describe('Player Controller', () => {
 
       await playerController.getByRdgaNumber(request, response);
 
-      expect(playerService.getByRdgaNumber).toBeCalledTimes(1);
-      expect(playerService.getByRdgaNumber).toBeCalledWith(24);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(404);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerService.getByRdgaNumber).toHaveBeenCalledWith(24);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(404);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Игрок с таким номером РДГА не найден',
       );
     });
@@ -112,13 +114,15 @@ describe('Player Controller', () => {
 
       await playerController.getByRdgaNumber(request, response);
 
-      expect(playerService.getByRdgaNumber).toBeCalledTimes(1);
-      expect(playerService.getByRdgaNumber).toBeCalledWith(24);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerService.getByRdgaNumber).toHaveBeenCalledWith(24);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
 
@@ -129,12 +133,14 @@ describe('Player Controller', () => {
 
       await playerController.create(request, response);
 
-      expect(playerService.create).toBeCalledTimes(1);
-      expect(playerService.create).toBeCalledWith(testPlayer);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(201);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Игрок с номером РДГА 1 создан');
+      expect(playerService.create).toHaveBeenCalledTimes(1);
+      expect(playerService.create).toHaveBeenCalledWith(testPlayer);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(201);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Игрок с номером РДГА 1 создан',
+      );
     });
 
     test('should return 500 if something went wrong', async () => {
@@ -145,12 +151,14 @@ describe('Player Controller', () => {
 
       await playerController.create(request, response);
 
-      expect(playerService.create).toBeCalledTimes(1);
-      expect(playerService.create).toBeCalledWith(testPlayer);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.create).toHaveBeenCalledTimes(1);
+      expect(playerService.create).toHaveBeenCalledWith(testPlayer);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
 
     test('should return 400 if data is corrupted', async () => {
@@ -160,11 +168,11 @@ describe('Player Controller', () => {
 
       await playerController.create(request, response);
 
-      expect(playerService.create).toBeCalledTimes(0);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(playerService.create).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Проверьте данные: "pdgaNumber" must be a number',
       );
     });
@@ -181,12 +189,12 @@ describe('Player Controller', () => {
 
       await playerController.update(request, response);
 
-      expect(playerService.update).toBeCalledTimes(1);
-      expect(playerService.update).toBeCalledWith(testPlayer);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith(testPlayer);
+      expect(playerService.update).toHaveBeenCalledTimes(1);
+      expect(playerService.update).toHaveBeenCalledWith(testPlayer);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith(testPlayer);
     });
 
     test('should return 500 if something went wrong', async () => {
@@ -201,13 +209,15 @@ describe('Player Controller', () => {
 
       await playerController.update(request, response);
 
-      expect(playerService.update).toBeCalledTimes(1);
-      expect(playerService.update).toBeCalledWith(testPlayer);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.update).toHaveBeenCalledTimes(1);
+      expect(playerService.update).toHaveBeenCalledWith(testPlayer);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
 
     test('should return 400 if data is corrupted', async () => {
@@ -218,11 +228,11 @@ describe('Player Controller', () => {
 
       await playerController.update(request, response);
 
-      expect(playerService.update).toBeCalledTimes(0);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(playerService.update).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Проверьте данные: "pdgaNumber" must be a number',
       );
     });
@@ -234,12 +244,14 @@ describe('Player Controller', () => {
 
       await playerController.delete(request, response);
 
-      expect(playerService.delete).toBeCalledTimes(1);
-      expect(playerService.delete).toBeCalledWith(24);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Игрок с номером РДГА 24 удален');
+      expect(playerService.delete).toHaveBeenCalledTimes(1);
+      expect(playerService.delete).toHaveBeenCalledWith(24);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Игрок с номером РДГА 24 удален',
+      );
     });
 
     test('should handle service throw with 500', async () => {
@@ -250,13 +262,15 @@ describe('Player Controller', () => {
 
       await playerController.delete(request, response);
 
-      expect(playerService.delete).toBeCalledTimes(1);
-      expect(playerService.delete).toBeCalledWith(24);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.delete).toHaveBeenCalledTimes(1);
+      expect(playerService.delete).toHaveBeenCalledWith(24);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
 
@@ -272,12 +286,12 @@ describe('Player Controller', () => {
 
       await playerController.updateRdgaRating(request, response);
 
-      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
-      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith(testPlayer);
+      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(1);
+      expect(playerService.updateRdgaRating).toHaveBeenCalledWith(1, 900);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith(testPlayer);
     });
 
     test('should return 500 if something went wrong', async () => {
@@ -293,13 +307,15 @@ describe('Player Controller', () => {
 
       await playerController.updateRdgaRating(request, response);
 
-      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
-      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(1);
+      expect(playerService.updateRdgaRating).toHaveBeenCalledWith(1, 900);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
 
     test('should return 400 if data is corrupted', async () => {
@@ -310,11 +326,11 @@ describe('Player Controller', () => {
 
       await playerController.updateRdgaRating(request, response);
 
-      expect(playerService.updateRdgaRating).toBeCalledTimes(0);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Проверьте данные: "rating" must be a number',
       );
     });
@@ -331,12 +347,16 @@ describe('Player Controller', () => {
 
       await playerController.activatePlayerForCurrentYear(request, response);
 
-      expect(playerService.activatePlayerForCurrentYear).toBeCalledTimes(1);
-      expect(playerService.activatePlayerForCurrentYear).toBeCalledWith(1);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith(testPlayer);
+      expect(playerService.activatePlayerForCurrentYear).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(playerService.activatePlayerForCurrentYear).toHaveBeenCalledWith(
+        1,
+      );
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith(testPlayer);
     });
 
     test('should return 500 if something went wrong', async () => {
@@ -351,13 +371,19 @@ describe('Player Controller', () => {
 
       await playerController.activatePlayerForCurrentYear(request, response);
 
-      expect(playerService.activatePlayerForCurrentYear).toBeCalledTimes(1);
-      expect(playerService.activatePlayerForCurrentYear).toBeCalledWith(1);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(playerService.activatePlayerForCurrentYear).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(playerService.activatePlayerForCurrentYear).toHaveBeenCalledWith(
+        1,
+      );
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
   describe('multipleUpdateRdgaRating', () => {
@@ -371,12 +397,12 @@ describe('Player Controller', () => {
 
       await playerController.multipleUpdateRdgaRating(request, response);
 
-      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
-      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith({
+      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(1);
+      expect(playerService.updateRdgaRating).toHaveBeenCalledWith(1, 900);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith({
         errors: [],
         updatedPlayers: [testPlayer],
       });
@@ -395,12 +421,12 @@ describe('Player Controller', () => {
 
       await playerController.multipleUpdateRdgaRating(request, response);
 
-      expect(playerService.updateRdgaRating).toBeCalledTimes(1);
-      expect(playerService.updateRdgaRating).toBeCalledWith(1, 900);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith({
+      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(1);
+      expect(playerService.updateRdgaRating).toHaveBeenCalledWith(1, 900);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith({
         errors: [errorToThrow],
         updatedPlayers: [],
       });
@@ -413,11 +439,11 @@ describe('Player Controller', () => {
 
       await playerController.multipleUpdateRdgaRating(request, response);
 
-      expect(playerService.updateRdgaRating).toBeCalledTimes(0);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Проверьте данные: "[0].rating" must be a number',
       );
     });

@@ -28,12 +28,12 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.getAll(request, response);
 
-      expect(tournamentsService.getAll).toBeCalledTimes(1);
-      expect(tournamentsService.getAll).toBeCalledWith('', '');
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith([]);
+      expect(tournamentsService.getAll).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.getAll).toHaveBeenCalledWith('', '');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith([]);
     });
 
     test('should handle service throw with 500', async () => {
@@ -43,12 +43,14 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.getAll(request, response);
 
-      expect(tournamentsService.getAll).toBeCalledTimes(1);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(tournamentsService.getAll).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
 
@@ -59,12 +61,12 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.create(request, response);
 
-      expect(tournamentsService.create).toBeCalledTimes(1);
-      expect(tournamentsService.create).toBeCalledWith(testTournament);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(201);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Турнир 1 создан');
+      expect(tournamentsService.create).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.create).toHaveBeenCalledWith(testTournament);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(201);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Турнир 1 создан');
     });
 
     test('should return 500 if something went wrong', async () => {
@@ -75,12 +77,14 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.create(request, response);
 
-      expect(tournamentsService.create).toBeCalledTimes(1);
-      expect(tournamentsService.create).toBeCalledWith(testTournament);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(tournamentsService.create).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.create).toHaveBeenCalledWith(testTournament);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
 
     test('should return 400 if data is corrupted', async () => {
@@ -90,11 +94,11 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.create(request, response);
 
-      expect(tournamentsService.create).toBeCalledTimes(0);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(tournamentsService.create).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Проверьте данные: "name" must be a string',
       );
     });
@@ -106,19 +110,19 @@ describe('Tournaments Controller', () => {
         body: { ...testTournamentWithoutCode },
         tournamentCode: 'test',
       } as unknown as Request;
-      delete request.body.rdgaNumber;
+
       (tournamentsService.update as jest.Mock).mockReturnValueOnce(
         testTournament,
       );
 
       await tournamentsController.update(request, response);
 
-      expect(tournamentsService.update).toBeCalledTimes(1);
-      expect(tournamentsService.update).toBeCalledWith(testTournament);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith(testTournament);
+      expect(tournamentsService.update).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.update).toHaveBeenCalledWith(testTournament);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith(testTournament);
     });
 
     test('should return 500 if something went wrong', async () => {
@@ -126,35 +130,36 @@ describe('Tournaments Controller', () => {
         body: { ...testTournamentWithoutCode },
         tournamentCode: 'test',
       } as unknown as Request;
-      delete request.body.rdgaNumber;
+
       (tournamentsService.update as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
       await tournamentsController.update(request, response);
 
-      expect(tournamentsService.update).toBeCalledTimes(1);
-      expect(tournamentsService.update).toBeCalledWith(testTournament);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(tournamentsService.update).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.update).toHaveBeenCalledWith(testTournament);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
 
     test('should return 400 if data is corrupted', async () => {
       const request = {
         body: { ...testTournament },
-        rdgaNumber: 1,
       } as unknown as Request;
 
       await tournamentsController.update(request, response);
 
-      expect(tournamentsService.update).toBeCalledTimes(0);
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith(
+      expect(tournamentsService.update).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
         'Проверьте данные: "code" is not allowed',
       );
     });
@@ -166,12 +171,12 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.delete(request, response);
 
-      expect(tournamentsService.delete).toBeCalledTimes(1);
-      expect(tournamentsService.delete).toBeCalledWith('test');
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Турнир test удален');
+      expect(tournamentsService.delete).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.delete).toHaveBeenCalledWith('test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Турнир test удален');
     });
 
     test('should handle service throw with 500', async () => {
@@ -182,13 +187,15 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.delete(request, response);
 
-      expect(tournamentsService.delete).toBeCalledTimes(1);
-      expect(tournamentsService.delete).toBeCalledWith('test');
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(tournamentsService.delete).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.delete).toHaveBeenCalledWith('test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
 
@@ -201,12 +208,12 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.getByCode(request, response);
 
-      expect(tournamentsService.getByCode).toBeCalledTimes(1);
-      expect(tournamentsService.getByCode).toBeCalledWith('test');
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledTimes(1);
-      expect(response.json).toBeCalledWith({ code: 'test' });
+      expect(tournamentsService.getByCode).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.getByCode).toHaveBeenCalledWith('test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith({ code: 'test' });
     });
 
     test('should handle service throw with 500', async () => {
@@ -217,13 +224,15 @@ describe('Tournaments Controller', () => {
 
       await tournamentsController.getByCode(request, response);
 
-      expect(tournamentsService.getByCode).toBeCalledTimes(1);
-      expect(tournamentsService.getByCode).toBeCalledWith('test');
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.json).toBeCalledTimes(0);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: Test');
+      expect(tournamentsService.getByCode).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.getByCode).toHaveBeenCalledWith('test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: Test',
+      );
     });
   });
 });

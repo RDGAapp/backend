@@ -3,7 +3,7 @@ import dbObjectToObject from 'helpers/dbObjectToObject';
 import objectToDbObject from 'helpers/objectToDbObject';
 import tournamentMapping from 'mapping/tournament';
 
-class PlayerService {
+class TournamentsService {
   async getAll(from: string, to: string): Promise<Tournament[]> {
     const tournamentsDao = await tournamentDao.getAll(from, to);
 
@@ -11,18 +11,21 @@ class PlayerService {
   }
 
   async create(tournament: Tournament): Promise<string> {
-    const playerDb = objectToDbObject<Tournament, TournamentDb>(
+    const tournamentDb = objectToDbObject<Tournament, TournamentDb>(
       tournament,
       tournamentMapping,
     );
 
-    const tournamentName = await tournamentDao.create(playerDb);
+    const tournamentName = await tournamentDao.create(tournamentDb);
 
     return tournamentName;
   }
 
   async update(tournament: Tournament): Promise<Tournament> {
-    const tournamentDb = objectToDbObject<Tournament, TournamentDb>(tournament, tournamentMapping);
+    const tournamentDb = objectToDbObject<Tournament, TournamentDb>(
+      tournament,
+      tournamentMapping,
+    );
 
     const updatedTournamentDb = await tournamentDao.update(tournamentDb);
 
@@ -42,4 +45,4 @@ class PlayerService {
   }
 }
 
-export default new PlayerService();
+export default new TournamentsService();

@@ -12,22 +12,26 @@ describe('handleGlobalError helper', () => {
       const error = new Error('test');
       response500(response, error);
 
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(500);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Что-то пошло не так: Error: test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        'Что-то пошло не так: Error: test',
+      );
     });
   });
 
   describe('response400Joi', () => {
     test('should response 400 with message', () => {
-      const error = { details: [{ message: 'test' }] } as unknown as ValidationError;
+      const error = {
+        details: [{ message: 'test' }],
+      } as unknown as ValidationError;
       response400Joi(response, error);
 
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Проверьте данные: test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Проверьте данные: test');
     });
   });
 
@@ -35,28 +39,28 @@ describe('handleGlobalError helper', () => {
     test('should response 400 with message for м', () => {
       response400(response, 'Test', 'not test', 'м');
 
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Test должен быть not test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Test должен быть not test');
     });
 
     test('should response 400 with message for ж', () => {
       response400(response, 'Test', 'not test', 'ж');
 
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Test должна быть not test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Test должна быть not test');
     });
 
     test('should response 400 with message for ср', () => {
       response400(response, 'Test', 'not test', 'ср');
 
-      expect(response.status).toBeCalledTimes(1);
-      expect(response.status).toBeCalledWith(400);
-      expect(response.send).toBeCalledTimes(1);
-      expect(response.send).toBeCalledWith('Test должно быть not test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(400);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Test должно быть not test');
     });
   });
 });

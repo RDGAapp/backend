@@ -88,3 +88,17 @@ export const multipleRdgaRatingUpdateSchema: Joi.ArraySchema<
     rating: Joi.number().required(),
   }),
 );
+
+export const postSchema: Joi.ObjectSchema<BlogPost> = Joi.object().keys({
+  code: Joi.string().required(),
+  author: Joi.string().required(),
+  header: Joi.string().required(),
+  text: Joi.string().required(),
+});
+
+export const postPutSchema: Joi.ObjectSchema<Partial<BlogPost>> =
+  Joi.object().keys({
+    author: Joi.string().required(),
+    header: Joi.string().required(),
+    text: Joi.string().required(),
+  });

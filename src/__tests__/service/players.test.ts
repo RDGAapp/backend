@@ -13,10 +13,20 @@ describe('Player Service', () => {
   describe('getAll', () => {
     test('should return whatever playerDao returns', async () => {
       (playerDao.getAll as jest.Mock).mockReturnValueOnce([]);
-      const players = await playerService.getAll(1, 'testSurname', 'testTown', false);
+      const players = await playerService.getAll(
+        1,
+        'testSurname',
+        'testTown',
+        false,
+      );
       expect(players).toEqual([]);
-      expect(playerDao.getAll).toBeCalledTimes(1);
-      expect(playerDao.getAll).toBeCalledWith(1, 'testSurname', 'testTown', false);
+      expect(playerDao.getAll).toHaveBeenCalledTimes(1);
+      expect(playerDao.getAll).toHaveBeenCalledWith(
+        1,
+        'testSurname',
+        'testTown',
+        false,
+      );
     });
   });
 
@@ -25,16 +35,16 @@ describe('Player Service', () => {
       (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(testPlayer);
       const player = await playerService.getByRdgaNumber(1);
       expect(player).toEqual(testPlayer);
-      expect(playerDao.getByRdgaNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toBeCalledWith(1);
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
     });
 
     test('should return null', async () => {
       (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
       const player = await playerService.getByRdgaNumber(1);
       expect(player).toEqual(null);
-      expect(playerDao.getByRdgaNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toBeCalledWith(1);
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
     });
   });
 
@@ -68,9 +78,9 @@ describe('Player Service', () => {
       const playerId = await playerService.create(testPlayer);
 
       expect(playerId).toBe(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.create).toBeCalledTimes(1);
-      expect(playerDao.create).toBeCalledWith(testPlayerDb);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.create).toHaveBeenCalledTimes(1);
+      expect(playerDao.create).toHaveBeenCalledWith(testPlayerDb);
     });
 
     test('should throw', async () => {
@@ -83,8 +93,8 @@ describe('Player Service', () => {
       expect(testFunction).rejects.toThrow(
         'Игрок с таким номером RDGA, PDGA или Metrix уже существует',
       );
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.create).toBeCalledTimes(0);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.create).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -95,8 +105,8 @@ describe('Player Service', () => {
       const updatedPlayer = await playerService.update(testPlayer);
 
       expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.update).toBeCalledTimes(1);
-      expect(playerDao.update).toBeCalledWith(testPlayerDb);
+      expect(playerDao.update).toHaveBeenCalledTimes(1);
+      expect(playerDao.update).toHaveBeenCalledWith(testPlayerDb);
     });
   });
 
@@ -108,8 +118,8 @@ describe('Player Service', () => {
 
       await playerService.delete(1);
 
-      expect(playerDao.delete).toBeCalledTimes(1);
-      expect(playerDao.delete).toBeCalledWith(1);
+      expect(playerDao.delete).toHaveBeenCalledTimes(1);
+      expect(playerDao.delete).toHaveBeenCalledWith(1);
     });
 
     test('should throw if player not exist', async () => {
@@ -122,7 +132,7 @@ describe('Player Service', () => {
       expect(testFunction).rejects.toThrow(
         'Игрока с таким номером РДГА нет в базе',
       );
-      expect(playerDao.delete).toBeCalledTimes(0);
+      expect(playerDao.delete).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -138,14 +148,14 @@ describe('Player Service', () => {
       const updatedPlayer = await playerService.updateRdgaRating(1, 900);
 
       expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledWith(
         1,
         undefined,
         undefined,
       );
-      expect(playerDao.updateRdgaRating).toBeCalledTimes(1);
-      expect(playerDao.updateRdgaRating).toBeCalledWith(1, 900, -9100);
+      expect(playerDao.updateRdgaRating).toHaveBeenCalledTimes(1);
+      expect(playerDao.updateRdgaRating).toHaveBeenCalledWith(1, 900, -9100);
     });
 
     test("should return player and count difference if rating doesn't already exists", async () => {
@@ -159,14 +169,14 @@ describe('Player Service', () => {
       const updatedPlayer = await playerService.updateRdgaRating(1, 900);
 
       expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledWith(
         1,
         undefined,
         undefined,
       );
-      expect(playerDao.updateRdgaRating).toBeCalledTimes(1);
-      expect(playerDao.updateRdgaRating).toBeCalledWith(1, 900, 900);
+      expect(playerDao.updateRdgaRating).toHaveBeenCalledTimes(1);
+      expect(playerDao.updateRdgaRating).toHaveBeenCalledWith(1, 900, 900);
     });
 
     test('should throw', async () => {
@@ -180,8 +190,8 @@ describe('Player Service', () => {
       expect(testFunction).rejects.toThrow(
         'Игрока с номером РДГА 1 нет в базе',
       );
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.updateRdgaRating).toBeCalledTimes(0);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.updateRdgaRating).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -197,14 +207,14 @@ describe('Player Service', () => {
       const updatedPlayer = await playerService.activatePlayerForCurrentYear(1);
 
       expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledWith(
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledWith(
         1,
         undefined,
         undefined,
       );
-      expect(playerDao.activatePlayerForCurrentYear).toBeCalledTimes(1);
-      expect(playerDao.activatePlayerForCurrentYear).toBeCalledWith(1);
+      expect(playerDao.activatePlayerForCurrentYear).toHaveBeenCalledTimes(1);
+      expect(playerDao.activatePlayerForCurrentYear).toHaveBeenCalledWith(1);
     });
 
     test('should throw', async () => {
@@ -218,8 +228,8 @@ describe('Player Service', () => {
       expect(testFunction).rejects.toThrow(
         'Игрока с номером РДГА 1 нет в базе',
       );
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toBeCalledTimes(1);
-      expect(playerDao.create).toBeCalledTimes(0);
+      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.create).toHaveBeenCalledTimes(0);
     });
   });
 });

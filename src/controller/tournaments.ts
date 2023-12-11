@@ -3,15 +3,15 @@ import tournamentsService from 'service/tournaments';
 import { response400Joi, response500 } from 'helpers/responses';
 import { tournamentPutSchema, tournamentSchema } from 'joiSchemas';
 
-class PlayerController {
+class TournamentsController {
   async getAll(request: Request, response: Response) {
     const from = (request.query.from as string) || '';
     const to = (request.query.to as string) || '';
 
     try {
-      const players = await tournamentsService.getAll(from, to);
+      const tournaments = await tournamentsService.getAll(from, to);
 
-      return response.status(200).json(players);
+      return response.status(200).json(tournaments);
     } catch (error) {
       return response500(response, error);
     }
@@ -86,4 +86,4 @@ class PlayerController {
   }
 }
 
-export default new PlayerController();
+export default new TournamentsController();

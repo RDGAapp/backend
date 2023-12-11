@@ -25,11 +25,11 @@ describe('Tournaments Dao', () => {
       const monday = getMonday(now);
 
       await tournamentDao.getAll('', '');
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().select).toBeCalledTimes(1);
-      expect(db().select).toBeCalledWith(tournamentMapping);
-      expect(db().where).toBeCalledTimes(1);
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(tournamentMapping);
+      expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith(
         'end_date',
         '>=',
@@ -39,31 +39,31 @@ describe('Tournaments Dao', () => {
 
     test('should use select from table tournaments with from', async () => {
       await tournamentDao.getAll('a', '');
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().select).toBeCalledTimes(1);
-      expect(db().select).toBeCalledWith(tournamentMapping);
-      expect(db().where).toBeCalledTimes(1);
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(tournamentMapping);
+      expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith('start_date', '>=', 'a');
     });
 
     test('should use select from table tournaments with to', async () => {
       await tournamentDao.getAll('', 'b');
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().select).toBeCalledTimes(1);
-      expect(db().select).toBeCalledWith(tournamentMapping);
-      expect(db().where).toBeCalledTimes(1);
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(tournamentMapping);
+      expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith('end_date', '<=', 'b');
     });
 
     test('should use select from table tournaments with from and to', async () => {
       await tournamentDao.getAll('a', 'b');
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().select).toBeCalledTimes(1);
-      expect(db().select).toBeCalledWith(tournamentMapping);
-      expect(db().where).toBeCalledTimes(2);
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(tournamentMapping);
+      expect(db().where).toHaveBeenCalledTimes(2);
       expect(db().where).toHaveBeenCalledWith('start_date', '>=', 'a');
       expect(db().where).toHaveBeenCalledWith('end_date', '<=', 'b');
     });
@@ -77,12 +77,12 @@ describe('Tournaments Dao', () => {
       const testTournamentName = await tournamentDao.create(testTournamentDb);
 
       expect(testTournamentName).toBe(testTournamentDb.name);
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().insert).toBeCalledTimes(1);
-      expect(db().insert).toBeCalledWith(testTournamentDb);
-      expect(db().returning).toBeCalledTimes(1);
-      expect(db().returning).toBeCalledWith('name');
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().insert).toHaveBeenCalledTimes(1);
+      expect(db().insert).toHaveBeenCalledWith(testTournamentDb);
+      expect(db().returning).toHaveBeenCalledTimes(1);
+      expect(db().returning).toHaveBeenCalledWith('name');
     });
   });
 
@@ -94,12 +94,12 @@ describe('Tournaments Dao', () => {
       const updatedTournament = await tournamentDao.update(testTournamentDb);
 
       expect(updatedTournament).toEqual(testTournamentDb);
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().update).toBeCalledTimes(1);
-      expect(db().update).toBeCalledWith(testTournamentDb);
-      expect(db().returning).toBeCalledTimes(1);
-      expect(db().returning).toBeCalledWith('*');
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().update).toHaveBeenCalledTimes(1);
+      expect(db().update).toHaveBeenCalledWith(testTournamentDb);
+      expect(db().returning).toHaveBeenCalledTimes(1);
+      expect(db().returning).toHaveBeenCalledWith('*');
     });
   });
 
@@ -107,12 +107,12 @@ describe('Tournaments Dao', () => {
     test('should delete tournament', async () => {
       await tournamentDao.delete('test');
 
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().where).toBeCalledTimes(1);
-      expect(db().where).toBeCalledWith({ code: 'test' });
-      expect(db().del).toBeCalledTimes(1);
-      expect(db().del).toBeCalledWith();
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().where).toHaveBeenCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith({ code: 'test' });
+      expect(db().del).toHaveBeenCalledTimes(1);
+      expect(db().del).toHaveBeenCalledWith();
     });
   });
 
@@ -120,12 +120,12 @@ describe('Tournaments Dao', () => {
     test('should getByCode tournament', async () => {
       await tournamentDao.getByCode('test');
 
-      expect(db).toBeCalledTimes(1);
-      expect(db).toBeCalledWith('tournaments');
-      expect(db().select).toBeCalledTimes(1);
-      expect(db().select).toBeCalledWith(tournamentMapping);
-      expect(db().where).toBeCalledTimes(1);
-      expect(db().where).toBeCalledWith({ code: 'test' });
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('tournaments');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(tournamentMapping);
+      expect(db().where).toHaveBeenCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith({ code: 'test' });
     });
   });
 });
