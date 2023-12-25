@@ -1,4 +1,5 @@
 import db from 'database';
+import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
 
 class PostsDao {
@@ -8,9 +9,20 @@ class PostsDao {
     this.#tableName = 'posts';
   }
 
-  async getAll(): Promise<BlogPost[]> {
+  async getAll({
+    pageNumber,
+  }: {
+    pageNumber: number;
+  }): Promise<IWithPagination<BlogPost[]>> {
     const query = db(this.#tableName);
-    const results = query.select(postMapping);
+    const results = query
+      .select(postMapping)
+      .orderBy('created_at', 'desc')
+      .paginate({
+        perPage: 10,
+        currentPage: pageNumber,
+        isLengthAware: true,
+      });
 
     return results;
   }

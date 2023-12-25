@@ -12,11 +12,19 @@ describe('Posts Dao', () => {
 
   describe('getAll', () => {
     test('should use select from table posts', async () => {
-      await postDao.getAll();
+      await postDao.getAll({ pageNumber: 1 });
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith('posts');
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(postMapping);
+      expect(db().orderBy).toHaveBeenCalledTimes(1);
+      expect(db().orderBy).toHaveBeenCalledWith('created_at', 'desc');
+      expect(db().paginate).toHaveBeenCalledTimes(1);
+      expect(db().paginate).toHaveBeenCalledWith({
+        perPage: 10,
+        currentPage: 1,
+        isLengthAware: true,
+      });
     });
   });
 

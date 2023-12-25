@@ -5,8 +5,10 @@ import { postPutSchema, postSchema } from 'joiSchemas';
 
 class PostsController {
   async getAll(request: Request, response: Response) {
+    const pageNumber = Number(request.query.page) || 1;
+
     try {
-      const posts = await postsService.getAll();
+      const posts = await postsService.getAll({ pageNumber });
 
       return response.status(200).json(posts);
     } catch (error) {
@@ -36,9 +38,7 @@ class PostsController {
   async update(request: Request, response: Response) {
     const { postCode } = request;
 
-    const { error, value: postToUpdate } = postPutSchema.validate(
-      request.body,
-    );
+    const { error, value: postToUpdate } = postPutSchema.validate(request.body);
 
     if (error) {
       console.log(error);

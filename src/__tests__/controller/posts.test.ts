@@ -41,7 +41,7 @@ describe('Posts Controller', () => {
       await postsController.getAll(request, response);
 
       expect(postsService.getAll).toHaveBeenCalledTimes(1);
-      expect(postsService.getAll).toHaveBeenCalledWith();
+      expect(postsService.getAll).toHaveBeenCalledWith({ pageNumber: 1 });
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);

@@ -38,7 +38,19 @@ describe('Posts endpoints', () => {
       const response = await request(app).get('/posts');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([]);
+      expect(response.body).toEqual({
+        data: [],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 0,
+          perPage: 10,
+          to: 0,
+          total: 0,
+          nextPage: null,
+          prevPage: null,
+        },
+      });
     });
 
     test('should return 200 with someData', async () => {
@@ -48,12 +60,61 @@ describe('Posts endpoints', () => {
       const response = await request(app).get('/posts');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([
-        {
-          ...testPost,
-          createdAt: new Date().toISOString(),
+      expect(response.body).toEqual({
+        data: [
+          {
+            ...testPost,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 1,
+          perPage: 10,
+          to: 1,
+          total: 1,
+          nextPage: null,
+          prevPage: null,
         },
-      ]);
+      });
+    });
+
+    test('should return 200 with sorted values by createdAt', async () => {
+      const postToCreate = testPostWithoutCreatedAt;
+      jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
+      await request(app).post('/posts').send(postToCreate);
+      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+      await request(app)
+        .post('/posts')
+        .send({ ...postToCreate, code: 'test2' });
+
+      const response = await request(app).get('/posts');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        data: [
+          {
+            ...testPost,
+            code: 'test2',
+            createdAt: new Date().toISOString(),
+          },
+          {
+            ...testPost,
+            createdAt: new Date('2010-01-01').toISOString(),
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 1,
+          perPage: 10,
+          to: 2,
+          total: 2,
+          nextPage: null,
+          prevPage: null,
+        },
+      });
     });
   });
 
@@ -67,12 +128,24 @@ describe('Posts endpoints', () => {
 
       const getAllResponse = await request(app).get('/posts');
       expect(getAllResponse.status).toBe(200);
-      expect(getAllResponse.body).toEqual([
-        {
-          ...testPost,
-          createdAt: new Date().toISOString(),
+      expect(getAllResponse.body).toEqual({
+        data: [
+          {
+            ...testPost,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 1,
+          perPage: 10,
+          to: 1,
+          total: 1,
+          nextPage: null,
+          prevPage: null,
         },
-      ]);
+      });
     });
 
     test('should return 500 if tournament already exists', async () => {
@@ -143,7 +216,7 @@ describe('Posts endpoints', () => {
       expect(response.text).toEqual('Пост site_update_1 удален');
 
       const getResponse = await request(app).get('/posts');
-      expect(getResponse.body.length).toBe(0);
+      expect(getResponse.body.data.length).toBe(0);
     });
   });
 

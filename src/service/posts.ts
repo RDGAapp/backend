@@ -1,11 +1,16 @@
 import postsDao from 'dao/posts';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import objectToDbObject from 'helpers/objectToDbObject';
+import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
 
 class PostsService {
-  async getAll(): Promise<BlogPost[]> {
-    const posts = await postsDao.getAll();
+  async getAll({
+    pageNumber,
+  }: {
+    pageNumber: number;
+  }): Promise<IWithPagination<BlogPost[]>> {
+    const posts = await postsDao.getAll({ pageNumber });
 
     return posts;
   }

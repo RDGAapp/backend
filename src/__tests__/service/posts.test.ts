@@ -22,11 +22,11 @@ describe('Posts Service', () => {
     test('should return whatever postsDao returns', async () => {
       (postsDao.getAll as jest.Mock).mockReturnValueOnce([]);
 
-      const posts = await postsService.getAll();
+      const posts = await postsService.getAll({ pageNumber: 3 });
 
       expect(posts).toEqual([]);
       expect(postsDao.getAll).toHaveBeenCalledTimes(1);
-      expect(postsDao.getAll).toHaveBeenCalledWith();
+      expect(postsDao.getAll).toHaveBeenCalledWith({ pageNumber: 3 });
     });
   });
 
