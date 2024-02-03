@@ -1,4 +1,4 @@
-interface BlogPostDb {
+export interface IBlogPostDb {
   code: string;
   author: string;
   header: string;

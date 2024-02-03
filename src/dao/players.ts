@@ -1,6 +1,8 @@
 import db from 'database';
 import { IWithPagination } from 'knex-paginate';
 import playerMapping from 'mapping/player';
+import { IPlayer } from 'types/player';
+import { IPlayerDb } from 'types/playerDb';
 
 class PlayerDao {
   #tableName;
@@ -14,7 +16,7 @@ class PlayerDao {
     surname: string,
     town: string,
     onlyActive: boolean,
-  ): Promise<IWithPagination<Player[]>> {
+  ): Promise<IWithPagination<IPlayer[]>> {
     let query = db(this.#tableName);
 
     if (surname) {
@@ -39,7 +41,7 @@ class PlayerDao {
       });
   }
 
-  async getByRdgaNumber(rdgaNumber: number): Promise<Player | null> {
+  async getByRdgaNumber(rdgaNumber: number): Promise<IPlayer | null> {
     const player = await db(this.#tableName)
       .select(playerMapping)
       .where({ rdga_number: rdgaNumber });
@@ -51,7 +53,7 @@ class PlayerDao {
     rdgaNumber?: number,
     pdgaNumber?: number | null,
     metrixNumber?: number | null,
-  ): Promise<Player[]> {
+  ): Promise<IPlayer[]> {
     const player = await db(this.#tableName)
       .select(playerMapping)
       .where({ rdga_number: rdgaNumber })
@@ -61,7 +63,7 @@ class PlayerDao {
     return player;
   }
 
-  async create(player: PlayerDb): Promise<number> {
+  async create(player: IPlayerDb): Promise<number> {
     const createdPlayer = await db(this.#tableName)
       .insert(player)
       .returning('rdga_number');
@@ -69,7 +71,7 @@ class PlayerDao {
     return createdPlayer[0].rdga_number;
   }
 
-  async update(player: PlayerDb): Promise<PlayerDb> {
+  async update(player: IPlayerDb): Promise<IPlayerDb> {
     const updatedPlayer = await db(this.#tableName)
       .where({ rdga_number: player.rdga_number })
       .update(player)
@@ -86,7 +88,7 @@ class PlayerDao {
     rdgaNumber: number,
     rdgaRating: number,
     ratingDifference: number,
-  ): Promise<PlayerDb> {
+  ): Promise<IPlayerDb> {
     const updatedPlayer = await db(this.#tableName)
       .where({ rdga_number: rdgaNumber })
       .update({ rdga_rating: rdgaRating, rdga_rating_change: ratingDifference })
@@ -95,10 +97,12 @@ class PlayerDao {
     return updatedPlayer[0];
   }
 
-  async activatePlayerForCurrentYear(rdgaNumber: number): Promise<PlayerDb> {
+  async activatePlayerForCurrentYear(rdgaNumber: number): Promise<IPlayerDb> {
     const updatedPlayer = await db(this.#tableName)
       .where({ rdga_number: rdgaNumber })
-      .update({ active_to: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z` })
+      .update({
+        active_to: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z`,
+      })
       .returning('*');
 
     return updatedPlayer[0];

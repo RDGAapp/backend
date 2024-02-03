@@ -3,3 +3,4 @@ dist
 coverage
 rest-client/prod.http
 .DS_Store
+.vscode

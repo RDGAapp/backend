@@ -1,4 +1,5 @@
 import TournamentType from 'enums/TournamentType';
+import { ITournament } from 'types/tournament';
 
 export default {
   code: 'test',
@@ -8,4 +9,4 @@ export default {
   endDate: new Date('3000-1-1'),
   tournamentType: TournamentType.AllStar,
   metrixId: 'testMetrixId',
-} as Tournament;
+} as ITournament;

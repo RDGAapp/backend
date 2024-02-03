@@ -1,6 +1,8 @@
 import db from 'database';
 import tournamentMapping from 'mapping/tournament';
 import { getMonday } from 'helpers/dateHelpers';
+import { ITournament } from 'types/tournament';
+import { ITournamentDb } from 'types/tournamentDb';
 
 class TournamentDao {
   #tableName;
@@ -9,7 +11,7 @@ class TournamentDao {
     this.#tableName = 'tournaments';
   }
 
-  async getAll(from: string, to: string): Promise<Tournament[]> {
+  async getAll(from: string, to: string): Promise<ITournament[]> {
     const query = db(this.#tableName);
     const now = new Date();
     const monday = getMonday(now);
@@ -29,7 +31,7 @@ class TournamentDao {
     return results.where('end_date', '>=', monday.toISOString());
   }
 
-  async create(tournament: TournamentDb): Promise<string> {
+  async create(tournament: ITournamentDb): Promise<string> {
     const createdTournament = await db(this.#tableName)
       .insert(tournament)
       .returning('name');
@@ -37,7 +39,7 @@ class TournamentDao {
     return createdTournament[0].name;
   }
 
-  async update(tournament: TournamentDb): Promise<TournamentDb> {
+  async update(tournament: ITournamentDb): Promise<ITournamentDb> {
     const updatedTournament = await db(this.#tableName)
       .where({ code: tournament.code })
       .update(tournament)
@@ -50,7 +52,7 @@ class TournamentDao {
     await db(this.#tableName).where({ code }).del();
   }
 
-  async getByCode(code: string): Promise<Tournament> {
+  async getByCode(code: string): Promise<ITournament> {
     const tournament = await db(this.#tableName)
       .select(tournamentMapping)
       .where({ code });

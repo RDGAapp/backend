@@ -1,4 +1,6 @@
-const mockPlayerDb: PlayerDb = {
+import { IPlayerDb } from 'types/playerDb';
+
+const mockPlayerDb: IPlayerDb = {
   name: 'Test',
   surname: 'User',
   rdga_number: 1,

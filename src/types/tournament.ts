@@ -1,4 +1,6 @@
-interface Tournament {
+import { TournamentType } from './tournamentType';
+
+export interface ITournament {
   code: string;
   name: string;
   town: string;

@@ -1,3 +1,5 @@
+import { IBlogPostDb } from 'types/postDb';
+
 export default {
   code: 'site_update_1',
   header: 'Обновление сайта',
@@ -28,4 +30,4 @@ export default {
     <li class="p1">В случае, если пункт "Против всех" занимает 1-ое место, то выборы признаются несостоявшимися.</li>
     </ol>
   `,
-} as BlogPostDb;
+} as IBlogPostDb;

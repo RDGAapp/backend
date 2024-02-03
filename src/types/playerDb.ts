@@ -1,4 +1,4 @@
-interface PlayerDb {
+export interface IPlayerDb {
   name: string;
   surname: string;
   rdga_number: number;

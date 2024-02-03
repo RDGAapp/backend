@@ -1,6 +1,8 @@
 import db from 'database';
 import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
+import { IBlogPost } from 'types/post';
+import { IBlogPostDb } from 'types/postDb';
 
 class PostsDao {
   #tableName;
@@ -13,7 +15,7 @@ class PostsDao {
     pageNumber,
   }: {
     pageNumber: number;
-  }): Promise<IWithPagination<BlogPost[]>> {
+  }): Promise<IWithPagination<IBlogPost[]>> {
     const query = db(this.#tableName);
     const results = query
       .select(postMapping)
@@ -27,7 +29,7 @@ class PostsDao {
     return results;
   }
 
-  async create(post: BlogPostDb): Promise<string> {
+  async create(post: IBlogPostDb): Promise<string> {
     const createdPost = await db(this.#tableName)
       .insert(post)
       .returning('header');
@@ -35,7 +37,7 @@ class PostsDao {
     return createdPost[0].header;
   }
 
-  async update(post: BlogPostDb): Promise<BlogPostDb> {
+  async update(post: IBlogPostDb): Promise<IBlogPostDb> {
     const updatedPost = await db(this.#tableName)
       .where({ code: post.code })
       .update(post)
@@ -48,7 +50,7 @@ class PostsDao {
     await db(this.#tableName).where({ code }).del();
   }
 
-  async getByCode(code: string): Promise<BlogPost> {
+  async getByCode(code: string): Promise<IBlogPost> {
     const post = await db(this.#tableName).select(postMapping).where({ code });
 
     return post[0];

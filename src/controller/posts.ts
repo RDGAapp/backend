@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import postsService from 'service/posts';
 import { response400Joi, response500 } from 'helpers/responses';
 import { postPutSchema, postSchema } from 'joiSchemas';
+import { IBlogPost } from 'types/post';
 
 class PostsController {
   async getAll(request: Request, response: Response) {
@@ -50,7 +51,7 @@ class PostsController {
         ...postToUpdate,
         code: postCode,
         createdAt: new Date().toISOString(),
-      } as BlogPost);
+      } as IBlogPost);
 
       return response.status(200).json(updatedPost);
     } catch (error) {

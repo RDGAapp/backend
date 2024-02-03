@@ -7,6 +7,7 @@ import {
   multipleRdgaRatingUpdateSchema,
 } from 'joiSchemas';
 import { response500, response400Joi } from 'helpers/responses';
+import { IPlayer } from 'types/player';
 
 class PlayerController {
   async getAll(request: Request, response: Response) {
@@ -81,7 +82,7 @@ class PlayerController {
       const updatedPlayer = await playerService.update({
         rdgaNumber,
         ...playerToUpdate,
-      } as Player);
+      } as IPlayer);
 
       return response.status(200).json(updatedPlayer);
     } catch (error) {
@@ -147,7 +148,7 @@ class PlayerController {
     }
 
     const errors: unknown[] = [];
-    const updatedPlayers: Player[] = [];
+    const updatedPlayers: IPlayer[] = [];
 
     await Promise.all(
       value.map(async (updateRatingValue) => {

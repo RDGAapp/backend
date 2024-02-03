@@ -1,4 +1,6 @@
-const testPlayer: Player = {
+import { IPlayer } from 'types/player';
+
+const testPlayer: IPlayer = {
   name: 'Test',
   surname: 'User',
   rdgaNumber: 1,

@@ -1,7 +1,10 @@
 import Joi from 'joi';
 import TournamentType from 'enums/TournamentType';
+import { IBlogPost } from 'types/post';
+import { ITournament } from 'types/tournament';
+import { IPlayer } from 'types/player';
 
-export const playerSchema: Joi.ObjectSchema<Player> = Joi.object().keys({
+export const playerSchema: Joi.ObjectSchema<IPlayer> = Joi.object().keys({
   name: Joi.string().required(),
   surname: Joi.string().required().allow(null),
   rdgaNumber: Joi.number().required().min(1),
@@ -17,7 +20,7 @@ export const playerSchema: Joi.ObjectSchema<Player> = Joi.object().keys({
   activeTo: Joi.date().required(),
 });
 
-export const playerPutSchema: Joi.ObjectSchema<Partial<Player>> =
+export const playerPutSchema: Joi.ObjectSchema<Partial<IPlayer>> =
   Joi.object().keys({
     name: Joi.string().required(),
     surname: Joi.string().required().allow(null),
@@ -38,8 +41,8 @@ export const playerUpdateRatingSchema: Joi.ObjectSchema<{ rating: number }> =
     rating: Joi.number().required(),
   });
 
-export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
-  {
+export const tournamentSchema: Joi.ObjectSchema<ITournament> =
+  Joi.object().keys({
     code: Joi.string().required(),
     name: Joi.string().required(),
     town: Joi.string().required(),
@@ -57,10 +60,9 @@ export const tournamentSchema: Joi.ObjectSchema<Tournament> = Joi.object().keys(
       )
       .required(),
     metrixId: Joi.string().optional().allow(null),
-  },
-);
+  });
 
-export const tournamentPutSchema: Joi.ObjectSchema<Partial<Tournament>> =
+export const tournamentPutSchema: Joi.ObjectSchema<Partial<ITournament>> =
   Joi.object().keys({
     name: Joi.string().required(),
     town: Joi.string().required(),
@@ -89,14 +91,14 @@ export const multipleRdgaRatingUpdateSchema: Joi.ArraySchema<
   }),
 );
 
-export const postSchema: Joi.ObjectSchema<BlogPost> = Joi.object().keys({
+export const postSchema: Joi.ObjectSchema<IBlogPost> = Joi.object().keys({
   code: Joi.string().required(),
   author: Joi.string().required(),
   header: Joi.string().required(),
   text: Joi.string().required(),
 });
 
-export const postPutSchema: Joi.ObjectSchema<Partial<BlogPost>> =
+export const postPutSchema: Joi.ObjectSchema<Partial<IBlogPost>> =
   Joi.object().keys({
     author: Joi.string().required(),
     header: Joi.string().required(),

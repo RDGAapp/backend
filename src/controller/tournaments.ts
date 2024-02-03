@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import tournamentsService from 'service/tournaments';
 import { response400Joi, response500 } from 'helpers/responses';
 import { tournamentPutSchema, tournamentSchema } from 'joiSchemas';
+import { ITournament } from 'types/tournament';
 
 class TournamentsController {
   async getAll(request: Request, response: Response) {
@@ -53,7 +54,7 @@ class TournamentsController {
       const updatedTournament = await tournamentsService.update({
         code: tournamentCode,
         ...tournamentToUpdate,
-      } as Tournament);
+      } as ITournament);
 
       return response.status(200).json(updatedTournament);
     } catch (error) {

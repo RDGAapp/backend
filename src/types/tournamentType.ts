@@ -1,4 +1,4 @@
-type TournamentType =
+export type TournamentType =
   | 'национальный тур'
   | 'МВЗ'
   | 'региональный'
