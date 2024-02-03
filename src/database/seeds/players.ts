@@ -14,7 +14,6 @@ const players = [
         "pdga_number": 1,
         "pdga_rating": 1000,
         "metrix_number": 1,
-        "metrix_rating": 1000,
         "priority": 0
     },
     {
@@ -28,7 +27,6 @@ const players = [
         "pdga_number": 2,
         "pdga_rating": 800,
         "metrix_number": 2,
-        "metrix_rating": 800,
         "priority": 0
     },
     {
@@ -42,7 +40,6 @@ const players = [
         "pdga_number": 3,
         "pdga_rating": 900,
         "metrix_number": 3,
-        "metrix_rating": 900,
         "priority": 0
     }
 ];
@@ -61,7 +58,6 @@ for (let i = 4; i <= 100; i++) {
         "pdga_number": i,
         "pdga_rating": generateRandomRating(),
         "metrix_number": i,
-        "metrix_rating": generateRandomRating(),
         "priority": 0
     };
     players.push(newTestPlayers);

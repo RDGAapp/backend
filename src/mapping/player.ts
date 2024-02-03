@@ -9,7 +9,6 @@ export default {
   pdgaNumber: 'pdga_number',
   pdgaRating: 'pdga_rating',
   metrixNumber: 'metrix_number',
-  metrixRating: 'metrix_rating',
   priority: 'priority',
   activeTo: 'active_to'
 };

@@ -1,7 +1,11 @@
 import request from 'supertest';
+import fetchMock from 'jest-fetch-mock';
+
 import app from '../src/app';
 import db from '../src/database';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
+
+fetchMock.enableMocks();
 
 describe('Player endpoints', () => {
   const testPlayerResponse = {
@@ -16,7 +20,6 @@ describe('Player endpoints', () => {
     pdgaNumber: null,
     pdgaRating: null,
     metrixNumber: null,
-    metrixRating: null,
   };
 
   const nullablePlayerResponse = {
@@ -25,6 +28,7 @@ describe('Player endpoints', () => {
   };
 
   beforeEach(async () => {
+    fetchMock.resetMocks();
     await db.migrate.latest();
   });
 
@@ -368,12 +372,57 @@ describe('Player endpoints', () => {
   });
 
   describe('GET /players/:rdgaNumber', () => {
-    test('should return 200 with player', async () => {
+    test('should return 200 with player with metrix data', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify([
+          [],
+          [
+            [1, 10, ''],
+            [1, 20, ''],
+          ],
+          [],
+        ]),
+      );
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).get('/players/1');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(testPlayerResponse);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixRating: 10,
+        metrixRatingChange: -10,
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('should return 200 with player without metrix data', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify([[], [], []]));
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).get('/players/1');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixRating: null,
+        metrixRatingChange: null,
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('should return 200 with player without metrixNumber', async () => {
+      await request(app)
+        .post('/players')
+        .send({ ...testPlayer, metrixNumber: null });
+      const response = await request(app).get('/players/1');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixNumber: null,
+        metrixRating: null,
+        metrixRatingChange: null,
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     test('should return 404 if player does not exist', async () => {
@@ -564,7 +613,7 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 and update player with null rating', async () => {
-      const playerToCreate = { ...testPlayer };
+      const playerToCreate: Partial<typeof testPlayer> = { ...testPlayer };
       delete playerToCreate.rdgaRating;
 
       await request(app)
@@ -651,7 +700,7 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 and update player with null rating', async () => {
-      const playerToCreate = { ...testPlayer };
+      const playerToCreate: Partial<typeof testPlayer> = { ...testPlayer };
       delete playerToCreate.rdgaRating;
 
       await request(app).post('/players').send(playerToCreate);

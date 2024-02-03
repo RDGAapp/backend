@@ -15,7 +15,6 @@ export const playerSchema: Joi.ObjectSchema<IPlayer> = Joi.object().keys({
   pdgaNumber: Joi.number().optional().min(1).allow(null),
   pdgaRating: Joi.number().optional().allow(null),
   metrixNumber: Joi.number().optional().min(1).allow(null),
-  metrixRating: Joi.number().optional().allow(null),
   priority: Joi.number().optional(),
   activeTo: Joi.date().required(),
 });
@@ -31,7 +30,6 @@ export const playerPutSchema: Joi.ObjectSchema<Partial<IPlayer>> =
     pdgaNumber: Joi.number().optional().min(1).allow(null),
     pdgaRating: Joi.number().optional().allow(null),
     metrixNumber: Joi.number().optional().min(1).allow(null),
-    metrixRating: Joi.number().optional().allow(null),
     priority: Joi.number().optional(),
     activeTo: Joi.date().required(),
   });

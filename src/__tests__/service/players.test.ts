@@ -1,11 +1,19 @@
+import fetchMock from 'jest-fetch-mock';
+
 import playerService from 'service/players';
 import playerDao from 'dao/players';
+
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
 
 jest.mock('dao/players');
+fetchMock.enableMocks();
 
 describe('Player Service', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -31,12 +39,64 @@ describe('Player Service', () => {
   });
 
   describe('getByRdgaNumber', () => {
-    test('should return player', async () => {
+    test('should return player with metrix info', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify([
+          [],
+          [
+            [1, 10, ''],
+            [1, 20, ''],
+          ],
+          [],
+        ]),
+      );
       (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(testPlayer);
+
       const player = await playerService.getByRdgaNumber(1);
-      expect(player).toEqual(testPlayer);
+
+      expect(player).toEqual({
+        ...testPlayer,
+        metrixRating: 10,
+        metrixRatingChange: -10,
+      });
       expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
       expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('should return player without metrix info', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify([[], [], []]));
+      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(testPlayer);
+
+      const player = await playerService.getByRdgaNumber(1);
+
+      expect(player).toEqual({
+        ...testPlayer,
+        metrixRating: null,
+        metrixRatingChange: null,
+      });
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('should return player without metrixNumber', async () => {
+      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce({
+        ...testPlayer,
+        metrixNumber: null,
+      });
+
+      const player = await playerService.getByRdgaNumber(1);
+
+      expect(player).toEqual({
+        ...testPlayer,
+        metrixNumber: null,
+        metrixRating: null,
+        metrixRatingChange: null,
+      });
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     test('should return null', async () => {
