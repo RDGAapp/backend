@@ -1,4 +1,4 @@
-FROM node:18.0-slim
+FROM node:21-alpine
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ ARG DATABASE_PASSWORD
 
 ENV PORT=$PORT DATABASE=$DATABASE DATABASE_HOST=$DATABASE_HOST DATABASE_USER=$DATABASE_USER DATABASE_PASSWORD=$DATABASE_PASSWORD
 
-RUN yarn install --production
+RUN yarn install --frozen-lockfile
 
 RUN yarn build
 
