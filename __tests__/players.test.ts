@@ -10,7 +10,7 @@ fetchMock.enableMocks();
 describe('Player endpoints', () => {
   const testPlayerResponse = {
     ...testPlayer,
-    activeTo: testPlayer.activeTo.toISOString(),
+    activeTo: testPlayer.activeTo,
   };
 
   const nullablePlayer = {
@@ -18,13 +18,12 @@ describe('Player endpoints', () => {
     surname: null,
     town: null,
     pdgaNumber: null,
-    pdgaRating: null,
     metrixNumber: null,
   };
 
   const nullablePlayerResponse = {
     ...nullablePlayer,
-    activeTo: testPlayer.activeTo.toISOString(),
+    activeTo: testPlayer.activeTo,
   };
 
   beforeEach(async () => {
@@ -383,7 +382,9 @@ describe('Player endpoints', () => {
           [],
         ]),
       );
-      await request(app).post('/players').send(testPlayer);
+      await request(app)
+        .post('/players')
+        .send({ ...testPlayer, pdgaNumber: null });
       const response = await request(app).get('/players/1');
 
       expect(response.status).toBe(200);
@@ -391,13 +392,18 @@ describe('Player endpoints', () => {
         ...testPlayerResponse,
         metrixRating: 10,
         metrixRatingChange: -10,
+        pdgaNumber: null,
+        pdgaRating: null,
+        pdgaActiveTo: null,
       });
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return 200 with player without metrix data', async () => {
       fetchMock.mockResponseOnce(JSON.stringify([[], [], []]));
-      await request(app).post('/players').send(testPlayer);
+      await request(app)
+        .post('/players')
+        .send({ ...testPlayer, pdgaNumber: null });
       const response = await request(app).get('/players/1');
 
       expect(response.status).toBe(200);
@@ -405,11 +411,17 @@ describe('Player endpoints', () => {
         ...testPlayerResponse,
         metrixRating: null,
         metrixRatingChange: null,
+        pdgaNumber: null,
+        pdgaRating: null,
+        pdgaActiveTo: null,
       });
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
-    test('should return 200 with player without metrixNumber', async () => {
+    test('should return 200 with player with pdga data', async () => {
+      fetchMock.mockResponseOnce(
+        '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
+      );
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null });
@@ -421,6 +433,46 @@ describe('Player endpoints', () => {
         metrixNumber: null,
         metrixRating: null,
         metrixRatingChange: null,
+        pdgaRating: 955,
+        pdgaActiveTo: new Date('31-Dec-2024').toISOString(),
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('should return 200 with player without pdga data', async () => {
+      fetchMock.mockResponseOnce('<html></html>');
+      await request(app)
+        .post('/players')
+        .send({ ...testPlayer, metrixNumber: null });
+      const response = await request(app).get('/players/1');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixNumber: null,
+        metrixRating: null,
+        metrixRatingChange: null,
+        pdgaRating: null,
+        pdgaActiveTo: null,
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('should return 200 with player without metrixNumber', async () => {
+      await request(app)
+        .post('/players')
+        .send({ ...testPlayer, metrixNumber: null, pdgaNumber: null });
+      const response = await request(app).get('/players/1');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixNumber: null,
+        metrixRating: null,
+        metrixRatingChange: null,
+        pdgaNumber: null,
+        pdgaRating: null,
+        pdgaActiveTo: null,
       });
       expect(fetchMock).toHaveBeenCalledTimes(0);
     });
@@ -509,7 +561,7 @@ describe('Player endpoints', () => {
       expect(response.body).toEqual({
         ...playerToUpdate,
         rdgaNumber: 1,
-        activeTo: playerToUpdate.activeTo?.toISOString(),
+        activeTo: playerToUpdate.activeTo,
       });
     });
 
@@ -541,7 +593,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         ...nullablePlayerToUpdate,
-        activeTo: nullablePlayerToUpdate.activeTo?.toISOString(),
+        activeTo: nullablePlayerToUpdate.activeTo,
         rdgaNumber: 1,
       });
     });

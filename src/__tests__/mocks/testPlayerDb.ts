@@ -9,10 +9,9 @@ const mockPlayerDb: IPlayerDb = {
   town: 'Somewhere',
   email: 'test@user.com',
   pdga_number: 1,
-  pdga_rating: 10000,
   metrix_number: 1,
   priority: 0,
-  active_to: new Date(`${new Date().getFullYear()}-04-01T00:00:00.000Z`),
+  active_to: new Date(`${new Date().getFullYear()}-04-01T00:00:00.000Z`).toISOString(),
 };
 
 export default mockPlayerDb;

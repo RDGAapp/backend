@@ -7,7 +7,6 @@ export default {
   town: 'town',
   email: 'email',
   pdgaNumber: 'pdga_number',
-  pdgaRating: 'pdga_rating',
   metrixNumber: 'metrix_number',
   priority: 'priority',
   activeTo: 'active_to'

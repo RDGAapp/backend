@@ -5,6 +5,10 @@ import playerMapping from 'mapping/player';
 import { IWithPagination } from 'knex-paginate';
 import { IPlayer, IPlayerExtended } from 'types/player';
 import { IPlayerDb } from 'types/playerDb';
+import {
+  getMetrixDataByNumber,
+  getPdgaDataByNumber,
+} from 'helpers/externalApiHelpers';
 class PlayerService {
   async checkIfPlayerExist(player: Partial<IPlayer>): Promise<null | IPlayer> {
     const existingPlayer = await playerDao.getByRdgaPdgaMetrixNumber(
@@ -33,39 +37,25 @@ class PlayerService {
     return playersDao;
   }
 
-  async getByRdgaNumber(rdgaNumber: number): Promise<IPlayer | null> {
+  async getByRdgaNumber(rdgaNumber: number): Promise<IPlayerExtended | null> {
     const playerDb = await playerDao.getByRdgaNumber(rdgaNumber);
 
-    const player: IPlayerExtended | null = playerDb
-      ? { ...playerDb, metrixRating: null, metrixRatingChange: null }
-      : null;
+    if (!playerDb) return playerDb;
 
-    if (player?.metrixNumber) {
-      try {
-        const metrixResponse = await fetch(
-          `https://discgolfmetrix.com/mystat_server_rating.php?user_id=${player.metrixNumber}&other=1&course_id=0`,
-        );
-        const metrixData = (await metrixResponse.json()) as [
-          number,
-          number,
-          string,
-        ][][];
+    let player: IPlayerExtended = {
+      ...playerDb,
+      metrixRating: null,
+      metrixRatingChange: null,
+      pdgaRating: null,
+      pdgaActiveTo: null,
+    };
 
-        const currentMetrixRating = metrixData[1].sort(
-          (a, b) => b[0] - a[0],
-        )[0]?.[1] ?? null;
-        const previousMetrixRating = metrixData[1].sort(
-          (a, b) => b[0] - a[0],
-        )[1]?.[1] ?? null;
+    const externalInfo = await Promise.all([
+      getMetrixDataByNumber(player.metrixNumber),
+      getPdgaDataByNumber(player.pdgaNumber),
+    ]);
 
-        player.metrixRating = currentMetrixRating ?? null;
-        player.metrixRatingChange = previousMetrixRating
-          ? currentMetrixRating - previousMetrixRating
-          : null;
-      } catch (error) {
-        console.error('Error getting metrix data', error);
-      }
-    }
+    player = Object.assign({}, player, ...externalInfo);
 
     return player;
   }

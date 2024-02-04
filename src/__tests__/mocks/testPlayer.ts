@@ -9,10 +9,11 @@ const testPlayer: IPlayer = {
   town: 'Somewhere',
   email: 'test@user.com',
   pdgaNumber: 1,
-  pdgaRating: 10000,
   metrixNumber: 1,
   priority: 0,
-  activeTo: new Date(`${new Date().getFullYear()}-04-01T00:00:00.000Z`),
+  activeTo: new Date(
+    `${new Date().getFullYear()}-04-01T00:00:00.000Z`,
+  ).toISOString(),
 };
 
 export default testPlayer;

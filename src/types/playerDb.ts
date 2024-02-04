@@ -10,5 +10,5 @@ export interface IPlayerDb {
   pdga_rating?: number;
   metrix_number?: number;
   priority?: number;
-  active_to: Date;
+  active_to: string;
 }

@@ -13,10 +13,9 @@ export const playerSchema: Joi.ObjectSchema<IPlayer> = Joi.object().keys({
   town: Joi.string().optional().allow(null),
   email: Joi.string().optional(),
   pdgaNumber: Joi.number().optional().min(1).allow(null),
-  pdgaRating: Joi.number().optional().allow(null),
   metrixNumber: Joi.number().optional().min(1).allow(null),
   priority: Joi.number().optional(),
-  activeTo: Joi.date().required(),
+  activeTo: Joi.date().raw().required(),
 });
 
 export const playerPutSchema: Joi.ObjectSchema<Partial<IPlayer>> =
@@ -28,10 +27,9 @@ export const playerPutSchema: Joi.ObjectSchema<Partial<IPlayer>> =
     town: Joi.string().optional().allow(null),
     email: Joi.string().optional(),
     pdgaNumber: Joi.number().optional().min(1).allow(null),
-    pdgaRating: Joi.number().optional().allow(null),
     metrixNumber: Joi.number().optional().min(1).allow(null),
     priority: Joi.number().optional(),
-    activeTo: Joi.date().required(),
+    activeTo: Joi.date().raw().required(),
   });
 
 export const playerUpdateRatingSchema: Joi.ObjectSchema<{ rating: number }> =

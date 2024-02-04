@@ -386,6 +386,7 @@ describe('Player Controller', () => {
       );
     });
   });
+
   describe('multipleUpdateRdgaRating', () => {
     test('should update with 200 response', async () => {
       const request = {
