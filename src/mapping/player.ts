@@ -9,5 +9,6 @@ export default {
   pdgaNumber: 'pdga_number',
   metrixNumber: 'metrix_number',
   priority: 'priority',
-  activeTo: 'active_to'
+  activeTo: 'active_to',
+  sportsCategory: 'sports_category',
 };

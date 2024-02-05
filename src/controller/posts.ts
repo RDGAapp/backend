@@ -42,7 +42,7 @@ class PostsController {
     const { error, value: postToUpdate } = postPutSchema.validate(request.body);
 
     if (error) {
-      console.log(error);
+      console.error(error);
       return response400Joi(response, error);
     }
 

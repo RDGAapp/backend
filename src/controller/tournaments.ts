@@ -45,7 +45,7 @@ class TournamentsController {
       request.body,
     );
 
-    console.log(error);
+    console.error(error);
     if (error) {
       return response400Joi(response, error);
     }

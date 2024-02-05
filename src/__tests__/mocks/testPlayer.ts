@@ -14,6 +14,7 @@ const testPlayer: IPlayer = {
   activeTo: new Date(
     `${new Date().getFullYear()}-04-01T00:00:00.000Z`,
   ).toISOString(),
+  sportsCategory: null,
 };
 
 export default testPlayer;

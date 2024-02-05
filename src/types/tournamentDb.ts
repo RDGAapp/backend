@@ -1,4 +1,4 @@
-import { TournamentType } from './tournamentType';
+import TournamentType from 'enums/TournamentType';
 
 export interface ITournamentDb {
   code: string;

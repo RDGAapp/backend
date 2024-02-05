@@ -1,7 +1,7 @@
 // * need to keep actual with same enum on the front-end
-// * also update tournamentType.d.ts with it
 // * also update tournament schema in joiSchemas
 // * when change, need to create migration to update tournaments.tournament_type
+// * DON'T DELETE TYPES, ONLY ADD (migrations depends on them, so it can break old ones)
 enum TournamentType {
   RussianChampionship = 'ЧР',
   National = 'национальный тур',

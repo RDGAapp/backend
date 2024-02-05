@@ -11,7 +11,10 @@ const mockPlayerDb: IPlayerDb = {
   pdga_number: 1,
   metrix_number: 1,
   priority: 0,
-  active_to: new Date(`${new Date().getFullYear()}-04-01T00:00:00.000Z`).toISOString(),
+  active_to: new Date(
+    `${new Date().getFullYear()}-04-01T00:00:00.000Z`,
+  ).toISOString(),
+  sports_category: null,
 };
 
 export default mockPlayerDb;

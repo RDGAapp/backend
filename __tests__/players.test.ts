@@ -4,6 +4,7 @@ import fetchMock from 'jest-fetch-mock';
 import app from '../src/app';
 import db from '../src/database';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
+import SportsCategory from '../src/enums/SportsCategory';
 
 fetchMock.enableMocks();
 
@@ -458,7 +459,7 @@ describe('Player endpoints', () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
-    test('should return 200 with player without metrixNumber', async () => {
+    test('should return 200 with player without metrixNumber and pdgaNumber', async () => {
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null, pdgaNumber: null });
@@ -473,6 +474,31 @@ describe('Player endpoints', () => {
         pdgaNumber: null,
         pdgaRating: null,
         pdgaActiveTo: null,
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(0);
+    });
+
+    test('should return 200 with player with SportsCategory', async () => {
+      await request(app)
+        .post('/players')
+        .send({
+          ...testPlayer,
+          metrixNumber: null,
+          pdgaNumber: null,
+          sportsCategory: SportsCategory.JuniorThird,
+        });
+      const response = await request(app).get('/players/1');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixNumber: null,
+        metrixRating: null,
+        metrixRatingChange: null,
+        pdgaNumber: null,
+        pdgaRating: null,
+        pdgaActiveTo: null,
+        sportsCategory: SportsCategory.JuniorThird,
       });
       expect(fetchMock).toHaveBeenCalledTimes(0);
     });
