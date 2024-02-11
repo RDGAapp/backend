@@ -720,7 +720,7 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         ...testPlayerResponse,
-        activeTo: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z`,
+        activeTo: `${new Date().getFullYear() + 1}-01-01T00:00:00.000Z`,
       });
     });
 

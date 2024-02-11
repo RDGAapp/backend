@@ -101,7 +101,7 @@ class PlayerDao {
     const updatedPlayer = await db(this.#tableName)
       .where({ rdga_number: rdgaNumber })
       .update({
-        active_to: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z`,
+        active_to: `${new Date().getFullYear() + 1}-01-01T00:00:00.000Z`,
       })
       .returning('*');
 

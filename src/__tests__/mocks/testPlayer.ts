@@ -12,7 +12,7 @@ const testPlayer: IPlayer = {
   metrixNumber: 1,
   priority: 0,
   activeTo: new Date(
-    `${new Date().getFullYear()}-04-01T00:00:00.000Z`,
+    `${new Date().getFullYear()}-01-01T00:00:00.000Z`,
   ).toISOString(),
   sportsCategory: null,
 };

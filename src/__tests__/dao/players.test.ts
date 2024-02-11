@@ -202,7 +202,7 @@ describe('Player Dao', () => {
       expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
       expect(db().update).toHaveBeenCalledTimes(1);
       expect(db().update).toHaveBeenCalledWith({
-        active_to: `${new Date().getFullYear() + 1}-04-01T00:00:00.000Z`,
+        active_to: `${new Date().getFullYear() + 1}-01-01T00:00:00.000Z`,
       });
       expect(db().returning).toHaveBeenCalledTimes(1);
       expect(db().returning).toHaveBeenCalledWith('*');
