@@ -4,8 +4,8 @@ export interface ITournamentDb {
   code: string;
   name: string;
   town: string;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
   tournament_type: TournamentType;
   metrix_id: string | null;
 }

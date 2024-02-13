@@ -121,7 +121,7 @@ describe('Posts Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "header" must be a string',
+        'Validation error: Expected string, received number at "header"',
       );
     });
   });
@@ -189,7 +189,7 @@ describe('Posts Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "code" is not allowed',
+        'Validation error: Unrecognized key(s) in object: \'code\', \'createdAt\'',
       );
     });
   });

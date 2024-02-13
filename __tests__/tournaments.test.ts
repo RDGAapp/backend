@@ -15,8 +15,8 @@ describe('Tournaments endpoints', () => {
 
   const testTournamentResponse = {
     ...testTournament,
-    startDate: testTournament.startDate.toISOString(),
-    endDate: testTournament.endDate.toISOString(),
+    startDate: testTournament.startDate,
+    endDate: testTournament.endDate,
   };
 
   beforeEach(async () => {
@@ -45,8 +45,8 @@ describe('Tournaments endpoints', () => {
       expect(response.body).toEqual([
         {
           ...tournamentToCreate,
-          startDate: tournamentToCreate.startDate.toISOString(),
-          endDate: tournamentToCreate.endDate.toISOString(),
+          startDate: tournamentToCreate.startDate,
+          endDate: tournamentToCreate.endDate,
         },
       ]);
     });
@@ -84,7 +84,7 @@ describe('Tournaments endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "name" must be a string',
+        'Validation error: Expected string, received number at "name"',
       );
     });
   });
@@ -101,8 +101,8 @@ describe('Tournaments endpoints', () => {
 
     const tournamentToUpdateResponse = {
       ...testTournamentWithoutCode,
-      startDate: testTournamentWithoutCode.startDate.toISOString(),
-      endDate: testTournamentWithoutCode.endDate.toISOString(),
+      startDate: testTournamentWithoutCode.startDate,
+      endDate: testTournamentWithoutCode.endDate,
       name: 'test2',
     };
 
@@ -125,7 +125,7 @@ describe('Tournaments endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "name" must be a string',
+        'Validation error: Expected string, received number at "name"',
       );
     });
   });
@@ -152,8 +152,8 @@ describe('Tournaments endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         ...tournamentToCreate,
-        startDate: tournamentToCreate.startDate.toISOString(),
-        endDate: tournamentToCreate.endDate.toISOString(),
+        startDate: tournamentToCreate.startDate,
+        endDate: tournamentToCreate.endDate,
       });
     });
   });

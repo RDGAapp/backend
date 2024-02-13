@@ -514,7 +514,9 @@ describe('Player endpoints', () => {
       const response = await request(app).get('/players/test');
 
       expect(response.status).toBe(400);
-      expect(response.text).toEqual('Номер РДГА должен быть числом');
+      expect(response.text).toEqual(
+        'Validation error: Expected number, received nan',
+      );
     });
   });
 
@@ -546,7 +548,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "rdgaNumber" must be a number',
+        'Validation error: Expected number, received string at "rdgaNumber"',
       );
     });
 
@@ -597,7 +599,9 @@ describe('Player endpoints', () => {
         .send(playerToUpdate);
 
       expect(response.status).toBe(400);
-      expect(response.text).toEqual('Номер РДГА должен быть числом');
+      expect(response.text).toEqual(
+        'Validation error: Expected number, received nan',
+      );
     });
 
     test('should return 400 if data is corrupted', async () => {
@@ -607,7 +611,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "pdgaNumber" must be a number',
+        'Validation error: Expected number, received string at "pdgaNumber"',
       );
     });
 
@@ -650,7 +654,9 @@ describe('Player endpoints', () => {
       const response = await request(app).del('/players/test');
 
       expect(response.status).toBe(400);
-      expect(response.text).toEqual('Номер РДГА должен быть числом');
+      expect(response.text).toEqual(
+        'Validation error: Expected number, received nan',
+      );
     });
   });
 
@@ -676,7 +682,9 @@ describe('Player endpoints', () => {
         .send({ rating: 900 });
 
       expect(response.status).toBe(400);
-      expect(response.text).toEqual('Номер РДГА должен быть числом');
+      expect(response.text).toEqual(
+        'Validation error: Expected number, received nan',
+      );
     });
 
     test('should return 400 if rating is not a number', async () => {
@@ -686,13 +694,15 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "rating" must be a number',
+        'Validation error: Expected number, received string at "rating"',
       );
     });
 
     test('should return 200 and update player with null rating', async () => {
-      const playerToCreate: Partial<typeof testPlayer> = { ...testPlayer };
-      delete playerToCreate.rdgaRating;
+      const playerToCreate: Partial<typeof testPlayer> = {
+        ...testPlayer,
+        rdgaRating: 0,
+      };
 
       await request(app)
         .post('/players')
@@ -730,7 +740,9 @@ describe('Player endpoints', () => {
         .send();
 
       expect(response.status).toBe(400);
-      expect(response.text).toEqual('Номер РДГА должен быть числом');
+      expect(response.text).toEqual(
+        'Validation error: Expected number, received nan',
+      );
     });
   });
 
@@ -762,7 +774,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "[0].rdgaNumber" must be a number',
+        'Validation error: Expected number, received string at "[0].rdgaNumber"',
       );
     });
 
@@ -773,13 +785,12 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "[0].rating" must be a number',
+        'Validation error: Expected number, received string at "[0].rating"',
       );
     });
 
     test('should return 200 and update player with null rating', async () => {
-      const playerToCreate: Partial<typeof testPlayer> = { ...testPlayer };
-      delete playerToCreate.rdgaRating;
+      const playerToCreate = { ...testPlayer, rdgaRating: 0 };
 
       await request(app).post('/players').send(playerToCreate);
 

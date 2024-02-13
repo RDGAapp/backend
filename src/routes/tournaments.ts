@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import tournamentsController from 'controller/tournaments';
-import { response400 } from 'helpers/responses';
+import { response400Schema } from 'helpers/responses';
+import { z } from 'zod';
 
 const router = Router();
 
@@ -18,11 +19,12 @@ router
 router.param(
   'tournamentCode',
   (request: Request, response: Response, next, tournamentCodeParam) => {
-    if (!tournamentCodeParam) {
-      return response400(response, 'Код турнира', 'строкой', 'м');
+    const result = z.string().safeParse(tournamentCodeParam);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
-    request.tournamentCode = tournamentCodeParam;
+    request.tournamentCode = result.data;
     next();
   },
 );

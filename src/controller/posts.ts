@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import postsService from 'service/posts';
-import { response400Joi, response500 } from 'helpers/responses';
-import { postPutSchema, postSchema } from 'joiSchemas';
+import { response400Schema, response500 } from 'helpers/responses';
+import { postPutSchema, postSchema } from 'schemas';
 import { IBlogPost } from 'types/post';
 
 class PostsController {
@@ -18,15 +18,15 @@ class PostsController {
   }
 
   async create(request: Request, response: Response) {
-    const { error, value: postToCreate } = postSchema.validate(request.body);
+    const result = postSchema.safeParse(request.body);
 
-    if (error) {
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     try {
       const postHeader = await postsService.create({
-        ...postToCreate,
+        ...result.data,
         createdAt: new Date().toISOString(),
       });
 
@@ -39,16 +39,15 @@ class PostsController {
   async update(request: Request, response: Response) {
     const { postCode } = request;
 
-    const { error, value: postToUpdate } = postPutSchema.validate(request.body);
+    const result = postPutSchema.safeParse(request.body);
 
-    if (error) {
-      console.error(error);
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     try {
       const updatedPost = await postsService.update({
-        ...postToUpdate,
+        ...result.data,
         code: postCode,
         createdAt: new Date().toISOString(),
       } as IBlogPost);

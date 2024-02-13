@@ -5,8 +5,8 @@ import {
   playerPutSchema,
   playerUpdateRatingSchema,
   multipleRdgaRatingUpdateSchema,
-} from 'joiSchemas';
-import { response500, response400Joi } from 'helpers/responses';
+} from 'schemas';
+import { response500, response400Schema } from 'helpers/responses';
 import { IPlayer } from 'types/player';
 
 class PlayerController {
@@ -48,16 +48,14 @@ class PlayerController {
   }
 
   async create(request: Request, response: Response) {
-    const { error, value: playerToCreate } = playerSchema.validate(
-      request.body,
-    );
+    const result = playerSchema.safeParse(request.body);
 
-    if (error) {
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     try {
-      const playerRdgaNumber = await playerService.create(playerToCreate);
+      const playerRdgaNumber = await playerService.create(result.data);
 
       response
         .status(201)
@@ -70,18 +68,18 @@ class PlayerController {
   async update(request: Request, response: Response) {
     const { rdgaNumber } = request;
 
-    const { error, value: playerToUpdate } = playerPutSchema.validate(
+    const result = playerPutSchema.safeParse(
       request.body,
     );
 
-    if (error) {
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     try {
       const updatedPlayer = await playerService.update({
         rdgaNumber,
-        ...playerToUpdate,
+        ...result.data,
       } as IPlayer);
 
       return response.status(200).json(updatedPlayer);
@@ -107,11 +105,11 @@ class PlayerController {
   async updateRdgaRating(request: Request, response: Response) {
     const { rdgaNumber } = request;
 
-    const { error, value } = playerUpdateRatingSchema.validate(request.body);
-    if (error) {
-      return response400Joi(response, error);
+    const result = playerUpdateRatingSchema.safeParse(request.body);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
-    const { rating } = value;
+    const { rating } = result.data;
 
     try {
       const updatedPlayer = await playerService.updateRdgaRating(
@@ -140,18 +138,18 @@ class PlayerController {
   }
 
   async multipleUpdateRdgaRating(request: Request, response: Response) {
-    const { error, value } = multipleRdgaRatingUpdateSchema.validate(
+    const result = multipleRdgaRatingUpdateSchema.safeParse(
       request.body,
     );
-    if (error) {
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     const errors: unknown[] = [];
     const updatedPlayers: IPlayer[] = [];
 
     await Promise.all(
-      value.map(async (updateRatingValue) => {
+      result.data.map(async (updateRatingValue) => {
         try {
           const { rdgaNumber, rating } = updateRatingValue;
           const updatedPlayer = await playerService.updateRdgaRating(

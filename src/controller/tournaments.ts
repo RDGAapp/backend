@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import tournamentsService from 'service/tournaments';
-import { response400Joi, response500 } from 'helpers/responses';
-import { tournamentPutSchema, tournamentSchema } from 'joiSchemas';
+import { response400Schema, response500 } from 'helpers/responses';
+import { tournamentPutSchema, tournamentSchema } from 'schemas';
 import { ITournament } from 'types/tournament';
 
 class TournamentsController {
@@ -19,17 +19,17 @@ class TournamentsController {
   }
 
   async create(request: Request, response: Response) {
-    const { error, value: tournamentToCreate } = tournamentSchema.validate(
+    const result = tournamentSchema.safeParse(
       request.body,
     );
 
-    if (error) {
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     try {
       const tournamentName = await tournamentsService.create(
-        tournamentToCreate,
+        result.data,
       );
 
       response.status(201).send(`Турнир ${tournamentName} создан`);
@@ -41,19 +41,18 @@ class TournamentsController {
   async update(request: Request, response: Response) {
     const { tournamentCode } = request;
 
-    const { error, value: tournamentToUpdate } = tournamentPutSchema.validate(
+    const result = tournamentPutSchema.safeParse(
       request.body,
     );
 
-    console.error(error);
-    if (error) {
-      return response400Joi(response, error);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
     try {
       const updatedTournament = await tournamentsService.update({
         code: tournamentCode,
-        ...tournamentToUpdate,
+        ...result.data,
       } as ITournament);
 
       return response.status(200).json(updatedTournament);

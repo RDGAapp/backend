@@ -1,6 +1,6 @@
-import { ValidationError } from 'joi';
-import { response500, response400Joi, response400 } from 'helpers/responses';
+import { response500, response400Schema } from 'helpers/responses';
 import response from '../mocks/response';
+import { ZodError } from 'zod';
 
 describe('handleGlobalError helper', () => {
   afterEach(() => {
@@ -21,46 +21,23 @@ describe('handleGlobalError helper', () => {
     });
   });
 
-  describe('response400Joi', () => {
+  describe('response400Schema', () => {
     test('should response 400 with message', () => {
-      const error = {
-        details: [{ message: 'test' }],
-      } as unknown as ValidationError;
-      response400Joi(response, error);
+      const error = new ZodError([
+        {
+          code: 'custom',
+          path: ['confirm'],
+          message: "Passwords don't match",
+        },
+      ]);
+      response400Schema(response, error);
 
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('Проверьте данные: test');
-    });
-  });
-
-  describe('response400', () => {
-    test('should response 400 with message for м', () => {
-      response400(response, 'Test', 'not test', 'м');
-
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('Test должен быть not test');
-    });
-
-    test('should response 400 with message for ж', () => {
-      response400(response, 'Test', 'not test', 'ж');
-
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('Test должна быть not test');
-    });
-
-    test('should response 400 with message for ср', () => {
-      response400(response, 'Test', 'not test', 'ср');
-
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('Test должно быть not test');
+      expect(response.send).toHaveBeenCalledWith(
+        'Validation error: Passwords don\'t match at "confirm"',
+      );
     });
   });
 });

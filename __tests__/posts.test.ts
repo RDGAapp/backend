@@ -167,7 +167,7 @@ describe('Posts endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "header" must be a string',
+        'Validation error: Expected string, received number at "header"',
       );
     });
   });
@@ -202,7 +202,7 @@ describe('Posts endpoints', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
-        'Проверьте данные: "header" must be a string',
+        'Validation error: Expected string, received number at "header"',
       );
     });
   });

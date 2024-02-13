@@ -1,13 +1,11 @@
 import { Request, Response, Router } from 'express';
 import postsController from 'controller/posts';
-import { response400 } from 'helpers/responses';
+import { response400Schema } from 'helpers/responses';
+import { z } from 'zod';
 
 const router = Router();
 
-router
-  .route('/')
-  .get(postsController.getAll)
-  .post(postsController.create);
+router.route('/').get(postsController.getAll).post(postsController.create);
 
 router
   .route('/:postCode')
@@ -18,11 +16,12 @@ router
 router.param(
   'postCode',
   (request: Request, response: Response, next, postCodeParam) => {
-    if (!postCodeParam) {
-      return response400(response, 'Код публикации', 'строкой', 'м');
+    const result = z.string().safeParse(postCodeParam);
+    if (!result.success) {
+      return response400Schema(response, result.error);
     }
 
-    request.postCode = postCodeParam;
+    request.postCode = result.data;
     next();
   },
 );

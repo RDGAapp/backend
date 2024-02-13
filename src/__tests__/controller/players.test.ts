@@ -173,7 +173,7 @@ describe('Player Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "pdgaNumber" must be a number',
+        'Validation error: Expected number, received string at "pdgaNumber"',
       );
     });
   });
@@ -233,7 +233,7 @@ describe('Player Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "pdgaNumber" must be a number',
+        'Validation error: Expected number, received string at "pdgaNumber"; Unrecognized key(s) in object: \'rdgaNumber\'',
       );
     });
   });
@@ -331,7 +331,7 @@ describe('Player Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "rating" must be a number',
+        'Validation error: Expected number, received string at "rating"',
       );
     });
   });
@@ -445,7 +445,7 @@ describe('Player Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "[0].rating" must be a number',
+        'Validation error: Expected number, received string at "[0].rating"',
       );
     });
   });

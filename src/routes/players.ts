@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import playerController from 'controller/players';
-import { response400 } from 'helpers/responses';
+import { response400Schema } from 'helpers/responses';
+import { z } from 'zod';
 
 const router = Router();
 
@@ -25,10 +26,10 @@ router
 router.param(
   'rdgaNumber',
   (request: Request, response: Response, next, rdgaNumberParam) => {
-    const rdgaNumber = Number(rdgaNumberParam);
-    if (isNaN(rdgaNumber))
-      return response400(response, 'Номер РДГА', 'числом', 'м');
-    request.rdgaNumber = rdgaNumber;
+    const result = z.number().positive().safeParse(Number(rdgaNumberParam));
+    if (!result.success)
+      return response400Schema(response, result.error);
+    request.rdgaNumber = result.data;
     next();
   },
 );

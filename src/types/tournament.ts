@@ -4,8 +4,8 @@ export interface ITournament {
   code: string;
   name: string;
   town: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   tournamentType: TournamentType;
   metrixId: string | null;
 }

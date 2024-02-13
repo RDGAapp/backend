@@ -99,7 +99,7 @@ describe('Tournaments Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "name" must be a string',
+        'Validation error: Expected string, received number at "name"',
       );
     });
   });
@@ -160,7 +160,7 @@ describe('Tournaments Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Проверьте данные: "code" is not allowed',
+        'Validation error: Unrecognized key(s) in object: \'code\'',
       );
     });
   });
