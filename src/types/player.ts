@@ -7,7 +7,6 @@ export interface IPlayer {
   rdgaRating: number;
   rdgaRatingChange: number;
   town: string | null;
-  email: string;
   pdgaNumber: number | null;
   metrixNumber: number | null;
   priority: number;

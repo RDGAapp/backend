@@ -18,10 +18,9 @@ export const getMetrixDataByNumber = async (metrixNumber?: number | null) => {
       string,
     ][][];
 
-    const currentMetrixRating =
-      metrixData[1].sort((a, b) => b[0] - a[0])[0]?.[1] ?? null;
-    const previousMetrixRating =
-      metrixData[1].sort((a, b) => b[0] - a[0])[1]?.[1] ?? null;
+    const sortedMetrixData = metrixData[1].sort((a, b) => b[0] - a[0]);
+    const currentMetrixRating = sortedMetrixData[0]?.[1] ?? null;
+    const previousMetrixRating = sortedMetrixData[1]?.[1] ?? null;
 
     returnValue.metrixRating = currentMetrixRating ?? null;
     returnValue.metrixRatingChange = previousMetrixRating
@@ -43,7 +42,9 @@ export const getPdgaDataByNumber = async (pdgaNumber?: number | null) => {
   if (!pdgaNumber) return returnValue;
 
   try {
-    const pdgaResponse = await fetch(`https://www.pdga.com/player/${pdgaNumber}`);
+    const pdgaResponse = await fetch(
+      `https://www.pdga.com/player/${pdgaNumber}`,
+    );
     const pdgaPlayerHtml = await pdgaResponse.text();
 
     const expireDateString = [

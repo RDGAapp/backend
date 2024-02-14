@@ -19,7 +19,6 @@ export const playerSchema = z.strictObject({
   rdgaRating: z.number().nonnegative(),
   rdgaRatingChange: z.number(),
   town: z.string().nullable(),
-  email: z.string().email(),
   pdgaNumber: z.number().min(1).nullable(),
   metrixNumber: z.number().min(1).nullable(),
   priority: z.number(),

@@ -5,7 +5,6 @@ export default {
   rdgaRating: 'rdga_rating',
   rdgaRatingChange: 'rdga_rating_change',
   town: 'town',
-  email: 'email',
   pdgaNumber: 'pdga_number',
   metrixNumber: 'metrix_number',
   priority: 'priority',

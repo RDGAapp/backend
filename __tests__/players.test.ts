@@ -570,7 +570,7 @@ describe('Player endpoints', () => {
 
     const playerToUpdate: Partial<typeof testPlayer> = {
       ...testPlayer,
-      email: 'test1@user.com',
+      name: 'Test2'
     };
     delete playerToUpdate.rdgaNumber;
 
