@@ -1,6 +1,6 @@
-import { IPlayer } from 'types/player';
+import { IPlayerBase } from 'types/player';
 
-const testPlayer: IPlayer = {
+const testPlayer: IPlayerBase = {
   name: 'Test',
   surname: 'User',
   rdgaNumber: 1,

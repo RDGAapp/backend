@@ -11,7 +11,7 @@ fetchMock.enableMocks();
 describe('Player endpoints', () => {
   const testPlayerResponse = {
     ...testPlayer,
-    activeTo: testPlayer.activeTo,
+    avatarUrl: null,
   };
 
   const nullablePlayer = {
@@ -24,6 +24,7 @@ describe('Player endpoints', () => {
 
   const nullablePlayerResponse = {
     ...nullablePlayer,
+    avatarUrl: null,
     activeTo: testPlayer.activeTo,
   };
 
@@ -78,13 +79,13 @@ describe('Player endpoints', () => {
 
     test('should return 200 sorted by rating and then by number', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -97,7 +98,11 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [testPlayer3, testPlayerResponse, testPlayer2],
+        data: [
+          { ...testPlayer3, avatarUrl: null },
+          testPlayerResponse,
+          { ...testPlayer2, avatarUrl: null },
+        ],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -113,14 +118,14 @@ describe('Player endpoints', () => {
 
     test('should return 200 filtered by city', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
         town: 'Somewhere2',
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -134,7 +139,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [testPlayer2],
+        data: [{ ...testPlayer2, avatarUrl: null }],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -150,14 +155,14 @@ describe('Player endpoints', () => {
 
     test('should return 200, filter by city and not drop table', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
         town: 'Somewhere2',
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -189,7 +194,11 @@ describe('Player endpoints', () => {
       const responseAll = await request(app).get('/players');
       expect(responseAll.status).toBe(200);
       expect(responseAll.body).toEqual({
-        data: [testPlayer3, testPlayerResponse, testPlayer2],
+        data: [
+          { ...testPlayer3, avatarUrl: null },
+          testPlayerResponse,
+          { ...testPlayer2, avatarUrl: null },
+        ],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -205,14 +214,14 @@ describe('Player endpoints', () => {
 
     test('should return 200 filtered by surname part', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
         surname: 'User2',
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -226,7 +235,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [testPlayer2],
+        data: [{ ...testPlayer2, avatarUrl: null }],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -242,14 +251,14 @@ describe('Player endpoints', () => {
 
     test('should return 200 ignore case for surname', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
         surname: 'User2',
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -263,7 +272,11 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [testPlayer3, testPlayerResponse, testPlayer2],
+        data: [
+          { ...testPlayer3, avatarUrl: null },
+          testPlayerResponse,
+          { ...testPlayer2, avatarUrl: null },
+        ],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -279,14 +292,14 @@ describe('Player endpoints', () => {
 
     test('should return 200, filter by surname and not drop table', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
         surname: 'User2',
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -318,7 +331,11 @@ describe('Player endpoints', () => {
       const responseAll = await request(app).get('/players');
       expect(responseAll.status).toBe(200);
       expect(responseAll.body).toEqual({
-        data: [testPlayer3, testPlayerResponse, testPlayer2],
+        data: [
+          { ...testPlayer3, avatarUrl: null },
+          testPlayerResponse,
+          { ...testPlayer2, avatarUrl: null },
+        ],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -334,7 +351,7 @@ describe('Player endpoints', () => {
 
     test('should return 200 onlyActive members', async () => {
       const testPlayer2 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 2,
         metrixNumber: 2,
         pdgaNumber: 2,
@@ -342,7 +359,7 @@ describe('Player endpoints', () => {
         activeTo: new Date('2000-09-29').toISOString(),
       };
       const testPlayer3 = {
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaNumber: 3,
         rdgaRating: 10001,
         metrixNumber: 3,
@@ -356,7 +373,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [testPlayer3],
+        data: [{ ...testPlayer3, avatarUrl: null }],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -570,7 +587,7 @@ describe('Player endpoints', () => {
 
     const playerToUpdate: Partial<typeof testPlayer> = {
       ...testPlayer,
-      name: 'Test2'
+      name: 'Test2',
     };
     delete playerToUpdate.rdgaNumber;
 
@@ -670,7 +687,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaRating: 900,
         rdgaRatingChange: -9100,
       });
@@ -714,7 +731,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        ...testPlayerResponse,
+        ...testPlayer,
         rdgaRating: 900,
         rdgaRatingChange: 900,
       });
@@ -729,7 +746,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        ...testPlayerResponse,
+        ...testPlayer,
         activeTo: `${new Date().getFullYear() + 1}-01-01T00:00:00.000Z`,
       });
     });
@@ -759,7 +776,7 @@ describe('Player endpoints', () => {
         errors: [],
         updatedPlayers: [
           {
-            ...testPlayerResponse,
+            ...testPlayer,
             rdgaRating: 900,
             rdgaRatingChange: -9100,
           },
@@ -803,7 +820,7 @@ describe('Player endpoints', () => {
         errors: [],
         updatedPlayers: [
           {
-            ...testPlayerResponse,
+            ...testPlayer,
             rdgaRating: 900,
             rdgaRatingChange: 900,
           },
