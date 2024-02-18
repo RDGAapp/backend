@@ -1,3 +1,9 @@
 .eslintrc
 .eslintignore
 .gitignore
+.github
+.vscode
+.jest
+jest.config.ts
+README.md
+__tests__

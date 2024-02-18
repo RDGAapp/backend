@@ -15,7 +15,7 @@ export interface IPlayerBase {
 }
 
 export interface IPlayer extends IPlayerBase {
-  avatarUrl?: string | null;
+  avatarUrl: string | null;
 }
 
 export interface IPlayerExtended extends IPlayer {

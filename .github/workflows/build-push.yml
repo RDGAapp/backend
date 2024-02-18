@@ -18,6 +18,8 @@ on:
         required: true
       DATABASE_PASSWORD:
         required: true
+      TG_BOT_TOKEN:
+        required: true
 
 jobs:
   build-push:
@@ -51,3 +53,4 @@ jobs:
             DATABASE_HOST=${{ secrets.DATABASE_HOST }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
             DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            TG_BOT_TOKEN=${{ secrets.TG_BOT_TOKEN }}

@@ -10,4 +10,4 @@ export default {
   priority: 'priority',
   activeTo: 'active_to',
   sportsCategory: 'sports_category',
-};
+} as const;

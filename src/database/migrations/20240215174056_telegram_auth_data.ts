@@ -8,10 +8,10 @@ export async function up(knex: Knex): Promise<void> {
     table.foreign('rdga_number').references('players.rdga_number');
     table.integer('telegram_id').notNullable().unique();
     table.integer('telegram_auth_date').notNullable();
+    table.text('telegram_username').notNullable().unique();
     table.text('telegram_first_name').defaultTo('');
     table.text('telegram_last_name').defaultTo('');
     table.text('telegram_photo_url').defaultTo('');
-    table.text('telegram_username').defaultTo('');
   });
 }
 
