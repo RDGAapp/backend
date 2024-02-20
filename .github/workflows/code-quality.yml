@@ -28,7 +28,7 @@ jobs:
         run: yarn types:check
       -
         name: Start database for tests
-        run: yarn start:dev:database
+        run: yarn database:start
       -
         name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.0.0
@@ -39,4 +39,4 @@ jobs:
           debug: true
       -
         name: Stop database
-        run: yarn stop:dev:database
+        run: yarn database:stop
