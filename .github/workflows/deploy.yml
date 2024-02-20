@@ -17,7 +17,7 @@ jobs:
       DATABASE_USER: ${{ secrets.DATABASE_USER }}
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-      BITRIX_URL: ${{ BITRIX_URL }}
+      BITRIX_URL: ${{ secrets.BITRIX_URL }}
   deploy:
     needs: update-docker
     uses: RDGAapp/docker-compose/.github/workflows/update.yml@main
