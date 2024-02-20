@@ -2,8 +2,10 @@ import { Response } from 'express';
 
 const response = {
   status: jest.fn().mockReturnThis(),
-  json: jest.fn(),
-  send: jest.fn(),
+  json: jest.fn().mockReturnThis(),
+  send: jest.fn().mockReturnThis(),
+  cookie: jest.fn().mockReturnThis(),
+  clearCookie: jest.fn().mockReturnThis(),
 } as unknown as Response;
 
 export default response;

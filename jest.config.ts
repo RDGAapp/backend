@@ -1,10 +1,11 @@
-import type { Config } from "@jest/types"
+import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   verbose: true,
   moduleDirectories: ['node_modules', 'src'],
-  modulePathIgnorePatterns: ["__tests__/mocks/*", "<rootDir>/.*/__mocks__"]
-}
+  modulePathIgnorePatterns: ['__tests__/mocks/*', '<rootDir>/.*/__mocks__'],
+  setupFiles: ['<rootDir>/.jest/setEnvVars.ts'],
+};
 export default config;

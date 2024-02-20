@@ -16,7 +16,7 @@ describe('handleGlobalError helper', () => {
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: test',
+        "Something's wrong: Error: test",
       );
     });
   });

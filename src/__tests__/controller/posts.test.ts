@@ -61,7 +61,7 @@ describe('Posts Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });
@@ -105,7 +105,7 @@ describe('Posts Controller', () => {
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
 
@@ -172,7 +172,7 @@ describe('Posts Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
 
@@ -189,7 +189,7 @@ describe('Posts Controller', () => {
       expect(response.status).toHaveBeenCalledWith(400);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Validation error: Unrecognized key(s) in object: \'code\', \'createdAt\'',
+        "Validation error: Unrecognized key(s) in object: 'code', 'createdAt'",
       );
     });
   });
@@ -223,7 +223,7 @@ describe('Posts Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });
@@ -260,7 +260,7 @@ describe('Posts Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });

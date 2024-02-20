@@ -12,6 +12,7 @@ export const queriesMock = {
   del: jest.fn().mockReturnThis(),
   toNative: jest.fn(),
   paginate: jest.fn().mockReturnThis(),
+  leftJoin: jest.fn().mockReturnThis(),
 };
 
 const dbMock = jest.fn().mockReturnValue(queriesMock);

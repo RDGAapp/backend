@@ -73,3 +73,32 @@ export const getPdgaDataByNumber = async (pdgaNumber?: number | null) => {
 
   return returnValue;
 };
+
+const bitrixUrl = process.env.BITRIX_URL;
+
+export const getTelegramLoginByRdgaNumber = async (
+  rdgaNumber: number,
+): Promise<string | null> => {
+  const result = await fetch(
+    `${bitrixUrl}/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=${rdgaNumber}&SELECT[]=IM`,
+  );
+
+  if (!result.ok) {
+    const text = await result.text();
+    throw new Error(`Bitrix error: ${text}`);
+  }
+
+  const json = (await result.json()) as {
+    result: { IM: { VALUE_TYPE: string; VALUE: string }[] }[];
+    total: number;
+  };
+
+  if (json.total !== 1) {
+    throw new Error(`Bitrix error: more or less than 1 contact found`);
+  }
+
+  return (
+    json.result[0]?.IM.find((value) => value.VALUE_TYPE === 'TELEGRAM')
+      ?.VALUE ?? null
+  );
+};

@@ -1,6 +1,6 @@
 import SportsCategory from 'enums/SportsCategory';
 
-export interface IPlayer {
+export interface IPlayerBase {
   name: string;
   surname: string | null;
   rdgaNumber: number;
@@ -12,6 +12,10 @@ export interface IPlayer {
   priority: number;
   activeTo: string;
   sportsCategory: SportsCategory | null;
+}
+
+export interface IPlayer extends IPlayerBase {
+  avatarUrl: string | null;
 }
 
 export interface IPlayerExtended extends IPlayer {

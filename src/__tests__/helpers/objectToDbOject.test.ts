@@ -6,19 +6,29 @@ describe('Helper function objectToDbObject', () => {
     ron: 'weasley',
     ginny: 'weasley_potter',
     muggle: 'shwuggle',
-  };
+  } as const;
 
   const fullObject = {
     harry: 'wizard',
     ron: 'friend',
     ginny: 'girlfriend',
     muggle: null,
-  }
+  };
+
+  const mappedObject = {
+    potter: 'wizard',
+    weasley: 'friend',
+    weasley_potter: 'girlfriend',
+    shwuggle: null,
+  };
 
   const halfObject = { harry: 'wizard' };
 
   test('should map all fields', () => {
-    const dbObject = objectToDbObject(fullObject, mapping);
+    const dbObject = objectToDbObject<typeof fullObject, typeof mappedObject>(
+      fullObject,
+      mapping,
+    );
     expect(dbObject).toEqual({
       potter: 'wizard',
       weasley: 'friend',
@@ -27,14 +37,19 @@ describe('Helper function objectToDbObject', () => {
     });
   });
 
-
   test('should map only existing fields', () => {
-    const dbObject = objectToDbObject(halfObject, mapping);
+    const dbObject = objectToDbObject<typeof fullObject, typeof mappedObject>(
+      halfObject,
+      mapping,
+    );
     expect(dbObject).toEqual({ potter: 'wizard' });
   });
 
   test('should map empty object to empty object', () => {
-    const dbObject = objectToDbObject({}, mapping);
+    const dbObject = objectToDbObject<typeof fullObject, typeof mappedObject>(
+      {},
+      mapping,
+    );
     expect(dbObject).toEqual({});
   });
 });

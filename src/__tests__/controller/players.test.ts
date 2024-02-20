@@ -66,7 +66,7 @@ describe('Player Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });
@@ -121,7 +121,7 @@ describe('Player Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });
@@ -157,7 +157,7 @@ describe('Player Controller', () => {
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
 
@@ -216,7 +216,7 @@ describe('Player Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
 
@@ -269,7 +269,7 @@ describe('Player Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });
@@ -314,7 +314,7 @@ describe('Player Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
 
@@ -382,7 +382,7 @@ describe('Player Controller', () => {
       expect(response.json).toHaveBeenCalledTimes(0);
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
-        'Что-то пошло не так: Error: Test',
+        "Something's wrong: Error: Test",
       );
     });
   });

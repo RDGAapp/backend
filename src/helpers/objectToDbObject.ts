@@ -1,10 +1,18 @@
-function objectToDbObject<T, K>(object: T, mapping: Record<string, string>): K {
-  const dbObject: Record<string, unknown> = {};
-  Object.keys(mapping).forEach(key => {
-    if ((object as Record<string, unknown>)[key] === undefined) return;
-    dbObject[mapping[key]] = (object as Record<string, unknown>)[key];
+function objectToDbObject<ObjectType, DbObjectType>(
+  object: Partial<ObjectType>,
+  mapping: Record<keyof ObjectType, keyof DbObjectType>,
+): DbObjectType {
+  const dbObject = {} as DbObjectType;
+
+  Object.keys(mapping).forEach((key) => {
+    if (object[key as keyof ObjectType] === undefined) return;
+
+    dbObject[mapping[key as keyof ObjectType]] = object[
+      key as keyof ObjectType
+    ] as DbObjectType[keyof DbObjectType];
   });
-  return dbObject as K;
+
+  return dbObject;
 }
 
 export default objectToDbObject;

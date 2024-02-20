@@ -4,4 +4,4 @@ export default {
   text: 'text',
   author: 'author',
   createdAt: 'created_at',
-};
+} as const;

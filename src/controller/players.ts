@@ -7,7 +7,7 @@ import {
   multipleRdgaRatingUpdateSchema,
 } from 'schemas';
 import { response500, response400Schema } from 'helpers/responses';
-import { IPlayer } from 'types/player';
+import { IPlayer, IPlayerBase } from 'types/player';
 
 class PlayerController {
   async getAll(request: Request, response: Response) {
@@ -68,9 +68,7 @@ class PlayerController {
   async update(request: Request, response: Response) {
     const { rdgaNumber } = request;
 
-    const result = playerPutSchema.safeParse(
-      request.body,
-    );
+    const result = playerPutSchema.safeParse(request.body);
 
     if (!result.success) {
       return response400Schema(response, result.error);
@@ -138,15 +136,13 @@ class PlayerController {
   }
 
   async multipleUpdateRdgaRating(request: Request, response: Response) {
-    const result = multipleRdgaRatingUpdateSchema.safeParse(
-      request.body,
-    );
+    const result = multipleRdgaRatingUpdateSchema.safeParse(request.body);
     if (!result.success) {
       return response400Schema(response, result.error);
     }
 
     const errors: unknown[] = [];
-    const updatedPlayers: IPlayer[] = [];
+    const updatedPlayers: IPlayerBase[] = [];
 
     await Promise.all(
       result.data.map(async (updateRatingValue) => {

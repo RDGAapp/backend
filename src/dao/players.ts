@@ -1,14 +1,16 @@
 import db from 'database';
 import { IWithPagination } from 'knex-paginate';
 import playerMapping from 'mapping/player';
-import { IPlayer } from 'types/player';
+import { IPlayer, IPlayerBase } from 'types/player';
 import { IPlayerDb } from 'types/playerDb';
 
 class PlayerDao {
   #tableName;
+  #authTableName;
 
   constructor() {
     this.#tableName = 'players';
+    this.#authTableName = 'auth_data';
   }
 
   async getAll(
@@ -17,7 +19,11 @@ class PlayerDao {
     town: string,
     onlyActive: boolean,
   ): Promise<IWithPagination<IPlayer[]>> {
-    let query = db(this.#tableName);
+    let query = db(this.#tableName).leftJoin(
+      this.#authTableName,
+      `${this.#tableName}.rdga_number`,
+      `${this.#authTableName}.rdga_number`,
+    );
 
     if (surname) {
       query = query.where('surname', 'ilike', `%${surname}%`);
@@ -31,9 +37,13 @@ class PlayerDao {
     }
 
     return query
-      .select(playerMapping)
+      .select({
+        ...playerMapping,
+        rdgaNumber: `${this.#tableName}.rdga_number`,
+        avatarUrl: 'telegram_photo_url',
+      })
       .orderBy('rdga_rating', 'desc')
-      .orderBy('rdga_number', 'asc')
+      .orderBy(`${this.#tableName}.rdga_number`, 'asc')
       .paginate({
         perPage: 30,
         currentPage: pageNumber,
@@ -43,8 +53,17 @@ class PlayerDao {
 
   async getByRdgaNumber(rdgaNumber: number): Promise<IPlayer | null> {
     const player = await db(this.#tableName)
-      .select(playerMapping)
-      .where({ rdga_number: rdgaNumber });
+      .leftJoin(
+        this.#authTableName,
+        `${this.#tableName}.rdga_number`,
+        `${this.#authTableName}.rdga_number`,
+      )
+      .select({
+        ...playerMapping,
+        rdgaNumber: `${this.#tableName}.rdga_number`,
+        avatarUrl: 'telegram_photo_url',
+      })
+      .where({ [`${this.#tableName}.rdga_number`]: rdgaNumber });
 
     return player?.[0] ?? null;
   }
@@ -53,7 +72,7 @@ class PlayerDao {
     rdgaNumber?: number,
     pdgaNumber?: number | null,
     metrixNumber?: number | null,
-  ): Promise<IPlayer[]> {
+  ): Promise<IPlayerBase[]> {
     const player = await db(this.#tableName)
       .select(playerMapping)
       .where({ rdga_number: rdgaNumber })
