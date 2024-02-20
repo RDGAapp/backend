@@ -5,6 +5,7 @@ const response = {
   json: jest.fn().mockReturnThis(),
   send: jest.fn().mockReturnThis(),
   cookie: jest.fn().mockReturnThis(),
+  clearCookie: jest.fn().mockReturnThis(),
 } as unknown as Response;
 
 export default response;

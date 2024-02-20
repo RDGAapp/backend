@@ -33,9 +33,19 @@ class AuthorizationDao {
   }
 
   async update(data: IAuthDataDb): Promise<IAuthDataDb> {
+    const dataToUpdate: Record<string, string | number | null> = {
+      telegram_auth_date: data.telegram_auth_date,
+      telegram_username: data.telegram_username,
+      telegram_first_name: data.telegram_first_name,
+      telegram_last_name: data.telegram_last_name,
+    };
+    if (data.telegram_photo_url) {
+      dataToUpdate.telegram_photo_url = data.telegram_photo_url;
+    }
+
     const authorization = await db(this.#tableName)
       .where({ rdga_number: data.rdga_number })
-      .update(data)
+      .update(dataToUpdate)
       .returning('*');
 
     return authorization[0];

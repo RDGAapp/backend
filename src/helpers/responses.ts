@@ -3,7 +3,7 @@ import { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
 export const response500 = (response: Response, error: unknown) =>
-  response.status(500).send(`Что-то пошло не так: ${error}`);
+  response.status(500).send(`Something's wrong: ${error}`);
 
 export const response400Schema = (response: Response, error: ZodError) =>
   response.status(400).send(fromZodError(error).toString());

@@ -1,7 +1,11 @@
 import request from 'supertest';
+import fetchMock from 'jest-fetch-mock';
 import app from '../src/app';
 import db from '../src/database';
 import { fullTelegramUser } from '../src/__tests__/mocks/telegramUsers';
+import testPlayer from '../src/__tests__/mocks/testPlayer';
+
+fetchMock.enableMocks();
 
 describe('Authorization endpoints', () => {
   beforeEach(async () => {
@@ -12,8 +16,118 @@ describe('Authorization endpoints', () => {
     await db.migrate.rollback();
   });
 
+  describe('POST /register', () => {
+    test('should return 200', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      await request(app).post('/players').send(testPlayer);
+
+      const response = await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        rdgaNumber: 1,
+        avatarUrl: fullTelegramUser.photo_url,
+      });
+    });
+
+    test('should return 400 rdgaNumber is corrupted', async () => {
+      const response = await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 'broken' });
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual('RDGA number is incorrect or not defined');
+    });
+
+    test('should return 400 corrupted data', async () => {
+      const response = await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, id: 'test', rdgaNumber: 1 });
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual(
+        'Validation error: Expected number, received string at "id"',
+      );
+    });
+
+    test('should return 400 corrupted hash', async () => {
+      const response = await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, hash: 'broken', rdgaNumber: 1 });
+
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual('Your data is corrupted');
+    });
+
+    test("should return 500 if player doesn't exist", async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      const response = await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+
+      expect(response.status).toBe(500);
+      expect(response.text).toEqual(
+        "Something's wrong: Error: Player doesn't exist",
+      );
+    });
+  });
+
   describe('POST /login', () => {
-    // TODO: positive e2e test
+    test('should return 200', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      await request(app).post('/players').send(testPlayer);
+      await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+
+      const response = await request(app)
+        .post('/authorization/login')
+        .send(fullTelegramUser);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        rdgaNumber: 1,
+        avatarUrl: fullTelegramUser.photo_url,
+      });
+    });
 
     test('should return 404', async () => {
       const response = await request(app)
@@ -42,6 +156,33 @@ describe('Authorization endpoints', () => {
       expect(response.text).toEqual(
         'Validation error: Expected number, received string at "id"',
       );
+    });
+  });
+
+  describe('GET /logout', () => {
+    test('should return 200', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      await request(app).post('/players').send(testPlayer);
+      await request(app)
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+      await request(app).post('/authorization/login').send(fullTelegramUser);
+
+      const response = await request(app).get('/authorization/logout');
+
+      expect(response.status).toBe(200);
     });
   });
 });

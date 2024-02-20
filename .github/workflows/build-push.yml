@@ -20,6 +20,8 @@ on:
         required: true
       TG_BOT_TOKEN:
         required: true
+      BITRIX_URL:
+        required: true
 
 jobs:
   build-push:
@@ -54,3 +56,4 @@ jobs:
             DATABASE_USER=${{ secrets.DATABASE_USER }}
             DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
             TG_BOT_TOKEN=${{ secrets.TG_BOT_TOKEN }}
+            BITRIX_URL=${{ secrets.BITRIX_URL }}

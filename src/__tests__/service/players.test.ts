@@ -212,7 +212,7 @@ describe('Player Service', () => {
 
       const testFunction = async () => await playerService.create(testPlayer);
 
-      expect(testFunction).rejects.toThrow(
+      await expect(testFunction).rejects.toThrow(
         'Игрок с таким номером RDGA, PDGA или Metrix уже существует',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
@@ -251,7 +251,7 @@ describe('Player Service', () => {
 
       const testFunction = async () => await playerService.delete(1);
 
-      expect(testFunction).rejects.toThrow(
+      await expect(testFunction).rejects.toThrow(
         'Игрока с таким номером РДГА нет в базе',
       );
       expect(playerDao.delete).toHaveBeenCalledTimes(0);
@@ -309,7 +309,7 @@ describe('Player Service', () => {
       const testFunction = async () =>
         await playerService.updateRdgaRating(1, 1000);
 
-      expect(testFunction).rejects.toThrow(
+      await expect(testFunction).rejects.toThrow(
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
@@ -347,7 +347,7 @@ describe('Player Service', () => {
       const testFunction = async () =>
         await playerService.activatePlayerForCurrentYear(1);
 
-      expect(testFunction).rejects.toThrow(
+      await expect(testFunction).rejects.toThrow(
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);

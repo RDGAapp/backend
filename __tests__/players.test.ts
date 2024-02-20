@@ -554,7 +554,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Что-то пошло не так: Error: Игрок с таким номером RDGA, PDGA или Metrix уже существует',
+        "Something's wrong: Error: Игрок с таким номером RDGA, PDGA или Metrix уже существует",
       );
     });
 
@@ -663,7 +663,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Что-то пошло не так: Error: Игрока с таким номером РДГА нет в базе',
+        "Something's wrong: Error: Игрока с таким номером РДГА нет в базе",
       );
     });
 

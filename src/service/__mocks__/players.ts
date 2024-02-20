@@ -1,4 +1,5 @@
 const playersServiceMock = {
+  checkIfPlayerExist: jest.fn(),
   getAll: jest.fn(),
   getByRdgaNumber: jest.fn(),
   create: jest.fn(),
