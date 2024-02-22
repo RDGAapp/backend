@@ -7,7 +7,7 @@ import { checkTgAuthorization } from 'helpers/telegramHelper';
 const cookieOptions: CookieOptions = {
   httpOnly: true,
   sameSite: 'strict',
-  maxAge: 24 * 60 * 60,
+  maxAge: 24 * 60 * 60 * 1000,
 };
 
 const setCookie = (
