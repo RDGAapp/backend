@@ -2,15 +2,46 @@ import authorizationDao from 'dao/authorization';
 import playersService from 'service/players';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import { getTelegramLoginByRdgaNumber } from 'helpers/externalApiHelpers';
-import { mapTelegramAuthDataToDb } from 'helpers/telegramHelper';
+import {
+  checkTgAuthorization,
+  mapTelegramAuthDataToDb,
+} from 'helpers/telegramHelper';
 import authorizationMapping from 'mapping/authorization';
-import { IAuthData, ITelegramAuthData } from 'types/authData';
+import { IAuthData, ITelegramAuthData, IUserBaseInfo } from 'types/authData';
 import { IAuthDataDb } from 'types/authDataDb';
 
 class AuthorizationService {
+  async checkAuthData(
+    rdgaNumber: number,
+    hash: string,
+  ): Promise<IUserBaseInfo> {
+    const authDataFromDb = await authorizationDao.getByRdgaNumber(rdgaNumber);
+
+    if (!authDataFromDb) throw new Error('Data is corrupted');
+
+    if (
+      !checkTgAuthorization({
+        id: authDataFromDb.telegramId,
+        auth_date: authDataFromDb.telegramAuthDate,
+        hash,
+        username: authDataFromDb.telegramUsername,
+        first_name: authDataFromDb.telegramFirstName,
+        last_name: authDataFromDb.telegramLastName,
+        photo_url: authDataFromDb.telegramPhotoUrl,
+      })
+    ) {
+      throw new Error('Data is corrupted');
+    }
+
+    return {
+      rdgaNumber: authDataFromDb.rdgaNumber,
+      avatarUrl: authDataFromDb.telegramPhotoUrl,
+    };
+  }
+
   async updateAuthData(
     telegramAuthData: ITelegramAuthData,
-  ): Promise<{ rdgaNumber: number; avatarUrl: string | null } | null> {
+  ): Promise<IUserBaseInfo | null> {
     const authDataFromDb = await authorizationDao.getByTelegramId(
       telegramAuthData.id,
     );
@@ -35,7 +66,7 @@ class AuthorizationService {
   async createAuthData(
     rdgaNumber: number,
     telegramAuthData: ITelegramAuthData,
-  ): Promise<{ rdgaNumber: number; avatarUrl: string | null }> {
+  ): Promise<IUserBaseInfo> {
     const authDataFromDb = await authorizationDao.getByRdgaNumber(rdgaNumber);
     if (authDataFromDb) throw new Error('Already registered');
 

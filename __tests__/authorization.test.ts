@@ -161,6 +161,8 @@ describe('Authorization endpoints', () => {
 
   describe('GET /logout', () => {
     test('should return 200', async () => {
+      const agent = request.agent(app);
+
       fetchMock.mockResponseOnce(
         JSON.stringify({
           result: [
@@ -174,15 +176,99 @@ describe('Authorization endpoints', () => {
         }),
       );
 
-      await request(app).post('/players').send(testPlayer);
-      await request(app)
+      await agent.post('/players').send(testPlayer);
+      await agent
         .post('/authorization/register')
         .send({ ...fullTelegramUser, rdgaNumber: 1 });
-      await request(app).post('/authorization/login').send(fullTelegramUser);
 
-      const response = await request(app).get('/authorization/logout');
+      const authorizeResponse1 = await agent.get('/authorization/authorize');
+      expect(authorizeResponse1.status).toBe(200);
 
+      const response = await agent.get('/authorization/logout');
       expect(response.status).toBe(200);
+
+      const authorizeResponse2 = await agent.get('/authorization/authorize');
+      expect(authorizeResponse2.status).toBe(401);
+    });
+  });
+
+  describe('GET /authorize', () => {
+    test('should return 200 after register', async () => {
+      const agent = request.agent(app);
+
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      await agent.post('/players').send(testPlayer);
+      await agent
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+
+      const response = await agent.get('/authorization/authorize');
+      expect(response.status).toBe(200);
+    });
+
+    test('should return 200 after login', async () => {
+      const agent = request.agent(app);
+
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      await agent.post('/players').send(testPlayer);
+      await agent
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+      await agent.get('/authorization/logout');
+      await agent.post('/authorization/login').send(fullTelegramUser);
+
+      const response = await agent.get('/authorization/authorize');
+      expect(response.status).toBe(200);
+    });
+
+    test('should return 401 after logout', async () => {
+      const agent = request.agent(app);
+
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          result: [
+            {
+              IM: [
+                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+              ],
+            },
+          ],
+          total: 1,
+        }),
+      );
+
+      await agent.post('/players').send(testPlayer);
+      await agent
+        .post('/authorization/register')
+        .send({ ...fullTelegramUser, rdgaNumber: 1 });
+      await agent.get('/authorization/logout');
+
+      const response = await agent.get('/authorization/authorize');
+      expect(response.status).toBe(401);
     });
   });
 });

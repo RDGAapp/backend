@@ -10,6 +10,17 @@ const cookieOptions: CookieOptions = {
   maxAge: 24 * 60 * 60,
 };
 
+const setCookie = (
+  response: Response,
+  hash: string,
+  rdgaNumber: number,
+): Response =>
+  response
+    .cookie('authorization_hash', hash, cookieOptions)
+    .cookie('rdga_number', rdgaNumber, cookieOptions);
+
+const clearCookies = (response: Response): Response =>
+  response.clearCookie('authorization_hash').clearCookie('rdga_number');
 class AuthorizationController {
   async login(request: Request, response: Response) {
     const result = telegramAuthorizationData.safeParse(request.body);
@@ -29,9 +40,7 @@ class AuthorizationController {
         return response.status(404).send('No such authorization');
       }
 
-      return response
-        .cookie('authorization_hash', result.data.hash, cookieOptions)
-        .cookie('rdga_number', authData.rdgaNumber, cookieOptions)
+      return setCookie(response, result.data.hash, authData.rdgaNumber)
         .status(200)
         .json({
           rdgaNumber: authData.rdgaNumber,
@@ -65,9 +74,7 @@ class AuthorizationController {
         result.data,
       );
 
-      return response
-        .cookie('authorization_hash', result.data.hash, cookieOptions)
-        .cookie('rdga_number', authData.rdgaNumber, cookieOptions)
+      return setCookie(response, result.data.hash, authData.rdgaNumber)
         .status(200)
         .json({
           rdgaNumber: authData.rdgaNumber,
@@ -84,6 +91,28 @@ class AuthorizationController {
       .clearCookie('rdga_number')
       .status(200)
       .send();
+  }
+
+  async authorize(request: Request, response: Response) {
+    const rdgaNumber: string = request.cookies.rdga_number;
+    const hash: string = request.cookies.authorization_hash;
+
+    const numberedRdgaNumber = Number(rdgaNumber);
+
+    if (!rdgaNumber || !hash || isNaN(numberedRdgaNumber)) {
+      return clearCookies(response).status(401).send('Not authorized');
+    }
+
+    try {
+      const baseUserInfo = await authorizationService.checkAuthData(
+        numberedRdgaNumber,
+        hash,
+      );
+
+      return response.status(200).json(baseUserInfo);
+    } catch (error) {
+      return clearCookies(response).status(401).send('Not authorized');
+    }
   }
 }
 

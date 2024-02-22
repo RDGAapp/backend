@@ -9,4 +9,6 @@ router.route('/register').post(authorizationController.register);
 
 router.route('/logout').get(authorizationController.logout);
 
+router.route('/authorize').get(authorizationController.authorize);
+
 export default router;

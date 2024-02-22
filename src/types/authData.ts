@@ -17,3 +17,8 @@ export interface IAuthData {
   telegramLastName: string | null;
   telegramPhotoUrl: string | null;
 }
+
+export interface IUserBaseInfo {
+  rdgaNumber: number;
+  avatarUrl: string | null;
+}

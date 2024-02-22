@@ -242,10 +242,110 @@ describe('Authorization Controller', () => {
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.clearCookie).toHaveBeenCalledTimes(2);
-      expect(response.clearCookie).toHaveBeenNthCalledWith(1, 'authorization_hash');
+      expect(response.clearCookie).toHaveBeenNthCalledWith(
+        1,
+        'authorization_hash',
+      );
       expect(response.clearCookie).toHaveBeenNthCalledWith(2, 'rdga_number');
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith();
+    });
+  });
+
+  describe('authorization', () => {
+    const request = {
+      cookies: {
+        rdga_number: '1',
+        authorization_hash:
+          '8f6db6edb9965f49a0d3ff6dd62433afb90ff3f2081397035e3b03f84069d939',
+      },
+    } as Request;
+
+    test('should response 200', async () => {
+      (authorizationService.checkAuthData as jest.Mock).mockReturnValueOnce({
+        rdgaNumber: 1,
+        avatarUrl: 'some_url',
+      });
+
+      await authorizationController.authorize(request, response);
+
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.clearCookie).toHaveBeenCalledTimes(0);
+      expect(response.cookie).toHaveBeenCalledTimes(0);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith({
+        rdgaNumber: 1,
+        avatarUrl: 'some_url',
+      });
+    });
+
+    test('should response 401 if rdgaNumber is not present', async () => {
+      await authorizationController.authorize(
+        {
+          ...request,
+          cookies: { hash: request.cookies.authorization_hash },
+        } as Request,
+        response,
+      );
+
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(401);
+      expect(response.clearCookie).toHaveBeenCalledTimes(2);
+      expect(response.cookie).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Not authorized');
+    });
+
+    test('should response 401 if hash is not present', async () => {
+      await authorizationController.authorize(
+        {
+          ...request,
+          cookies: { rdga_number: request.cookies.rdga_number },
+        } as Request,
+        response,
+      );
+
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(401);
+      expect(response.clearCookie).toHaveBeenCalledTimes(2);
+      expect(response.cookie).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Not authorized');
+    });
+
+    test('should response 401 if rdga_number is not number', async () => {
+      await authorizationController.authorize(
+        {
+          ...request,
+          cookies: { hash: request.cookies.hash, rdga_number: 'string value' },
+        } as Request,
+        response,
+      );
+
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(401);
+      expect(response.clearCookie).toHaveBeenCalledTimes(2);
+      expect(response.cookie).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Not authorized');
+    });
+
+    test('should response 500', async () => {
+      (authorizationService.checkAuthData as jest.Mock).mockImplementationOnce(
+        () => {
+          throw new Error('Data corrupted');
+        },
+      );
+
+      await authorizationController.authorize(request, response);
+
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(401);
+      expect(response.clearCookie).toHaveBeenCalledTimes(2);
+      expect(response.cookie).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Not authorized');
     });
   });
 });

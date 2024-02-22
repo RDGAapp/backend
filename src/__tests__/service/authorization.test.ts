@@ -228,4 +228,46 @@ describe('Authorization Service', () => {
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
   });
+
+  describe('checkAuthData', () => {
+    const correctHash =
+      '8f6db6edb9965f49a0d3ff6dd62433afb90ff3f2081397035e3b03f84069d939';
+
+    test('should return baseUserInfo', async () => {
+      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(
+        testAuthData,
+      );
+
+      const authData = await authorizationService.checkAuthData(1, correctHash);
+
+      expect(authData).toEqual({
+        rdgaNumber: 1,
+        avatarUrl: 'https://some.url/photo',
+      });
+      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+    });
+
+    test('should throw with wrong hash', async () => {
+      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(
+        testAuthData,
+      );
+
+      await expect(
+        async () => await authorizationService.checkAuthData(1, 'hash'),
+      ).rejects.toThrow('Data is corrupted');
+      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+    });
+
+    test('should throw if no user', async () => {
+      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+
+      await expect(
+        async () => await authorizationService.checkAuthData(1, correctHash),
+      ).rejects.toThrow('Data is corrupted');
+      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
+      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+    });
+  });
 });
