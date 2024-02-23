@@ -141,7 +141,6 @@ describe('Posts Controller', () => {
       expect(postsService.update).toHaveBeenCalledWith({
         ...testPostWithoutCode,
         code: 'test',
-        createdAt: new Date().toISOString(),
       });
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
@@ -165,7 +164,6 @@ describe('Posts Controller', () => {
       expect(postsService.update).toHaveBeenCalledWith({
         ...testPostWithoutCode,
         code: 'test',
-        createdAt: new Date().toISOString(),
       });
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(500);

@@ -37,7 +37,7 @@ class PostsDao {
     return createdPost[0].header;
   }
 
-  async update(post: IBlogPostDb): Promise<IBlogPostDb> {
+  async update(post: Omit<IBlogPostDb, 'created_at'>): Promise<IBlogPostDb> {
     const updatedPost = await db(this.#tableName)
       .where({ code: post.code })
       .update(post)

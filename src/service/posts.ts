@@ -25,8 +25,11 @@ class PostsService {
     return postName;
   }
 
-  async update(post: IBlogPost): Promise<IBlogPost> {
-    const postDb = objectToDbObject<IBlogPost, IBlogPostDb>(post, postMapping);
+  async update(post: Omit<IBlogPost, 'createdAt'>): Promise<IBlogPost> {
+    const postDb = objectToDbObject<
+      typeof post,
+      Omit<IBlogPostDb, 'created_at'>
+    >(post, postMapping);
 
     const updatedPostDb = await postsDao.update(postDb);
 
