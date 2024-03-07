@@ -1,4 +1,4 @@
-import { IPlayerExtended } from 'types/player';
+import { IPlayerBase, IPlayerExtended } from 'types/player';
 
 export const getMetrixDataByNumber = async (metrixNumber?: number | null) => {
   const returnValue: {
@@ -101,4 +101,51 @@ export const getTelegramLoginByRdgaNumber = async (
     json.result[0]?.IM.find((value) => value.VALUE_TYPE === 'TELEGRAM')
       ?.VALUE ?? null
   );
+};
+
+export const getPlayerDataByRdgaNumber = async (
+  rdgaNumber: number,
+): Promise<IPlayerBase> => {
+  const result = await fetch(
+    `${bitrixUrl}/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=${rdgaNumber}`,
+  );
+
+  if (!result.ok) {
+    const text = await result.text();
+    throw new Error(`Bitrix error: ${text}`);
+  }
+
+  const json = (await result.json()) as {
+    result: {
+      NAME: string;
+      LAST_NAME: string;
+      ADDRESS_CITY: string;
+      UF_CRM_CONTACT_1705326873362: string;
+    }[];
+    total: number;
+  };
+
+  if (json.total !== 1) {
+    throw new Error(`Bitrix error: more or less than 1 contact found`);
+  }
+
+  const {
+    NAME,
+    LAST_NAME,
+    ADDRESS_CITY,
+    UF_CRM_CONTACT_1705326873362: metrixNumber,
+  } = json.result[0];
+
+  return {
+    name: NAME,
+    surname: LAST_NAME,
+    rdgaNumber,
+    town: ADDRESS_CITY,
+    metrixNumber: metrixNumber ? Number(metrixNumber) : null,
+    pdgaNumber: null,
+    sportsCategory: null,
+    rdgaRating: 0,
+    rdgaRatingChange: 0,
+    activeTo: '',
+  };
 };

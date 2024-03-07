@@ -9,7 +9,6 @@ export interface IPlayerBase {
   town: string | null;
   pdgaNumber: number | null;
   metrixNumber: number | null;
-  priority: number;
   activeTo: string;
   sportsCategory: SportsCategory | null;
 }

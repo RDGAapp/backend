@@ -22,7 +22,6 @@ export const playerSchema = z.strictObject({
   town: townSchema.nullable(),
   pdgaNumber: z.number().min(1).nullable(),
   metrixNumber: z.number().min(1).nullable(),
-  priority: z.number(),
   activeTo: z.string().datetime(),
   sportsCategory: z.enum(validSportsCategory).nullable(),
 });

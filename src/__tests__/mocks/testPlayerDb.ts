@@ -9,7 +9,6 @@ const mockPlayerDb: IPlayerDb = {
   town: 'Somewhere',
   pdga_number: 1,
   metrix_number: 1,
-  priority: 0,
   active_to: new Date(
     `${new Date().getFullYear()}-01-01T00:00:00.000Z`,
   ).toISOString(),

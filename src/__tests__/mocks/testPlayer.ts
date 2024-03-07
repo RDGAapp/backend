@@ -9,7 +9,6 @@ const testPlayer: IPlayerBase = {
   town: 'Somewhere',
   pdgaNumber: 1,
   metrixNumber: 1,
-  priority: 0,
   activeTo: new Date(
     `${new Date().getFullYear()}-01-01T00:00:00.000Z`,
   ).toISOString(),

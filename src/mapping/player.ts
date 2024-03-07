@@ -7,7 +7,6 @@ export default {
   town: 'town',
   pdgaNumber: 'pdga_number',
   metrixNumber: 'metrix_number',
-  priority: 'priority',
   activeTo: 'active_to',
   sportsCategory: 'sports_category',
 } as const;

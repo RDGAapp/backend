@@ -21,8 +21,7 @@ Content-Type: application/json
   "rdgaRatingChange": 0,
   "town": "Годрикова Впадина",
   "pdgaNumber": 1,
-  "metrixNumber": 1,
-  "priority": 0
+  "metrixNumber": 1
 }
 
 ### Update player
@@ -36,8 +35,7 @@ Content-Type: application/json
   "rdgaRatingChange": 0,
   "town": "Годрикова Впадина",
   "pdgaNumber": 1,
-  "metrixNumber": 1,
-  "priority": 1
+  "metrixNumber": 1
 }
 
 ### Delete player
