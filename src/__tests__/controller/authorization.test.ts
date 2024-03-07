@@ -259,7 +259,7 @@ describe('Authorization Controller', () => {
         authorization_hash:
           '8f6db6edb9965f49a0d3ff6dd62433afb90ff3f2081397035e3b03f84069d939',
       },
-    } as Request;
+    } as unknown as Request;
 
     test('should response 200', async () => {
       (authorizationService.checkAuthData as jest.Mock).mockReturnValueOnce({
@@ -285,7 +285,7 @@ describe('Authorization Controller', () => {
         {
           ...request,
           cookies: { hash: request.cookies.authorization_hash },
-        } as Request,
+        } as unknown as Request,
         response,
       );
 
@@ -302,7 +302,7 @@ describe('Authorization Controller', () => {
         {
           ...request,
           cookies: { rdga_number: request.cookies.rdga_number },
-        } as Request,
+        } as unknown as Request,
         response,
       );
 
@@ -319,7 +319,7 @@ describe('Authorization Controller', () => {
         {
           ...request,
           cookies: { hash: request.cookies.hash, rdga_number: 'string value' },
-        } as Request,
+        } as unknown as Request,
         response,
       );
 
