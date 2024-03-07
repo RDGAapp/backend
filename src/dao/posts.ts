@@ -13,10 +13,16 @@ class PostsDao {
 
   async getAll({
     pageNumber,
+    fromDateTime,
   }: {
     pageNumber: number;
+    fromDateTime?: string;
   }): Promise<IWithPagination<IBlogPost[]>> {
-    const query = db(this.#tableName);
+    let query = db(this.#tableName);
+    if (fromDateTime) {
+      query = query.where({ created_at: fromDateTime });
+    }
+
     const results = query
       .select(postMapping)
       .orderBy('created_at', 'desc')

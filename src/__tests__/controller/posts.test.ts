@@ -48,6 +48,28 @@ describe('Posts Controller', () => {
       expect(response.json).toHaveBeenCalledWith([]);
     });
 
+    test('should pass town', async () => {
+      (postsService.getAll as jest.Mock).mockReturnValueOnce([]);
+
+      await postsController.getAll(
+        {
+          ...request,
+          query: { from: new Date().toISOString() },
+        } as unknown as Request,
+        response,
+      );
+
+      expect(postsService.getAll).toHaveBeenCalledTimes(1);
+      expect(postsService.getAll).toHaveBeenCalledWith({
+        pageNumber: 1,
+        fromDateTime: '2020-01-02T00:00:00.000Z',
+      });
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith([]);
+    });
+
     test('should handle service throw with 500', async () => {
       (postsService.getAll as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');

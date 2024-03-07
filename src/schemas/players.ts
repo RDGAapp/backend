@@ -1,5 +1,6 @@
 import SportsCategory from 'enums/SportsCategory';
 import { z } from 'zod';
+import { townSchema } from './common';
 
 const validSportsCategory = [
   SportsCategory.Master,
@@ -18,7 +19,7 @@ export const playerSchema = z.strictObject({
   rdgaNumber: z.number().min(1),
   rdgaRating: z.number().nonnegative(),
   rdgaRatingChange: z.number(),
-  town: z.string().nullable(),
+  town: townSchema.nullable(),
   pdgaNumber: z.number().min(1).nullable(),
   metrixNumber: z.number().min(1).nullable(),
   priority: z.number(),

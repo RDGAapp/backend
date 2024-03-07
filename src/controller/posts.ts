@@ -6,9 +6,10 @@ import { postPutSchema, postSchema } from 'schemas';
 class PostsController {
   async getAll(request: Request, response: Response) {
     const pageNumber = Number(request.query.page) || 1;
+    const fromDateTime = request.query.from?.toString();
 
     try {
-      const posts = await postsService.getAll({ pageNumber });
+      const posts = await postsService.getAll({ pageNumber, fromDateTime });
 
       return response.status(200).json(posts);
     } catch (error) {

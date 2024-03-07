@@ -13,7 +13,7 @@ class PlayerController {
   async getAll(request: Request, response: Response) {
     const pageNumber = Number(request.query.page) || 1;
     const surname = (request.query.surname as string) || '';
-    const town = (request.query.town as string) || '';
+    const town = request.query.town?.toString() || '';
     const onlyActive = request.query.onlyActive === 'true' ? true : false;
 
     try {

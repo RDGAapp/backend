@@ -1,5 +1,6 @@
 import TournamentType from 'enums/TournamentType';
 import { z } from 'zod';
+import { townSchema } from './common';
 
 const validTournamentTypes = [
   TournamentType.AllStar,
@@ -14,7 +15,7 @@ const validTournamentTypes = [
 export const tournamentSchema = z.strictObject({
   code: z.string(),
   name: z.string(),
-  town: z.string(),
+  town: townSchema,
   startDate: z.string().datetime(),
   endDate: z.string().datetime(),
   tournamentType: z.enum(validTournamentTypes),

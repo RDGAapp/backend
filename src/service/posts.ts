@@ -9,10 +9,12 @@ import { IBlogPostDb } from 'types/postDb';
 class PostsService {
   async getAll({
     pageNumber,
+    fromDateTime,
   }: {
     pageNumber: number;
+    fromDateTime?: string;
   }): Promise<IWithPagination<IBlogPost[]>> {
-    const posts = await postsDao.getAll({ pageNumber });
+    const posts = await postsDao.getAll({ pageNumber, fromDateTime });
 
     return posts;
   }

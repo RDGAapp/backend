@@ -28,6 +28,22 @@ describe('Posts Service', () => {
       expect(postsDao.getAll).toHaveBeenCalledTimes(1);
       expect(postsDao.getAll).toHaveBeenCalledWith({ pageNumber: 3 });
     });
+
+    test('should pass from', async () => {
+      (postsDao.getAll as jest.Mock).mockReturnValueOnce([]);
+
+      const posts = await postsService.getAll({
+        pageNumber: 3,
+        fromDateTime: 'testDateTime',
+      });
+
+      expect(posts).toEqual([]);
+      expect(postsDao.getAll).toHaveBeenCalledTimes(1);
+      expect(postsDao.getAll).toHaveBeenCalledWith({
+        pageNumber: 3,
+        fromDateTime: 'testDateTime',
+      });
+    });
   });
 
   describe('create', () => {

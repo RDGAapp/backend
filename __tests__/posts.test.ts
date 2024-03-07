@@ -116,6 +116,41 @@ describe('Posts endpoints', () => {
         },
       });
     });
+
+    test('should filter by createdAt', async () => {
+      const postToCreate = testPostWithoutCreatedAt;
+      jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
+      await request(app).post('/posts').send(postToCreate);
+      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+      await request(app)
+        .post('/posts')
+        .send({ ...postToCreate, code: 'test2' });
+
+      const response = await request(app).get(
+        '/posts?from=2020-01-01T00:00:00.000Z',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        data: [
+          {
+            ...testPost,
+            code: 'test2',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 1,
+          perPage: 10,
+          to: 1,
+          total: 1,
+          nextPage: null,
+          prevPage: null,
+        },
+      });
+    });
   });
 
   describe('POST /posts', () => {

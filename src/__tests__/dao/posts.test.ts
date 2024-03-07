@@ -26,6 +26,24 @@ describe('Posts Dao', () => {
         isLengthAware: true,
       });
     });
+
+    test('should use select from table posts with from', async () => {
+      await postDao.getAll({ pageNumber: 1, fromDateTime: 'testDateTime' });
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('posts');
+      expect(db().where).toHaveBeenCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith({ created_at: 'testDateTime' });
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(postMapping);
+      expect(db().orderBy).toHaveBeenCalledTimes(1);
+      expect(db().orderBy).toHaveBeenCalledWith('created_at', 'desc');
+      expect(db().paginate).toHaveBeenCalledTimes(1);
+      expect(db().paginate).toHaveBeenCalledWith({
+        perPage: 10,
+        currentPage: 1,
+        isLengthAware: true,
+      });
+    });
   });
 
   describe('create', () => {
