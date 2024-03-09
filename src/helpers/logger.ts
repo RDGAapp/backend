@@ -8,7 +8,7 @@ const pinoPrettyTransport = pino.transport({
         colorize: false,
         colorizeObjects: false,
         translateTime: 'yyyy-mm-dd HH:MM:ss.l',
-        destination: './logs/pino-pretty.log',
+        destination: './logs/rdga-backend.log',
         mkdir: true,
       },
     },
