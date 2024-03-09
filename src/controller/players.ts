@@ -8,6 +8,7 @@ import {
 } from 'schemas';
 import { response500, response400Schema } from 'helpers/responses';
 import { IPlayer, IPlayerBase } from 'types/player';
+import logger from 'helpers/logger';
 
 class PlayerController {
   async getAll(request: Request, response: Response) {
@@ -136,6 +137,7 @@ class PlayerController {
   }
 
   async multipleUpdateRdgaRating(request: Request, response: Response) {
+    logger.info('multipleUpdateRdgaRating request acquired');
     const result = multipleRdgaRatingUpdateSchema.safeParse(request.body);
     if (!result.success) {
       return response400Schema(response, result.error);

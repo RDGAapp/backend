@@ -7,3 +7,6 @@
 jest.config.ts
 README.md
 __tests__
+src/__tests__
+rest-client
+logs
