@@ -118,9 +118,9 @@ export const getPlayerDataFromBitrix = async (
   const json = (await result.json()) as {
     result: {
       NAME: string;
-      LAST_NAME: string;
-      ADDRESS: string;
-      UF_CRM_CONTACT_1705326873362: string;
+      LAST_NAME: string | null;
+      ADDRESS: string | null;
+      UF_CRM_CONTACT_1705326873362: string | null;
     }[];
     total: number;
   };
@@ -129,19 +129,17 @@ export const getPlayerDataFromBitrix = async (
     throw new Error(`Bitrix error: more or less than 1 contact found`);
   }
 
-  const {
-    NAME,
-    LAST_NAME,
-    ADDRESS,
-    UF_CRM_CONTACT_1705326873362: metrixNumber,
-  } = json.result[0];
+  const { NAME, LAST_NAME, ADDRESS, UF_CRM_CONTACT_1705326873362 } =
+    json.result[0];
+
+  const metrixNumber = Number(UF_CRM_CONTACT_1705326873362);
 
   return {
-    name: NAME,
-    surname: LAST_NAME,
+    name: NAME.trim(),
+    surname: (LAST_NAME ?? '').trim(),
     rdgaNumber,
-    town: ADDRESS,
-    metrixNumber: metrixNumber ? Number(metrixNumber) : null,
+    town: (ADDRESS ?? '').trim(),
+    metrixNumber: isNaN(metrixNumber) ? null : metrixNumber,
     pdgaNumber: null,
     sportsCategory: null,
     rdgaRating: 0,
