@@ -103,7 +103,7 @@ export const getTelegramLoginByRdgaNumber = async (
   );
 };
 
-export const getPlayerDataByRdgaNumber = async (
+export const getPlayerDataFromBitrix = async (
   rdgaNumber: number,
 ): Promise<IPlayerBase> => {
   const result = await fetch(
@@ -119,7 +119,7 @@ export const getPlayerDataByRdgaNumber = async (
     result: {
       NAME: string;
       LAST_NAME: string;
-      ADDRESS_CITY: string;
+      ADDRESS: string;
       UF_CRM_CONTACT_1705326873362: string;
     }[];
     total: number;
@@ -132,7 +132,7 @@ export const getPlayerDataByRdgaNumber = async (
   const {
     NAME,
     LAST_NAME,
-    ADDRESS_CITY,
+    ADDRESS,
     UF_CRM_CONTACT_1705326873362: metrixNumber,
   } = json.result[0];
 
@@ -140,7 +140,7 @@ export const getPlayerDataByRdgaNumber = async (
     name: NAME,
     surname: LAST_NAME,
     rdgaNumber,
-    town: ADDRESS_CITY,
+    town: ADDRESS,
     metrixNumber: metrixNumber ? Number(metrixNumber) : null,
     pdgaNumber: null,
     sportsCategory: null,

@@ -9,7 +9,7 @@ import {
 import { response500, response400Schema } from 'helpers/responses';
 import { IPlayer, IPlayerBase } from 'types/player';
 import logger from 'helpers/logger';
-
+import { getPlayerDataFromBitrix } from 'helpers/externalApiHelpers';
 class PlayerController {
   async getAll(request: Request, response: Response) {
     const pageNumber = Number(request.query.page) || 1;
@@ -163,6 +163,53 @@ class PlayerController {
     );
 
     return response.status(200).json({ updatedPlayers, errors });
+  }
+
+  async updatePlayerFromBitrix(request: Request, response: Response) {
+    const rdgaNumber = Number(request.query.rdgaNumber);
+    if (isNaN(rdgaNumber)) {
+      return response500(response, new Error('Invalid rdgaNumber'));
+    }
+
+    try {
+      const playerFromDb = await playerService.getByRdgaNumber(rdgaNumber);
+      const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
+
+      const newPlayer: IPlayerBase = {
+        rdgaNumber,
+        name: playerFromDb?.name ?? playerFromBitrix.name,
+        surname: playerFromDb?.surname ?? playerFromBitrix.surname,
+        rdgaRating: playerFromDb?.rdgaRating ?? playerFromBitrix.rdgaRating,
+        rdgaRatingChange:
+          playerFromDb?.rdgaRatingChange ?? playerFromBitrix.rdgaRatingChange,
+        town: playerFromDb?.town ?? playerFromBitrix.town,
+        pdgaNumber: playerFromDb?.pdgaNumber ?? playerFromBitrix.pdgaNumber,
+        metrixNumber:
+          playerFromDb?.metrixNumber ?? playerFromBitrix.metrixNumber,
+        activeTo: playerFromDb?.activeTo ?? playerFromBitrix.activeTo,
+        sportsCategory:
+          playerFromDb?.sportsCategory ?? playerFromBitrix.sportsCategory,
+      };
+
+      const player = await (playerFromDb
+        ? playerService.update(newPlayer)
+        : playerService.create(newPlayer));
+
+      if (!player) {
+        return response500(
+          response,
+          new Error('Player was not created or found'),
+        );
+      }
+
+      const updatedPlayer = await playerService.activatePlayerForCurrentYear(
+        rdgaNumber,
+      );
+
+      return response.status(200).json(updatedPlayer);
+    } catch (error) {
+      return response500(response, error);
+    }
   }
 }
 
