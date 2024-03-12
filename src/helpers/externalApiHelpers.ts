@@ -146,6 +146,6 @@ export const getPlayerDataFromBitrix = async (
     sportsCategory: null,
     rdgaRating: 0,
     rdgaRatingChange: 0,
-    activeTo: '',
+    activeTo: new Date().toISOString(),
   };
 };

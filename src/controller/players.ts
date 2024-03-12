@@ -174,41 +174,13 @@ class PlayerController {
     try {
       const playerFromDb = await playerService.getByRdgaNumber(rdgaNumber);
       const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
-      logger.info(`Update from Bitrix. RDGA number received: ${rdgaNumber}`);
 
-      const newPlayer: IPlayerBase = {
-        rdgaNumber,
-        name: playerFromDb?.name ?? playerFromBitrix.name,
-        surname: playerFromDb?.surname ?? playerFromBitrix.surname,
-        rdgaRating: playerFromDb?.rdgaRating ?? playerFromBitrix.rdgaRating,
-        rdgaRatingChange:
-          playerFromDb?.rdgaRatingChange ?? playerFromBitrix.rdgaRatingChange,
-        town: playerFromDb?.town ?? playerFromBitrix.town,
-        pdgaNumber: playerFromDb?.pdgaNumber ?? playerFromBitrix.pdgaNumber,
-        metrixNumber:
-          playerFromDb?.metrixNumber ?? playerFromBitrix.metrixNumber,
-        activeTo: playerFromDb?.activeTo ?? playerFromBitrix.activeTo,
-        sportsCategory:
-          playerFromDb?.sportsCategory ?? playerFromBitrix.sportsCategory,
-      };
+      if (!playerFromDb) {
+        const newPlayerNumber = await playerService.create(playerFromBitrix);
 
-      logger.info(
-        `Update from Bitrix. Player combined: ${JSON.stringify(
-          playerFromBitrix,
-          null,
-          2,
-        )}`,
-      );
-
-      const player = await (playerFromDb
-        ? playerService.update(newPlayer)
-        : playerService.create(newPlayer));
-
-      if (!player) {
-        return response500(
-          response,
-          new Error('Player was not created or found'),
-        );
+        if (!newPlayerNumber) {
+          return response500(response, new Error('Player was not created'));
+        }
       }
 
       const updatedPlayer = await playerService.activatePlayerForCurrentYear(
