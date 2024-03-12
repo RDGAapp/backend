@@ -174,6 +174,7 @@ class PlayerController {
     try {
       const playerFromDb = await playerService.getByRdgaNumber(rdgaNumber);
       const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
+      logger.info(`Update from Bitrix. RDGA number received: ${rdgaNumber}`);
 
       const newPlayer: IPlayerBase = {
         rdgaNumber,
@@ -190,6 +191,14 @@ class PlayerController {
         sportsCategory:
           playerFromDb?.sportsCategory ?? playerFromBitrix.sportsCategory,
       };
+
+      logger.info(
+        `Update from Bitrix. Player combined: ${JSON.stringify(
+          playerFromBitrix,
+          null,
+          2,
+        )}`,
+      );
 
       const player = await (playerFromDb
         ? playerService.update(newPlayer)
