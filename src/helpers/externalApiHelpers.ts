@@ -1,4 +1,5 @@
 import { IPlayerBase, IPlayerExtended } from 'types/player';
+import logger from './logger';
 
 export const getMetrixDataByNumber = async (metrixNumber?: number | null) => {
   const returnValue: {
@@ -133,6 +134,11 @@ export const getPlayerDataFromBitrix = async (
     json.result[0];
 
   const metrixNumber = Number(UF_CRM_CONTACT_1705326873362);
+  logger.info(
+    'Player from bitrix: ',
+    UF_CRM_CONTACT_1705326873362,
+    metrixNumber,
+  );
 
   return {
     name: NAME.trim(),

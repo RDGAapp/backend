@@ -176,6 +176,7 @@ class PlayerController {
       const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
 
       if (!playerFromDb) {
+        logger.info('Player from bitrix to create:', playerFromBitrix);
         const newPlayerNumber = await playerService.create(playerFromBitrix);
 
         if (!newPlayerNumber) {
