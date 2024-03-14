@@ -9,7 +9,6 @@ import {
   getMetrixDataByNumber,
   getPdgaDataByNumber,
 } from 'helpers/externalApiHelpers';
-import logger from 'helpers/logger';
 class PlayerService {
   async checkIfPlayerExist(
     player: Partial<IPlayerBase>,
@@ -72,7 +71,6 @@ class PlayerService {
       player,
       playerMapping,
     );
-    logger.info('Creating player: ', playerDb)
 
     const playerRdgaNumber = await playerDao.create(playerDb);
 

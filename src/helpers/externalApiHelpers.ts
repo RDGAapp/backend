@@ -1,5 +1,4 @@
 import { IPlayerBase, IPlayerExtended } from 'types/player';
-import logger from './logger';
 
 export const getMetrixDataByNumber = async (metrixNumber?: number | null) => {
   const returnValue: {
@@ -107,9 +106,15 @@ export const getTelegramLoginByRdgaNumber = async (
 export const getPlayerDataFromBitrix = async (
   rdgaNumber: number,
 ): Promise<IPlayerBase> => {
-  const result = await fetch(
-    `${bitrixUrl}/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=${rdgaNumber}`,
-  );
+  const query = new URLSearchParams();
+  query.append('FILTER[UF_CRM_CONTACT_1705326811592]', rdgaNumber.toString());
+  query.append('SELECT[]', 'NAME');
+  query.append('SELECT[]', 'LAST_NAME');
+  query.append('SELECT[]', 'ADDRESS');
+  // metrix_number
+  query.append('SELECT[]', 'UF_CRM_CONTACT_1705326873362');
+
+  const result = await fetch(`${bitrixUrl}/crm.contact.list.json?${query}`);
 
   if (!result.ok) {
     const text = await result.text();
@@ -134,11 +139,6 @@ export const getPlayerDataFromBitrix = async (
     json.result[0];
 
   const metrixNumber = Number(UF_CRM_CONTACT_1705326873362);
-  logger.info(
-    'Player from bitrix: ',
-    UF_CRM_CONTACT_1705326873362,
-    metrixNumber,
-  );
 
   return {
     name: NAME.trim(),
