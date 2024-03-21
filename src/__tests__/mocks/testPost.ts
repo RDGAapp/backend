@@ -1,4 +1,4 @@
-import { IBlogPost } from 'types/post';
+import { IBlogPostBase } from 'types/post';
 
 export default {
   code: 'site_update_1',
@@ -30,4 +30,5 @@ export default {
     <li class="p1">В случае, если пункт "Против всех" занимает 1-ое место, то выборы признаются несостоявшимися.</li>
     </ol>
   `,
-} as IBlogPost;
+  authorRdgaNumber: 1,
+} as IBlogPostBase;

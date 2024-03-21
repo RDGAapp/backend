@@ -4,4 +4,5 @@ export default {
   text: 'text',
   author: 'author',
   createdAt: 'created_at',
+  authorRdgaNumber: 'author_rdga_number',
 } as const;

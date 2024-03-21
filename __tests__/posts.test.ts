@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../src/app';
 import db from '../src/database';
 import testPost from '../src/__tests__/mocks/testPost';
+import testPlayer from '../src/__tests__/mocks/testPlayer';
 
 describe('Posts endpoints', () => {
   beforeEach(async () => {
@@ -25,12 +26,21 @@ describe('Posts endpoints', () => {
     header: testPost.header,
     text: testPost.text,
     author: testPost.author,
+    authorRdgaNumber: testPlayer.rdgaNumber,
   };
 
   const testPostWithoutCode = {
     header: testPost.header,
     text: testPost.text,
     author: testPost.author,
+    authorRdgaNumber: testPlayer.rdgaNumber,
+  };
+
+  const responseTestPost = {
+    ...testPost,
+    authorAvatarUrl: null,
+    authorName: 'Test',
+    authorSurname: 'User',
   };
 
   describe('GET /posts', () => {
@@ -55,6 +65,7 @@ describe('Posts endpoints', () => {
 
     test('should return 200 with someData', async () => {
       const postToCreate = testPostWithoutCreatedAt;
+      await request(app).post('/players').send(testPlayer);
       await request(app).post('/posts').send(postToCreate);
 
       const response = await request(app).get('/posts');
@@ -63,7 +74,7 @@ describe('Posts endpoints', () => {
       expect(response.body).toEqual({
         data: [
           {
-            ...testPost,
+            ...responseTestPost,
             createdAt: new Date().toISOString(),
           },
         ],
@@ -82,6 +93,7 @@ describe('Posts endpoints', () => {
 
     test('should return 200 with sorted values by createdAt', async () => {
       const postToCreate = testPostWithoutCreatedAt;
+      await request(app).post('/players').send(testPlayer);
       jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
       await request(app).post('/posts').send(postToCreate);
       jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
@@ -95,12 +107,12 @@ describe('Posts endpoints', () => {
       expect(response.body).toEqual({
         data: [
           {
-            ...testPost,
+            ...responseTestPost,
             code: 'test2',
             createdAt: new Date().toISOString(),
           },
           {
-            ...testPost,
+            ...responseTestPost,
             createdAt: new Date('2010-01-01').toISOString(),
           },
         ],
@@ -119,6 +131,7 @@ describe('Posts endpoints', () => {
 
     test('should filter by createdAt', async () => {
       const postToCreate = testPostWithoutCreatedAt;
+      await request(app).post('/players').send(testPlayer);
       jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
       await request(app).post('/posts').send(postToCreate);
       jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
@@ -134,7 +147,7 @@ describe('Posts endpoints', () => {
       expect(response.body).toEqual({
         data: [
           {
-            ...testPost,
+            ...responseTestPost,
             code: 'test2',
             createdAt: new Date().toISOString(),
           },
@@ -155,6 +168,7 @@ describe('Posts endpoints', () => {
 
   describe('POST /posts', () => {
     test('should return 201 and create post', async () => {
+      await request(app).post('/players').send(testPlayer);
       const response = await request(app)
         .post('/posts')
         .send(testPostWithoutCreatedAt);
@@ -166,7 +180,7 @@ describe('Posts endpoints', () => {
       expect(getAllResponse.body).toEqual({
         data: [
           {
-            ...testPost,
+            ...responseTestPost,
             createdAt: new Date().toISOString(),
           },
         ],
@@ -184,6 +198,7 @@ describe('Posts endpoints', () => {
     });
 
     test('should return 500 if tournament already exists', async () => {
+      await request(app).post('/players').send(testPlayer);
       await request(app).post('/posts').send(testPostWithoutCreatedAt);
       const response = await request(app)
         .post('/posts')
@@ -191,7 +206,7 @@ describe('Posts endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Something\'s wrong: error: insert into "posts" ("author", "code", "created_at", "header", "text") values ($1, $2, $3, $4, $5) returning "header" - duplicate key value violates unique constraint "posts_pkey"',
+        'Something\'s wrong: error: insert into "posts" ("author", "author_rdga_number", "code", "created_at", "header", "text") values ($1, $2, $3, $4, $5, $6) returning "header" - duplicate key value violates unique constraint "posts_pkey"',
       );
     });
 
@@ -209,6 +224,7 @@ describe('Posts endpoints', () => {
 
   describe('PUT /posts/:postCode', () => {
     beforeEach(async () => {
+      await request(app).post('/players').send(testPlayer);
       await request(app).post('/posts').send(testPostWithoutCreatedAt);
     });
 
@@ -257,12 +273,13 @@ describe('Posts endpoints', () => {
 
   describe('GET /posts/:postCode', () => {
     test('should return 200 and get tournament', async () => {
+      await request(app).post('/players').send(testPlayer);
       await request(app).post('/posts').send(testPostWithoutCreatedAt);
       const response = await request(app).get('/posts/site_update_1');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        ...testPostWithoutCreatedAt,
+        ...responseTestPost,
         createdAt: new Date().toISOString(),
       });
     });

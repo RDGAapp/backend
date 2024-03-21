@@ -6,9 +6,13 @@ import { IBlogPostDb } from 'types/postDb';
 
 class PostsDao {
   #tableName;
+  #playersTableName;
+  #authTableName;
 
   constructor() {
     this.#tableName = 'posts';
+    this.#playersTableName = 'players';
+    this.#authTableName = 'auth_data';
   }
 
   async getAll({
@@ -18,13 +22,29 @@ class PostsDao {
     pageNumber: number;
     fromDateTime?: string;
   }): Promise<IWithPagination<IBlogPost[]>> {
-    let query = db(this.#tableName);
+    let query = db(this.#tableName)
+      .leftJoin(
+        this.#playersTableName,
+        `${this.#tableName}.author_rdga_number`,
+        `${this.#playersTableName}.rdga_number`,
+      )
+      .leftJoin(
+        this.#authTableName,
+        `${this.#tableName}.author_rdga_number`,
+        `${this.#authTableName}.rdga_number`,
+      );
+
     if (fromDateTime) {
-      query = query.where({ created_at: fromDateTime });
+      query = query.where({ [`${this.#tableName}.created_at`]: fromDateTime });
     }
 
     const results = query
-      .select(postMapping)
+      .select({
+        ...postMapping,
+        authorName: 'name',
+        authorSurname: 'surname',
+        authorAvatarUrl: 'telegram_photo_url',
+      })
       .orderBy('created_at', 'desc')
       .paginate({
         perPage: 10,
@@ -57,7 +77,24 @@ class PostsDao {
   }
 
   async getByCode(code: string): Promise<IBlogPost> {
-    const post = await db(this.#tableName).select(postMapping).where({ code });
+    const post = await db(this.#tableName)
+      .leftJoin(
+        this.#playersTableName,
+        `${this.#tableName}.author_rdga_number`,
+        `${this.#playersTableName}.rdga_number`,
+      )
+      .leftJoin(
+        this.#authTableName,
+        `${this.#tableName}.author_rdga_number`,
+        `${this.#authTableName}.rdga_number`,
+      )
+      .select({
+        ...postMapping,
+        authorName: 'name',
+        authorSurname: 'surname',
+        authorAvatarUrl: 'telegram_photo_url',
+      })
+      .where({ code });
 
     return post[0];
   }

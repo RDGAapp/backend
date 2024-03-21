@@ -12,12 +12,14 @@ describe('Posts Controller', () => {
     header: testPost.header,
     text: testPost.text,
     author: testPost.author,
+    authorRdgaNumber: testPost.authorRdgaNumber,
   };
 
   const testPostWithoutCode = {
     header: testPost.header,
     text: testPost.text,
     author: testPost.author,
+    authorRdgaNumber: testPost.authorRdgaNumber,
   };
 
   afterEach(() => {

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { playerSchema } from './players';
 
 export const postSchema = z
   .strictObject({
@@ -6,6 +7,7 @@ export const postSchema = z
     author: z.string(),
     header: z.string(),
     text: z.string(),
+    authorRdgaNumber: playerSchema.shape.rdgaNumber,
   });
 
 export const postPutSchema = postSchema.omit({ code: true });

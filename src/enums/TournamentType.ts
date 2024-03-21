@@ -4,12 +4,17 @@
 // * DON'T DELETE TYPES, ONLY ADD (migrations depends on them, so it can break old ones)
 enum TournamentType {
   RussianChampionship = 'ЧР',
-  National = 'национальный тур',
   Pro = 'про тур',
-  AllStar = 'МВЗ',
-  Regional = 'региональный',
   Federal = 'федеральный',
   League = 'лига',
+
+  AllStar = 'МВЗ',
+
+  // @deprecated renamed to Federal
+  Regional = 'региональный',
+  // @deprecated renamed to Pro
+  National = 'национальный тур',
+  // @deprecated wasn't used
   BagTag = 'bag-tag',
 }
 

@@ -4,4 +4,5 @@ export interface IBlogPostDb {
   header: string;
   text: string;
   created_at: string;
+  author_rdga_number: number;
 }

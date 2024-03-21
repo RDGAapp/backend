@@ -3,7 +3,7 @@ import dbObjectToObject from 'helpers/dbObjectToObject';
 import objectToDbObject from 'helpers/objectToDbObject';
 import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
-import { IBlogPost } from 'types/post';
+import { IBlogPost, IBlogPostBase } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 
 class PostsService {
@@ -19,15 +19,18 @@ class PostsService {
     return posts;
   }
 
-  async create(post: IBlogPost): Promise<string> {
-    const postDb = objectToDbObject<IBlogPost, IBlogPostDb>(post, postMapping);
+  async create(post: IBlogPostBase): Promise<string> {
+    const postDb = objectToDbObject<IBlogPostBase, IBlogPostDb>(
+      post,
+      postMapping,
+    );
 
     const postName = await postsDao.create(postDb);
 
     return postName;
   }
 
-  async update(post: Omit<IBlogPost, 'createdAt'>): Promise<IBlogPost> {
+  async update(post: Omit<IBlogPostBase, 'createdAt'>): Promise<IBlogPostBase> {
     const postDb = objectToDbObject<
       typeof post,
       Omit<IBlogPostDb, 'created_at'>
@@ -35,7 +38,7 @@ class PostsService {
 
     const updatedPostDb = await postsDao.update(postDb);
 
-    const updatedPost = dbObjectToObject<IBlogPostDb, IBlogPost>(
+    const updatedPost = dbObjectToObject<IBlogPostDb, IBlogPostBase>(
       updatedPostDb,
       postMapping,
     );
