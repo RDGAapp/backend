@@ -1,6 +1,6 @@
 export interface IBlogPostDb {
   code: string;
-  author: string;
+  author: string | null;
   header: string;
   text: string;
   created_at: string;
