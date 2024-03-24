@@ -140,7 +140,7 @@ describe('Posts endpoints', () => {
         .send({ ...postToCreate, code: 'test2' });
 
       const response = await request(app).get(
-        '/posts?from=2020-01-01T00:00:00.000Z',
+        '/posts?from=2010-01-01T00:00:00.000Z',
       );
 
       expect(response.status).toBe(200);
@@ -148,8 +148,7 @@ describe('Posts endpoints', () => {
         data: [
           {
             ...responseTestPost,
-            code: 'test2',
-            createdAt: new Date().toISOString(),
+            createdAt: new Date('2010-01-01').toISOString(),
           },
         ],
         pagination: {

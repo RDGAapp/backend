@@ -63,9 +63,11 @@ describe('Posts Dao', () => {
         'auth_data.rdga_number',
       );
       expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({
-        'posts.created_at': 'testDateTime',
-      });
+      expect(db().where).toHaveBeenCalledWith(
+        'posts.created_at',
+        '<=',
+        'testDateTime',
+      );
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({
         ...postMapping,
