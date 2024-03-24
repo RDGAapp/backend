@@ -5,3 +5,4 @@ rest-client/prod.http
 .DS_Store
 .vscode
 logs
+.env.local

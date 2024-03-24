@@ -35,7 +35,7 @@ class PostsDao {
       );
 
     if (fromDateTime) {
-      query = query.where({ [`${this.#tableName}.created_at`]: fromDateTime });
+      query = query.where(`${this.#tableName}.created_at`, '<=', fromDateTime);
     }
 
     const results = query
