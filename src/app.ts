@@ -11,7 +11,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'production' ? 'https://rdga.ru' : '*',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://rdga.ru'
+        : 'http://192.168.50.164:3000',
+    credentials: true,
   }),
 );
 app.use(rootRouter);

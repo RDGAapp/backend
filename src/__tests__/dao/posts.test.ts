@@ -15,8 +15,26 @@ describe('Posts Dao', () => {
       await postDao.getAll({ pageNumber: 1 });
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith('posts');
+      expect(db().leftJoin).toHaveBeenCalledTimes(2);
+      expect(db().leftJoin).toHaveBeenNthCalledWith(
+        1,
+        'players',
+        'posts.author_rdga_number',
+        'players.rdga_number',
+      );
+      expect(db().leftJoin).toHaveBeenNthCalledWith(
+        2,
+        'auth_data',
+        'posts.author_rdga_number',
+        'auth_data.rdga_number',
+      );
       expect(db().select).toHaveBeenCalledTimes(1);
-      expect(db().select).toHaveBeenCalledWith(postMapping);
+      expect(db().select).toHaveBeenCalledWith({
+        ...postMapping,
+        authorName: 'name',
+        authorSurname: 'surname',
+        authorAvatarUrl: 'telegram_photo_url',
+      });
       expect(db().orderBy).toHaveBeenCalledTimes(1);
       expect(db().orderBy).toHaveBeenCalledWith('created_at', 'desc');
       expect(db().paginate).toHaveBeenCalledTimes(1);
@@ -31,10 +49,32 @@ describe('Posts Dao', () => {
       await postDao.getAll({ pageNumber: 1, fromDateTime: 'testDateTime' });
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith('posts');
+      expect(db().leftJoin).toHaveBeenCalledTimes(2);
+      expect(db().leftJoin).toHaveBeenNthCalledWith(
+        1,
+        'players',
+        'posts.author_rdga_number',
+        'players.rdga_number',
+      );
+      expect(db().leftJoin).toHaveBeenNthCalledWith(
+        2,
+        'auth_data',
+        'posts.author_rdga_number',
+        'auth_data.rdga_number',
+      );
       expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({ created_at: 'testDateTime' });
+      expect(db().where).toHaveBeenCalledWith(
+        'posts.created_at',
+        '<=',
+        'testDateTime',
+      );
       expect(db().select).toHaveBeenCalledTimes(1);
-      expect(db().select).toHaveBeenCalledWith(postMapping);
+      expect(db().select).toHaveBeenCalledWith({
+        ...postMapping,
+        authorName: 'name',
+        authorSurname: 'surname',
+        authorAvatarUrl: 'telegram_photo_url',
+      });
       expect(db().orderBy).toHaveBeenCalledTimes(1);
       expect(db().orderBy).toHaveBeenCalledWith('created_at', 'desc');
       expect(db().paginate).toHaveBeenCalledTimes(1);
@@ -99,8 +139,26 @@ describe('Posts Dao', () => {
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith('posts');
+      expect(db().leftJoin).toHaveBeenCalledTimes(2);
+      expect(db().leftJoin).toHaveBeenNthCalledWith(
+        1,
+        'players',
+        'posts.author_rdga_number',
+        'players.rdga_number',
+      );
+      expect(db().leftJoin).toHaveBeenNthCalledWith(
+        2,
+        'auth_data',
+        'posts.author_rdga_number',
+        'auth_data.rdga_number',
+      );
       expect(db().select).toHaveBeenCalledTimes(1);
-      expect(db().select).toHaveBeenCalledWith(postMapping);
+      expect(db().select).toHaveBeenCalledWith({
+        ...postMapping,
+        authorName: 'name',
+        authorSurname: 'surname',
+        authorAvatarUrl: 'telegram_photo_url',
+      });
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ code: 'test' });
     });

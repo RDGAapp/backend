@@ -1,7 +1,15 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
   },
-  "exclude": ["**/*.test.*", "**/__mocks__/*", "**/__tests__/*", "rest-client/*"]
+  "exclude": [
+    "**/*.test.*",
+    "**/__mocks__/*",
+    "**/__tests__/*",
+    "rest-client/*",
+    "src/database/seeds/*"
+  ]
 }
