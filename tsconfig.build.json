@@ -10,6 +10,7 @@
     "**/__mocks__/*",
     "**/__tests__/*",
     "rest-client/*",
-    "src/database/seeds/*"
+    "src/database/seeds/*",
+    "src/knex-types.ts"
   ]
 }

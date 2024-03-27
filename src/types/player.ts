@@ -1,16 +1,16 @@
-import SportsCategory from 'enums/SportsCategory';
+import { IPlayerDb } from './playerDb';
 
 export interface IPlayerBase {
-  name: string;
-  surname: string | null;
-  rdgaNumber: number;
-  rdgaRating: number;
-  rdgaRatingChange: number;
-  town: string | null;
-  pdgaNumber: number | null;
-  metrixNumber: number | null;
-  activeTo: string;
-  sportsCategory: SportsCategory | null;
+  name: IPlayerDb['name'];
+  surname: IPlayerDb['surname'];
+  rdgaNumber: IPlayerDb['rdga_number'];
+  rdgaRating: IPlayerDb['rdga_rating'];
+  rdgaRatingChange: IPlayerDb['rdga_rating_change'];
+  town: IPlayerDb['town'];
+  pdgaNumber: IPlayerDb['pdga_number'];
+  metrixNumber: IPlayerDb['metrix_number'];
+  activeTo: IPlayerDb['active_to'];
+  sportsCategory: IPlayerDb['sports_category'];
 }
 
 export interface IPlayer extends IPlayerBase {
