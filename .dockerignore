@@ -10,3 +10,4 @@ __tests__
 src/__tests__
 rest-client
 logs
+renovate.json
