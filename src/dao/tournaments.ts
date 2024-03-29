@@ -3,12 +3,13 @@ import tournamentMapping from 'mapping/tournament';
 import { getMonday } from 'helpers/dateHelpers';
 import { ITournament } from 'types/tournament';
 import { ITournamentDb } from 'types/tournamentDb';
+import { Table } from 'types/db';
 
 class TournamentDao {
   #tableName;
 
   constructor() {
-    this.#tableName = 'tournaments';
+    this.#tableName = Table.Tournament;
   }
 
   async getAll(from: string, to: string): Promise<ITournament[]> {

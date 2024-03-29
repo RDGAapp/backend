@@ -4,7 +4,7 @@ import fetchMock from 'jest-fetch-mock';
 import app from '../src/app';
 import db from '../src/database';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
-import SportsCategory from '../src/enums/SportsCategory';
+import { SportsCategory } from '../src/types/db';
 
 fetchMock.enableMocks();
 

@@ -1,4 +1,4 @@
-import TournamentType from 'enums/TournamentType';
+import { TournamentType } from 'types/db';
 import { ITournament } from 'types/tournament';
 
 export default {

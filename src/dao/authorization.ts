@@ -2,12 +2,13 @@ import db from 'database';
 import authorizationMapping from 'mapping/authorization';
 import { IAuthData } from 'types/authData';
 import { IAuthDataDb } from 'types/authDataDb';
+import { Table } from 'types/db';
 
 class AuthorizationDao {
   #tableName;
 
   constructor() {
-    this.#tableName = 'auth_data';
+    this.#tableName = Table.AuthData;
   }
 
   async getByTelegramId(id: number): Promise<IAuthData | null> {

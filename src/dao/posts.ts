@@ -1,6 +1,7 @@
 import db from 'database';
 import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
+import { Table } from 'types/db';
 import { IBlogPost } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 
@@ -10,9 +11,9 @@ class PostsDao {
   #authTableName;
 
   constructor() {
-    this.#tableName = 'posts';
-    this.#playersTableName = 'players';
-    this.#authTableName = 'auth_data';
+    this.#tableName = Table.Post;
+    this.#playersTableName = Table.Player;
+    this.#authTableName = Table.AuthData;
   }
 
   async getAll({

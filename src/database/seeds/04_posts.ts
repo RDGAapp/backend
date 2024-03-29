@@ -1,8 +1,9 @@
 import { Knex } from 'knex';
 import { fakerRU as faker } from '@faker-js/faker';
-import { IBlogPostDb } from 'types/postDb';
+import { IBlogPostDb } from '../../types/postDb';
+import { Table } from '../../types/db';
 
-const tableName = 'posts';
+const tableName = Table.Post;
 
 const posts: IBlogPostDb[] = [];
 

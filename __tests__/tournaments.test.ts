@@ -73,7 +73,7 @@ describe('Tournaments endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Something\'s wrong: error: insert into "tournaments" ("code", "end_date", "metrix_id", "name", "start_date", "tournament_type", "town") values ($1, $2, $3, $4, $5, $6, $7) returning "name" - duplicate key value violates unique constraint "tournaments_pkey"',
+        'Something\'s wrong: error: insert into "tournament" ("code", "end_date", "metrix_id", "name", "start_date", "tournament_type", "town") values ($1, $2, $3, $4, $5, $6, $7) returning "name" - duplicate key value violates unique constraint "tournaments_pkey"',
       );
     });
 

@@ -2,7 +2,7 @@ import type { Knex } from 'knex';
 
 const roleTableName = 'roles';
 const joinTableName = 'user_roles';
-const playersTableName = 'players';
+const playersTableName = 'player';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable(roleTableName, (table) => {

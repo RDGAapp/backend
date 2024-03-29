@@ -11,21 +11,21 @@ describe('Posts Dao', () => {
   });
 
   describe('getAll', () => {
-    test('should use select from table posts', async () => {
+    test('should use select from table post', async () => {
       await postDao.getAll({ pageNumber: 1 });
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('posts');
+      expect(db).toHaveBeenCalledWith('post');
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         1,
-        'players',
-        'posts.author_rdga_number',
-        'players.rdga_number',
+        'player',
+        'post.author_rdga_number',
+        'player.rdga_number',
       );
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         2,
         'auth_data',
-        'posts.author_rdga_number',
+        'post.author_rdga_number',
         'auth_data.rdga_number',
       );
       expect(db().select).toHaveBeenCalledTimes(1);
@@ -45,26 +45,26 @@ describe('Posts Dao', () => {
       });
     });
 
-    test('should use select from table posts with from', async () => {
+    test('should use select from table post with from', async () => {
       await postDao.getAll({ pageNumber: 1, fromDateTime: 'testDateTime' });
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('posts');
+      expect(db).toHaveBeenCalledWith('post');
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         1,
-        'players',
-        'posts.author_rdga_number',
-        'players.rdga_number',
+        'player',
+        'post.author_rdga_number',
+        'player.rdga_number',
       );
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         2,
         'auth_data',
-        'posts.author_rdga_number',
+        'post.author_rdga_number',
         'auth_data.rdga_number',
       );
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith(
-        'posts.created_at',
+        'post.created_at',
         '<=',
         'testDateTime',
       );
@@ -95,7 +95,7 @@ describe('Posts Dao', () => {
 
       expect(testPostName).toBe(testPostDb.header);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('posts');
+      expect(db).toHaveBeenCalledWith('post');
       expect(db().insert).toHaveBeenCalledTimes(1);
       expect(db().insert).toHaveBeenCalledWith(testPostDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -112,7 +112,7 @@ describe('Posts Dao', () => {
 
       expect(updatedPost).toEqual(testPostDb);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('posts');
+      expect(db).toHaveBeenCalledWith('post');
       expect(db().update).toHaveBeenCalledTimes(1);
       expect(db().update).toHaveBeenCalledWith(testPostDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -125,7 +125,7 @@ describe('Posts Dao', () => {
       await postDao.delete('test');
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('posts');
+      expect(db).toHaveBeenCalledWith('post');
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ code: 'test' });
       expect(db().del).toHaveBeenCalledTimes(1);
@@ -138,18 +138,18 @@ describe('Posts Dao', () => {
       await postDao.getByCode('test');
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('posts');
+      expect(db).toHaveBeenCalledWith('post');
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         1,
-        'players',
-        'posts.author_rdga_number',
-        'players.rdga_number',
+        'player',
+        'post.author_rdga_number',
+        'player.rdga_number',
       );
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         2,
         'auth_data',
-        'posts.author_rdga_number',
+        'post.author_rdga_number',
         'auth_data.rdga_number',
       );
       expect(db().select).toHaveBeenCalledTimes(1);

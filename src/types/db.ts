@@ -1,14 +1,35 @@
 // The TypeScript definitions below are automatically generated.
 // Do not touch them, or risk, your modifications being lost.
 
+export enum SportsCategory {
+  Master = "master",
+  Candidate = "candidate",
+  AdultFirst = "adult-first",
+  AdultSecond = "adult-second",
+  AdultThird = "adult-third",
+  JuniorFirst = "junior-first",
+  JuniorSecond = "junior-second",
+  JuniorThird = "junior-third",
+}
+
+export enum TournamentType {
+  RussianChampionship = "russian_championship",
+  Pro = "pro",
+  Federal = "federal",
+  League = "league",
+  AllStar = "all_star",
+  Regional = "regional",
+  National = "national",
+}
+
 export enum Table {
   AuthData = "auth_data",
   KnexMigrations = "knex_migrations",
   KnexMigrationsLock = "knex_migrations_lock",
-  Players = "players",
-  Posts = "posts",
+  Player = "player",
+  Post = "post",
   Roles = "roles",
-  Tournaments = "tournaments",
+  Tournament = "tournament",
   UserRoles = "user_roles",
 }
 
@@ -16,10 +37,10 @@ export type Tables = {
   "auth_data": AuthData,
   "knex_migrations": KnexMigrations,
   "knex_migrations_lock": KnexMigrationsLock,
-  "players": Players,
-  "posts": Posts,
+  "player": Player,
+  "post": Post,
   "roles": Roles,
-  "tournaments": Tournaments,
+  "tournament": Tournament,
   "user_roles": UserRoles,
 };
 
@@ -45,7 +66,7 @@ export type KnexMigrationsLock = {
   is_locked: number | null;
 };
 
-export type Players = {
+export type Player = {
   rdga_number: number;
   name: string;
   surname: string | null;
@@ -55,10 +76,10 @@ export type Players = {
   pdga_number: number | null;
   metrix_number: number | null;
   active_to: Date;
-  sports_category: string | null;
+  sports_category: SportsCategory | null;
 };
 
-export type Posts = {
+export type Post = {
   code: string;
   author: string | null;
   header: string;
@@ -72,14 +93,14 @@ export type Roles = {
   name: string;
 };
 
-export type Tournaments = {
+export type Tournament = {
   code: string;
   name: string;
   town: string;
   start_date: Date;
   end_date: Date;
-  tournament_type: string;
   metrix_id: string | null;
+  tournament_type: TournamentType;
 };
 
 export type UserRoles = {

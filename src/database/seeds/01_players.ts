@@ -1,9 +1,9 @@
-import SportsCategory from '../../enums/SportsCategory';
+import { SportsCategory, Table } from '../../types/db';
 import { Knex } from 'knex';
-import { IPlayerDb } from 'types/playerDb';
+import { IPlayerDb } from '../../types/playerDb';
 import { fakerRU as faker } from '@faker-js/faker';
 
-const tableName = 'players';
+const tableName = Table.Player;
 const now = new Date();
 
 const players: IPlayerDb[] = [];

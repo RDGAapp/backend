@@ -60,6 +60,6 @@
     "types:check": "tsc --noEmit",
     "test": "TZ=UTC jest --runInBand --forceExit --detectOpenHandles",
     "test:coverage": "TZ=UTC jest --coverage --runInBand --forceExit --detectOpenHandles",
-    "generate:types:db": "NODE_PATH=src npx ts-node src/knex-types.ts"
+    "generate:types": "NODE_PATH=src npx ts-node src/knex-types.ts && cp ./src/types/db.ts ../web/src/types/db.ts"
   }
 }

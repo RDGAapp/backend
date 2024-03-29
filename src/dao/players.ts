@@ -1,6 +1,7 @@
 import db from 'database';
 import { IWithPagination } from 'knex-paginate';
 import playerMapping from 'mapping/player';
+import { Table } from 'types/db';
 import { IPlayer, IPlayerBase } from 'types/player';
 import { IPlayerDb } from 'types/playerDb';
 
@@ -9,8 +10,8 @@ class PlayerDao {
   #authTableName;
 
   constructor() {
-    this.#tableName = 'players';
-    this.#authTableName = 'auth_data';
+    this.#tableName = Table.Player;
+    this.#authTableName = Table.AuthData;
   }
 
   async getAll(

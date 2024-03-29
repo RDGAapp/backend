@@ -1,17 +1,6 @@
-import SportsCategory from 'enums/SportsCategory';
+import { SportsCategory } from 'types/db';
 import { z } from 'zod';
 import { townSchema } from './common';
-
-const validSportsCategory = [
-  SportsCategory.Master,
-  SportsCategory.Candidate,
-  SportsCategory.AdultFirst,
-  SportsCategory.AdultSecond,
-  SportsCategory.AdultThird,
-  SportsCategory.JuniorFirst,
-  SportsCategory.JuniorSecond,
-  SportsCategory.JuniorThird,
-] as const;
 
 export const playerSchema = z.strictObject({
   name: z.string(),
@@ -23,7 +12,7 @@ export const playerSchema = z.strictObject({
   pdgaNumber: z.number().min(1).nullable(),
   metrixNumber: z.number().min(1).nullable(),
   activeTo: z.string().datetime(),
-  sportsCategory: z.enum(validSportsCategory).nullable(),
+  sportsCategory: z.nativeEnum(SportsCategory).nullable(),
 });
 
 export const playerPutSchema = playerSchema.omit({ rdgaNumber: true });
