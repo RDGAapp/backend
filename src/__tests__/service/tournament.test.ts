@@ -1,11 +1,11 @@
-import tournamentsService from 'service/tournaments';
-import tournamentsDao from 'dao/tournaments';
+import tournamentsService from 'service/tournament';
+import tournamentsDao from 'dao/tournament';
 import testTournament from '__tests__/mocks/testTournament';
 import testTournamentDb from '__tests__/mocks/testTournamentDb';
 
-jest.mock('dao/tournaments');
+jest.mock('dao/tournament');
 
-describe('Tournaments Service', () => {
+describe('Tournament Service', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });

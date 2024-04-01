@@ -1,11 +1,12 @@
 import db from 'database';
-import postDao from 'dao/posts';
+import postDao from 'dao/post';
 import postMapping from 'mapping/post';
 import testPostDb from '__tests__/mocks/testPostDb';
+import { Table } from 'types/db';
 
 jest.mock('database');
 
-describe('Posts Dao', () => {
+describe('Post Dao', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -14,19 +15,19 @@ describe('Posts Dao', () => {
     test('should use select from table post', async () => {
       await postDao.getAll({ pageNumber: 1 });
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('post');
+      expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         1,
-        'player',
-        'post.author_rdga_number',
-        'player.rdga_number',
+        Table.Player,
+        `${Table.Post}.author_rdga_number`,
+        `${Table.Player}.rdga_number`,
       );
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         2,
-        'auth_data',
-        'post.author_rdga_number',
-        'auth_data.rdga_number',
+        Table.AuthData,
+        `${Table.Post}.author_rdga_number`,
+        `${Table.AuthData}.rdga_number`,
       );
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({
@@ -48,23 +49,23 @@ describe('Posts Dao', () => {
     test('should use select from table post with from', async () => {
       await postDao.getAll({ pageNumber: 1, fromDateTime: 'testDateTime' });
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('post');
+      expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         1,
-        'player',
-        'post.author_rdga_number',
-        'player.rdga_number',
+        Table.Player,
+        `${Table.Post}.author_rdga_number`,
+        `${Table.Player}.rdga_number`,
       );
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         2,
-        'auth_data',
-        'post.author_rdga_number',
-        'auth_data.rdga_number',
+        Table.AuthData,
+        `${Table.Post}.author_rdga_number`,
+        `${Table.AuthData}.rdga_number`,
       );
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith(
-        'post.created_at',
+        `${Table.Post}.created_at`,
         '<=',
         'testDateTime',
       );
@@ -95,7 +96,7 @@ describe('Posts Dao', () => {
 
       expect(testPostName).toBe(testPostDb.header);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('post');
+      expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().insert).toHaveBeenCalledTimes(1);
       expect(db().insert).toHaveBeenCalledWith(testPostDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -112,7 +113,7 @@ describe('Posts Dao', () => {
 
       expect(updatedPost).toEqual(testPostDb);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('post');
+      expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().update).toHaveBeenCalledTimes(1);
       expect(db().update).toHaveBeenCalledWith(testPostDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -125,7 +126,7 @@ describe('Posts Dao', () => {
       await postDao.delete('test');
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('post');
+      expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ code: 'test' });
       expect(db().del).toHaveBeenCalledTimes(1);
@@ -138,19 +139,19 @@ describe('Posts Dao', () => {
       await postDao.getByCode('test');
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('post');
+      expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         1,
-        'player',
-        'post.author_rdga_number',
-        'player.rdga_number',
+        Table.Player,
+        `${Table.Post}.author_rdga_number`,
+        `${Table.Player}.rdga_number`,
       );
       expect(db().leftJoin).toHaveBeenNthCalledWith(
         2,
-        'auth_data',
-        'post.author_rdga_number',
-        'auth_data.rdga_number',
+        Table.AuthData,
+        `${Table.Post}.author_rdga_number`,
+        `${Table.AuthData}.rdga_number`,
       );
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({

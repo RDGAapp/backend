@@ -5,7 +5,7 @@ import { Table } from 'types/db';
 import { IBlogPost } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 
-class PostsDao {
+class PostDao {
   #tableName;
   #playersTableName;
   #authTableName;
@@ -101,4 +101,4 @@ class PostsDao {
   }
 }
 
-export default new PostsDao();
+export default new PostDao();

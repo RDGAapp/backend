@@ -1,12 +1,12 @@
 import { Request } from 'express';
-import tournamentsController from 'controller/tournaments';
-import tournamentsService from 'service/tournaments';
+import tournamentsController from 'controller/tournament';
+import tournamentsService from 'service/tournament';
 import response from '../mocks/response';
 import testTournament from '__tests__/mocks/testTournament';
 
-jest.mock('service/tournaments');
+jest.mock('service/tournament');
 
-describe('Tournaments Controller', () => {
+describe('Tournament Controller', () => {
   const testTournamentWithoutCode = {
     name: testTournament.name,
     town: testTournament.town,

@@ -3,7 +3,7 @@ import app from '../src/app';
 import db from '../src/database';
 import testTournament from '../src/__tests__/mocks/testTournament';
 
-describe('Tournaments endpoints', () => {
+describe('Tournament endpoints', () => {
   const testTournamentWithoutCode = {
     name: testTournament.name,
     town: testTournament.town,

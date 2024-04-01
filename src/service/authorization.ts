@@ -1,5 +1,5 @@
 import authorizationDao from 'dao/authorization';
-import playersService from 'service/players';
+import playersService from 'service/player';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import { getTelegramLoginByRdgaNumber } from 'helpers/externalApiHelpers';
 import {

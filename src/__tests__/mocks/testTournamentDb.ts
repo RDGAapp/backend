@@ -9,4 +9,4 @@ export default {
   end_date: new Date('3000-1-1').toISOString(),
   tournament_type: TournamentType.AllStar,
   metrix_id: 'testMetrixId',
-} as ITournamentDb;
+} satisfies ITournamentDb;

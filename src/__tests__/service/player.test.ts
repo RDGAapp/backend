@@ -1,12 +1,12 @@
 import fetchMock from 'jest-fetch-mock';
 
-import playerService from 'service/players';
-import playerDao from 'dao/players';
+import playerService from 'service/player';
+import playerDao from 'dao/player';
 
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
 
-jest.mock('dao/players');
+jest.mock('dao/player');
 fetchMock.enableMocks();
 
 describe('Player Service', () => {

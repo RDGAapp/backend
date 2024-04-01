@@ -1,11 +1,11 @@
-import postsService from 'service/posts';
-import postsDao from 'dao/posts';
+import postsService from 'service/post';
+import postsDao from 'dao/post';
 import testPost from '__tests__/mocks/testPost';
 import testPostDb from '__tests__/mocks/testPostDb';
 
-jest.mock('dao/posts');
+jest.mock('dao/post');
 
-describe('Posts Service', () => {
+describe('Post Service', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });

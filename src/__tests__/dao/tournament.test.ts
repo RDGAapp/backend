@@ -1,12 +1,13 @@
 import db from 'database';
-import tournamentDao from 'dao/tournaments';
+import tournamentDao from 'dao/tournament';
 import tournamentMapping from 'mapping/tournament';
 import testTournamentDb from '__tests__/mocks/testTournamentDb';
 import { getMonday } from '../../helpers/dateHelpers';
+import { Table } from 'types/db';
 
 jest.mock('database');
 
-describe('Tournaments Dao', () => {
+describe('Tournament Dao', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -26,7 +27,7 @@ describe('Tournaments Dao', () => {
 
       await tournamentDao.getAll('', '');
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(tournamentMapping);
       expect(db().where).toHaveBeenCalledTimes(1);
@@ -40,7 +41,7 @@ describe('Tournaments Dao', () => {
     test('should use select from table tournaments with from', async () => {
       await tournamentDao.getAll('a', '');
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(tournamentMapping);
       expect(db().where).toHaveBeenCalledTimes(1);
@@ -50,7 +51,7 @@ describe('Tournaments Dao', () => {
     test('should use select from table tournaments with to', async () => {
       await tournamentDao.getAll('', 'b');
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(tournamentMapping);
       expect(db().where).toHaveBeenCalledTimes(1);
@@ -60,7 +61,7 @@ describe('Tournaments Dao', () => {
     test('should use select from table tournaments with from and to', async () => {
       await tournamentDao.getAll('a', 'b');
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(tournamentMapping);
       expect(db().where).toHaveBeenCalledTimes(2);
@@ -78,7 +79,7 @@ describe('Tournaments Dao', () => {
 
       expect(testTournamentName).toBe(testTournamentDb.name);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().insert).toHaveBeenCalledTimes(1);
       expect(db().insert).toHaveBeenCalledWith(testTournamentDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -95,7 +96,7 @@ describe('Tournaments Dao', () => {
 
       expect(updatedTournament).toEqual(testTournamentDb);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().update).toHaveBeenCalledTimes(1);
       expect(db().update).toHaveBeenCalledWith(testTournamentDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -108,7 +109,7 @@ describe('Tournaments Dao', () => {
       await tournamentDao.delete('test');
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ code: 'test' });
       expect(db().del).toHaveBeenCalledTimes(1);
@@ -121,7 +122,7 @@ describe('Tournaments Dao', () => {
       await tournamentDao.getByCode('test');
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('tournament');
+      expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(tournamentMapping);
       expect(db().where).toHaveBeenCalledTimes(1);

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import playerService from 'service/players';
+import playerService from 'service/player';
 import {
   playerSchema,
   playerPutSchema,

@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import playerController from 'controller/players';
+import playerController from 'controller/player';
 import { response400Schema } from 'helpers/responses';
 import { z } from 'zod';
 
@@ -27,8 +27,7 @@ router.param(
   'rdgaNumber',
   (request: Request, response: Response, next, rdgaNumberParam) => {
     const result = z.number().positive().safeParse(Number(rdgaNumberParam));
-    if (!result.success)
-      return response400Schema(response, result.error);
+    if (!result.success) return response400Schema(response, result.error);
     request.rdgaNumber = result.data;
     next();
   },

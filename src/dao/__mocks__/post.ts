@@ -1,4 +1,4 @@
-const postsDaoMock = {
+const postDaoMock = {
   getAll: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
@@ -6,4 +6,4 @@ const postsDaoMock = {
   getByCode: jest.fn(),
 };
 
-export default postsDaoMock;
+export default postDaoMock;

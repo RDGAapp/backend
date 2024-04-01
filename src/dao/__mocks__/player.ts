@@ -1,4 +1,4 @@
-const playersDaoMock = {
+const playerDaoMock = {
   getAll: jest.fn(),
   getByRdgaNumber: jest.fn(),
   getByRdgaPdgaMetrixNumber: jest.fn(),
@@ -9,4 +9,4 @@ const playersDaoMock = {
   activatePlayerForCurrentYear: jest.fn(),
 };
 
-export default playersDaoMock;
+export default playerDaoMock;

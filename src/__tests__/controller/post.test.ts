@@ -1,12 +1,12 @@
 import { Request } from 'express';
-import postsController from 'controller/posts';
-import postsService from 'service/posts';
+import postsController from 'controller/post';
+import postsService from 'service/post';
 import response from '../mocks/response';
 import testPost from '__tests__/mocks/testPost';
 
-jest.mock('service/posts');
+jest.mock('service/post');
 
-describe('Posts Controller', () => {
+describe('Post Controller', () => {
   const testPostWithoutDate = {
     code: testPost.code,
     header: testPost.header,

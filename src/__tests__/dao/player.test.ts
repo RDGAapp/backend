@@ -1,8 +1,9 @@
 import db from 'database';
-import playerDao from 'dao/players';
+import playerDao from 'dao/player';
 import playerMapping from 'mapping/player';
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
+import { Table } from 'types/db';
 
 jest.mock('database');
 
@@ -15,11 +16,11 @@ describe('Player Dao', () => {
     test('should use select from table player ', async () => {
       await playerDao.getAll(1, 'testSurname', 'testTown', false);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({
         ...playerMapping,
-        rdgaNumber: 'player.rdga_number',
+        rdgaNumber: `${Table.Player}.rdga_number`,
         avatarUrl: 'telegram_photo_url',
       });
       expect(db().where).toHaveBeenCalledTimes(2);
@@ -34,7 +35,7 @@ describe('Player Dao', () => {
       expect(db().orderBy).toHaveBeenNthCalledWith(1, 'rdga_rating', 'desc');
       expect(db().orderBy).toHaveBeenNthCalledWith(
         2,
-        'player.rdga_number',
+        `${Table.Player}.rdga_number`,
         'asc',
       );
       expect(db().paginate).toHaveBeenCalledTimes(1);
@@ -58,11 +59,13 @@ describe('Player Dao', () => {
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({
         ...playerMapping,
-        rdgaNumber: 'player.rdga_number',
+        rdgaNumber: `${Table.Player}.rdga_number`,
         avatarUrl: 'telegram_photo_url',
       });
       expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({ 'player.rdga_number': 24 });
+      expect(db().where).toHaveBeenCalledWith({
+        [`${Table.Player}.rdga_number`]: 24,
+      });
       expect(player).toEqual(testPlayer);
     });
 
@@ -77,11 +80,13 @@ describe('Player Dao', () => {
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({
         ...playerMapping,
-        rdgaNumber: 'player.rdga_number',
+        rdgaNumber: `${Table.Player}.rdga_number`,
         avatarUrl: 'telegram_photo_url',
       });
       expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({ 'player.rdga_number': 24 });
+      expect(db().where).toHaveBeenCalledWith({
+        [`${Table.Player}.rdga_number`]: 24,
+      });
       expect(player).toEqual(null);
     });
   });
@@ -93,7 +98,7 @@ describe('Player Dao', () => {
       await playerDao.getByRdgaPdgaMetrixNumber(24, 24, 24);
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(playerMapping);
       expect(db().where).toHaveBeenCalledTimes(1);
@@ -109,7 +114,7 @@ describe('Player Dao', () => {
       await playerDao.getByRdgaPdgaMetrixNumber(24);
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith(playerMapping);
       expect(db().where).toHaveBeenCalledTimes(1);
@@ -129,7 +134,7 @@ describe('Player Dao', () => {
 
       expect(playerRdgaNumber).toBe(1);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().insert).toHaveBeenCalledTimes(1);
       expect(db().insert).toHaveBeenCalledWith(testPlayerDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -146,7 +151,7 @@ describe('Player Dao', () => {
 
       expect(updatedPlayer).toEqual(testPlayerDb);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().update).toHaveBeenCalledTimes(1);
       expect(db().update).toHaveBeenCalledWith(testPlayerDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
@@ -159,7 +164,7 @@ describe('Player Dao', () => {
       await playerDao.delete(1);
 
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
       expect(db().del).toHaveBeenCalledTimes(1);
@@ -176,7 +181,7 @@ describe('Player Dao', () => {
 
       expect(updatedPlayer).toEqual(testPlayerDb);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
       expect(db().update).toHaveBeenCalledTimes(1);
@@ -198,7 +203,7 @@ describe('Player Dao', () => {
 
       expect(updatedPlayer).toEqual(testPlayerDb);
       expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith('player');
+      expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
       expect(db().update).toHaveBeenCalledTimes(1);

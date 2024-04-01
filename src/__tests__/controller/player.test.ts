@@ -1,10 +1,10 @@
 import { Request } from 'express';
-import playerController from 'controller/players';
-import playerService from 'service/players';
+import playerController from 'controller/player';
+import playerService from 'service/player';
 import response from '../mocks/response';
 import testPlayer from '../mocks/testPlayer';
 
-jest.mock('service/players');
+jest.mock('service/player');
 
 describe('Player Controller', () => {
   afterEach(() => {

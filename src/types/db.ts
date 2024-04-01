@@ -27,10 +27,10 @@ export enum Table {
   KnexMigrations = "knex_migrations",
   KnexMigrationsLock = "knex_migrations_lock",
   Player = "player",
+  PlayerRoles = "player_roles",
   Post = "post",
-  Roles = "roles",
+  Role = "role",
   Tournament = "tournament",
-  UserRoles = "user_roles",
 }
 
 export type Tables = {
@@ -38,10 +38,10 @@ export type Tables = {
   "knex_migrations": KnexMigrations,
   "knex_migrations_lock": KnexMigrationsLock,
   "player": Player,
+  "player_roles": PlayerRoles,
   "post": Post,
-  "roles": Roles,
+  "role": Role,
   "tournament": Tournament,
-  "user_roles": UserRoles,
 };
 
 export type AuthData = {
@@ -79,6 +79,12 @@ export type Player = {
   sports_category: SportsCategory | null;
 };
 
+export type PlayerRoles = {
+  id: number;
+  player_rdga_number: number;
+  role_code: string;
+};
+
 export type Post = {
   code: string;
   author: string | null;
@@ -88,9 +94,15 @@ export type Post = {
   author_rdga_number: number;
 };
 
-export type Roles = {
+export type Role = {
   code: string;
   name: string;
+  can_manage_players: boolean;
+  can_manage_tournaments: boolean;
+  can_manage_blog_post: boolean;
+  can_manage_blog_posts: boolean;
+  can_manage_roles: boolean;
+  can_assign_roles: boolean;
 };
 
 export type Tournament = {
@@ -101,11 +113,5 @@ export type Tournament = {
   end_date: Date;
   metrix_id: string | null;
   tournament_type: TournamentType;
-};
-
-export type UserRoles = {
-  id: number;
-  player_rdga_number: number;
-  role_code: string;
 };
 

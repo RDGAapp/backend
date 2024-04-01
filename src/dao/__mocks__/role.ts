@@ -1,4 +1,4 @@
-const tournamentsServiceMock = {
+const roleDaoMock = {
   getAll: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
@@ -6,4 +6,4 @@ const tournamentsServiceMock = {
   getByCode: jest.fn(),
 };
 
-export default tournamentsServiceMock;
+export default roleDaoMock;

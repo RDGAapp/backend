@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import postsService from 'service/posts';
+import postsService from 'service/post';
 import { response400Schema, response500 } from 'helpers/responses';
 import { postPutSchema, postSchema } from 'schemas';
 
-class PostsController {
+class PostController {
   async getAll(request: Request, response: Response) {
     const pageNumber = Number(request.query.page) || 1;
     const fromDateTime = request.query.from?.toString();
@@ -82,4 +82,4 @@ class PostsController {
   }
 }
 
-export default new PostsController();
+export default new PostController();

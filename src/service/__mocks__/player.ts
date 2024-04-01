@@ -1,4 +1,4 @@
-const playersServiceMock = {
+const playerServiceMock = {
   checkIfPlayerExist: jest.fn(),
   getAll: jest.fn(),
   getByRdgaNumber: jest.fn(),
@@ -9,4 +9,4 @@ const playersServiceMock = {
   activatePlayerForCurrentYear: jest.fn(),
 };
 
-export default playersServiceMock;
+export default playerServiceMock;

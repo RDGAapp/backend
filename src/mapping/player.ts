@@ -1,3 +1,6 @@
+import { IPlayerBase } from 'types/player';
+import { IPlayerDb } from 'types/playerDb';
+
 export default {
   name: 'name',
   surname: 'surname',
@@ -9,4 +12,4 @@ export default {
   metrixNumber: 'metrix_number',
   activeTo: 'active_to',
   sportsCategory: 'sports_category',
-} as const;
+} satisfies Record<keyof IPlayerBase, keyof IPlayerDb>;

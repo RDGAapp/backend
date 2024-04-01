@@ -1,7 +1,7 @@
 import fetchMock from 'jest-fetch-mock';
 import authorizationService from 'service/authorization';
 import authorizationDao from 'dao/authorization';
-import playersService from 'service/players';
+import playersService from 'service/player';
 
 import testAuthData from '../mocks/authorization';
 import { fullTelegramUser } from '../mocks/telegramUsers';
@@ -9,7 +9,7 @@ import testAuthDataDb from '../mocks/authorizationDb';
 import testPlayer from '../mocks/testPlayer';
 
 jest.mock('dao/authorization');
-jest.mock('service/players');
+jest.mock('service/player');
 fetchMock.enableMocks();
 
 describe('Authorization Service', () => {

@@ -3,7 +3,7 @@ import playerRouter from 'routes/players';
 import tournamentsRouter from 'routes/tournaments';
 import postsRouter from 'routes/posts';
 import authorizationRouter from 'routes/authorization';
-import playerController from 'controller/players';
+import playerController from 'controller/player';
 
 const router = Router();
 

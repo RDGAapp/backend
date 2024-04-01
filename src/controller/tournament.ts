@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import tournamentsService from 'service/tournaments';
+import tournamentsService from 'service/tournament';
 import { response400Schema, response500 } from 'helpers/responses';
 import { tournamentPutSchema, tournamentSchema } from 'schemas';
 import { ITournament } from 'types/tournament';
 
-class TournamentsController {
+class TournamentController {
   async getAll(request: Request, response: Response) {
     const from = (request.query.from as string) || '';
     const to = (request.query.to as string) || '';
@@ -19,18 +19,14 @@ class TournamentsController {
   }
 
   async create(request: Request, response: Response) {
-    const result = tournamentSchema.safeParse(
-      request.body,
-    );
+    const result = tournamentSchema.safeParse(request.body);
 
     if (!result.success) {
       return response400Schema(response, result.error);
     }
 
     try {
-      const tournamentName = await tournamentsService.create(
-        result.data,
-      );
+      const tournamentName = await tournamentsService.create(result.data);
 
       response.status(201).send(`Турнир ${tournamentName} создан`);
     } catch (error) {
@@ -41,9 +37,7 @@ class TournamentsController {
   async update(request: Request, response: Response) {
     const { tournamentCode } = request;
 
-    const result = tournamentPutSchema.safeParse(
-      request.body,
-    );
+    const result = tournamentPutSchema.safeParse(request.body);
 
     if (!result.success) {
       return response400Schema(response, result.error);
@@ -86,4 +80,4 @@ class TournamentsController {
   }
 }
 
-export default new TournamentsController();
+export default new TournamentController();

@@ -1,11 +1,11 @@
-import tournamentDao from 'dao/tournaments';
+import tournamentDao from 'dao/tournament';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import objectToDbObject from 'helpers/objectToDbObject';
 import tournamentMapping from 'mapping/tournament';
 import { ITournament } from 'types/tournament';
 import { ITournamentDb } from 'types/tournamentDb';
 
-class TournamentsService {
+class TournamentService {
   async getAll(from: string, to: string): Promise<ITournament[]> {
     const tournamentsDao = await tournamentDao.getAll(from, to);
 
@@ -47,4 +47,4 @@ class TournamentsService {
   }
 }
 
-export default new TournamentsService();
+export default new TournamentService();

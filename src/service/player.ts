@@ -1,4 +1,4 @@
-import playerDao from 'dao/players';
+import playerDao from 'dao/player';
 import objectToDbObject from 'helpers/objectToDbObject';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import playerMapping from 'mapping/player';
@@ -9,6 +9,7 @@ import {
   getMetrixDataByNumber,
   getPdgaDataByNumber,
 } from 'helpers/externalApiHelpers';
+
 class PlayerService {
   async checkIfPlayerExist(
     player: Partial<IPlayerBase>,

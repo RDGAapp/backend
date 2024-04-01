@@ -4,7 +4,7 @@ import db from '../src/database';
 import testPost from '../src/__tests__/mocks/testPost';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
 
-describe('Posts endpoints', () => {
+describe('Post endpoints', () => {
   beforeEach(async () => {
     await db.migrate.latest();
   });

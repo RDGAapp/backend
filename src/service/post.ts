@@ -1,4 +1,4 @@
-import postsDao from 'dao/posts';
+import postsDao from 'dao/post';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import objectToDbObject from 'helpers/objectToDbObject';
 import { IWithPagination } from 'knex-paginate';
@@ -6,7 +6,7 @@ import postMapping from 'mapping/post';
 import { IBlogPost, IBlogPostBase } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 
-class PostsService {
+class PostService {
   async getAll({
     pageNumber,
     fromDateTime,
@@ -54,4 +54,4 @@ class PostsService {
   }
 }
 
-export default new PostsService();
+export default new PostService();
