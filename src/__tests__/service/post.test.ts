@@ -53,9 +53,9 @@ describe('Post Service', () => {
       const testPostToCreate = testPost;
       const testPostDbToCreate = testPostDb;
 
-      const tournamentName = await postsService.create(testPostToCreate);
+      const postName = await postsService.create(testPostToCreate);
 
-      expect(tournamentName).toBe('Test');
+      expect(postName).toBe('Test');
       expect(postsDao.create).toHaveBeenCalledTimes(1);
       expect(postsDao.create).toHaveBeenCalledWith(testPostDbToCreate);
     });
