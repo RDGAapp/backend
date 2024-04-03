@@ -77,13 +77,13 @@ describe('Tournament Dao', () => {
 
       const testTournamentName = await tournamentDao.create(testTournamentDb);
 
-      expect(testTournamentName).toBe(testTournamentDb.name);
+      expect(testTournamentName).toBe(testTournamentDb.code);
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Tournament);
       expect(db().insert).toHaveBeenCalledTimes(1);
       expect(db().insert).toHaveBeenCalledWith(testTournamentDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
-      expect(db().returning).toHaveBeenCalledWith('name');
+      expect(db().returning).toHaveBeenCalledWith('code');
     });
   });
 

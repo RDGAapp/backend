@@ -30,14 +30,6 @@ class TournamentDao extends BaseDao<ITournament, ITournamentDb, 'code'> {
 
     return results.where('end_date', '>=', monday.toISOString());
   }
-
-  async create(tournament: ITournamentDb): Promise<string> {
-    const createdTournament = await db(this._tableName)
-      .insert(tournament)
-      .returning('name');
-
-    return createdTournament[0].name;
-  }
 }
 
 export default new TournamentDao();
