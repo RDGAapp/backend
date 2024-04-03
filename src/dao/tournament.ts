@@ -4,16 +4,15 @@ import { getMonday } from 'helpers/dateHelpers';
 import { ITournament } from 'types/tournament';
 import { ITournamentDb } from 'types/tournamentDb';
 import { Table } from 'types/db';
+import BaseDao from './base';
 
-class TournamentDao {
-  #tableName;
-
+class TournamentDao extends BaseDao<ITournament, ITournamentDb, 'code'> {
   constructor() {
-    this.#tableName = Table.Tournament;
+    super(Table.Tournament, tournamentMapping, 'code');
   }
 
   async getAll(from: string, to: string): Promise<ITournament[]> {
-    const query = db(this.#tableName);
+    const query = db(this._tableName);
     const now = new Date();
     const monday = getMonday(now);
 
@@ -33,7 +32,7 @@ class TournamentDao {
   }
 
   async create(tournament: ITournamentDb): Promise<string> {
-    const createdTournament = await db(this.#tableName)
+    const createdTournament = await db(this._tableName)
       .insert(tournament)
       .returning('name');
 
@@ -41,24 +40,12 @@ class TournamentDao {
   }
 
   async update(tournament: ITournamentDb): Promise<ITournamentDb> {
-    const updatedTournament = await db(this.#tableName)
+    const updatedTournament = await db(this._tableName)
       .where({ code: tournament.code })
       .update(tournament)
       .returning('*');
 
     return updatedTournament[0];
-  }
-
-  async delete(code: string): Promise<void> {
-    await db(this.#tableName).where({ code }).del();
-  }
-
-  async getByCode(code: string): Promise<ITournament> {
-    const tournament = await db(this.#tableName)
-      .select(tournamentMapping)
-      .where({ code });
-
-    return tournament[0];
   }
 }
 

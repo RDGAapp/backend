@@ -26,15 +26,15 @@ describe('Role Dao', () => {
       (db().returning as jest.Mock).mockReturnValueOnce([testRoleDb]);
       jest.clearAllMocks();
 
-      const testPostName = await roleDao.create(testRoleDb);
+      const testRoleName = await roleDao.create(testRoleDb);
 
-      expect(testPostName).toBe(testRoleDb.name);
+      expect(testRoleName).toBe(testRoleDb.code);
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Role);
       expect(db().insert).toHaveBeenCalledTimes(1);
       expect(db().insert).toHaveBeenCalledWith(testRoleDb);
       expect(db().returning).toHaveBeenCalledTimes(1);
-      expect(db().returning).toHaveBeenCalledWith('name');
+      expect(db().returning).toHaveBeenCalledWith('code');
     });
   });
 
@@ -69,8 +69,8 @@ describe('Role Dao', () => {
   });
 
   describe('getByCode', () => {
-    test('should getByCode role', async () => {
-      await roleDao.getByCode('test');
+    test('should getByPrimaryKey role', async () => {
+      await roleDao.getByPrimaryKey('test');
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Role);

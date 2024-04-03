@@ -75,11 +75,11 @@ describe('Tournament Service', () => {
   });
 
   describe('getByCode', () => {
-    test('should call dao getByCode tournament', async () => {
+    test('should call dao getByPrimaryKey tournament', async () => {
       await tournamentsService.getByCode('test');
 
-      expect(tournamentsDao.getByCode).toHaveBeenCalledTimes(1);
-      expect(tournamentsDao.getByCode).toHaveBeenCalledWith('test');
+      expect(tournamentsDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(tournamentsDao.getByPrimaryKey).toHaveBeenCalledWith('test');
     });
   });
 });

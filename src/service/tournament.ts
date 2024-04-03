@@ -43,7 +43,7 @@ class TournamentService {
   }
 
   async getByCode(code: string): Promise<ITournament> {
-    return tournamentDao.getByCode(code);
+    return tournamentDao.getByPrimaryKey(code);
   }
 }
 

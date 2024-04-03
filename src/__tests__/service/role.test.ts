@@ -59,11 +59,11 @@ describe('Role Service', () => {
   });
 
   describe('getByCode', () => {
-    test('should call dao getByCode role', async () => {
+    test('should call dao getByPrimaryKey role', async () => {
       await roleService.getByCode('test');
 
-      expect(roleDao.getByCode).toHaveBeenCalledTimes(1);
-      expect(roleDao.getByCode).toHaveBeenCalledWith('test');
+      expect(roleDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(roleDao.getByPrimaryKey).toHaveBeenCalledWith('test');
     });
   });
 });

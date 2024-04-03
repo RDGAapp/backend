@@ -118,8 +118,8 @@ describe('Tournament Dao', () => {
   });
 
   describe('getByCode', () => {
-    test('should getByCode tournament', async () => {
-      await tournamentDao.getByCode('test');
+    test('should getByPrimaryKey tournament', async () => {
+      await tournamentDao.getByPrimaryKey('test');
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Tournament);

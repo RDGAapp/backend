@@ -37,7 +37,7 @@ class RoleService {
   }
 
   async getByCode(code: string): Promise<IRole> {
-    return roleDao.getByCode(code);
+    return roleDao.getByPrimaryKey(code);
   }
 }
 
