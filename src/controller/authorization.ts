@@ -85,7 +85,7 @@ class AuthorizationController {
     }
   }
 
-  async logout(request: Request, response: Response) {
+  async logout(_request: Request, response: Response) {
     return response
       .clearCookie('authorization_hash')
       .clearCookie('rdga_number')
@@ -110,7 +110,7 @@ class AuthorizationController {
       );
 
       return response.status(200).json(baseUserInfo);
-    } catch (error) {
+    } catch (_error) {
       return clearCookies(response).status(401).send('Not authorized');
     }
   }

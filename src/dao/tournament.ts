@@ -38,15 +38,6 @@ class TournamentDao extends BaseDao<ITournament, ITournamentDb, 'code'> {
 
     return createdTournament[0].name;
   }
-
-  async update(tournament: ITournamentDb): Promise<ITournamentDb> {
-    const updatedTournament = await db(this._tableName)
-      .where({ code: tournament.code })
-      .update(tournament)
-      .returning('*');
-
-    return updatedTournament[0];
-  }
 }
 
 export default new TournamentDao();

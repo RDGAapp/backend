@@ -4,7 +4,7 @@ import { response400Schema, response500 } from 'helpers/responses';
 import { rolePutSchema, roleSchema } from 'schemas';
 
 class RoleController {
-  async getAll(request: Request, response: Response) {
+  async getAll(_request: Request, response: Response) {
     try {
       const roles = await roleService.getAll();
 

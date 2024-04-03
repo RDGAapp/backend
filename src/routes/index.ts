@@ -7,7 +7,7 @@ import playerController from 'controller/player';
 
 const router = Router();
 
-router.get('/coffee', (req: Request, res: Response) => {
+router.get('/coffee', (_req: Request, res: Response) => {
   res.status(418).send("I'm a teapot");
 });
 
