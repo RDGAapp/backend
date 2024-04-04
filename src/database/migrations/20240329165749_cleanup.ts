@@ -112,7 +112,7 @@ export async function up(knex: Knex): Promise<void> {
       knex('tournament')
         .update({
           tournament_type_enum:
-            tournamentTypeToEnum[tournament.tournament_type],
+            tournamentTypeToEnum[tournament.tournament_type] ?? 'regional',
         })
         .where({ code: tournament.code }),
     ),
@@ -186,7 +186,9 @@ export async function down(knex: Knex): Promise<void> {
     tournaments.map((tournament) =>
       knex('tournaments')
         .update({
-          tournament_type: tournamentTypeToDb[tournament.tournament_type_enum],
+          tournament_type:
+            tournamentTypeToDb[tournament.tournament_type_enum] ??
+            'региональный',
         })
         .where({ code: tournament.code }),
     ),
