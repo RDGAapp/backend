@@ -22,7 +22,7 @@ const playerSportsCategoryToDb: Record<string, string> = {
 };
 
 const tournamentTypeToEnum: Record<string, string> = {
-  чр: 'russian_championship',
+  ЧР: 'russian_championship',
   'про тур': 'pro',
   федеральный: 'federal',
   лига: 'league',
@@ -31,7 +31,7 @@ const tournamentTypeToEnum: Record<string, string> = {
   национальный: 'national',
 };
 const tournamentTypeToDb: Record<string, string> = {
-  russian_championship: 'чр',
+  russian_championship: 'ЧР',
   pro: 'про тур',
   federal: 'федеральный',
   league: 'лига',
@@ -112,7 +112,7 @@ export async function up(knex: Knex): Promise<void> {
       knex('tournament')
         .update({
           tournament_type_enum:
-            tournamentTypeToEnum[tournament.tournament_type] ?? 'regional',
+            tournamentTypeToEnum[tournament.tournament_type],
         })
         .where({ code: tournament.code }),
     ),
@@ -186,9 +186,7 @@ export async function down(knex: Knex): Promise<void> {
     tournaments.map((tournament) =>
       knex('tournaments')
         .update({
-          tournament_type:
-            tournamentTypeToDb[tournament.tournament_type_enum] ??
-            'региональный',
+          tournament_type: tournamentTypeToDb[tournament.tournament_type_enum],
         })
         .where({ code: tournament.code }),
     ),
