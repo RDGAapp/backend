@@ -34,7 +34,9 @@ describe('Tournament Service', () => {
 
   describe('create', () => {
     test('should return name', async () => {
-      (tournamentsDao.create as jest.Mock).mockReturnValueOnce('Test');
+      (tournamentsDao.create as jest.Mock).mockReturnValueOnce({
+        name: 'Test',
+      });
 
       const testTournamentToCreate = testTournament;
       const testTournamentDbToCreate = testTournamentDb;

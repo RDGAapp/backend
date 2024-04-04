@@ -18,9 +18,9 @@ describe('Player Service', () => {
     jest.clearAllMocks();
   });
 
-  describe('getAll', () => {
+  describe('getAllPaginated', () => {
     test('should return whatever playerDao returns', async () => {
-      (playerDao.getAll as jest.Mock).mockReturnValueOnce([]);
+      (playerDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
       const players = await playerService.getAll(
         1,
         'testSurname',
@@ -28,8 +28,8 @@ describe('Player Service', () => {
         false,
       );
       expect(players).toEqual([]);
-      expect(playerDao.getAll).toHaveBeenCalledTimes(1);
-      expect(playerDao.getAll).toHaveBeenCalledWith(
+      expect(playerDao.getAllPaginated).toHaveBeenCalledTimes(1);
+      expect(playerDao.getAllPaginated).toHaveBeenCalledWith(
         1,
         'testSurname',
         'testTown',
@@ -191,11 +191,11 @@ describe('Player Service', () => {
   });
 
   describe('create', () => {
-    test('should return id', async () => {
+    test('should return rdga_number', async () => {
       (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
         [],
       );
-      (playerDao.create as jest.Mock).mockReturnValueOnce(1);
+      (playerDao.create as jest.Mock).mockReturnValueOnce({ rdga_number: 1 });
 
       const playerId = await playerService.create(testPlayer);
 

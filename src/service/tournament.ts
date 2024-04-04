@@ -18,9 +18,9 @@ class TournamentService {
       tournamentMapping,
     );
 
-    const tournamentName = await tournamentDao.create(tournamentDb);
+    const createdTournament = await tournamentDao.create(tournamentDb);
 
-    return tournamentName;
+    return createdTournament.name;
   }
 
   async update(tournament: ITournament): Promise<ITournament> {

@@ -205,7 +205,7 @@ describe('Post endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Something\'s wrong: error: insert into "post" ("author", "author_rdga_number", "code", "created_at", "header", "text") values ($1, $2, $3, $4, $5, $6) returning "header" - duplicate key value violates unique constraint "posts_pkey"',
+        'Something\'s wrong: error: insert into "post" ("author", "author_rdga_number", "code", "created_at", "header", "text") values ($1, $2, $3, $4, $5, $6) returning * - duplicate key value violates unique constraint "posts_pkey"',
       );
     });
 

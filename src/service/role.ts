@@ -15,9 +15,9 @@ class RoleService {
   async create(role: IRole): Promise<string> {
     const roleDb = objectToDbObject<IRole, IRoleDb>(role, roleMapping);
 
-    const roleName = await roleDao.create(roleDb);
+    const createdRole = await roleDao.create(roleDb);
 
-    return roleName;
+    return createdRole.name;
   }
 
   async update(post: IRole): Promise<IRole> {

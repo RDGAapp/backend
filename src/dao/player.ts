@@ -4,25 +4,25 @@ import playerMapping from 'mapping/player';
 import { Table } from 'types/db';
 import { IPlayer, IPlayerBase } from 'types/player';
 import { IPlayerDb } from 'types/playerDb';
+import BaseDao from './base';
 
-class PlayerDao {
-  #tableName;
+class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
   #authTableName;
 
   constructor() {
-    this.#tableName = Table.Player;
+    super(Table.Player, playerMapping, 'rdga_number');
     this.#authTableName = Table.AuthData;
   }
 
-  async getAll(
+  async getAllPaginated(
     pageNumber: number,
     surname: string,
     town: string,
     onlyActive: boolean,
   ): Promise<IWithPagination<IPlayer[]>> {
-    let query = db(this.#tableName).leftJoin(
+    let query = db(this._tableName).leftJoin(
       this.#authTableName,
-      `${this.#tableName}.rdga_number`,
+      `${this._tableName}.rdga_number`,
       `${this.#authTableName}.rdga_number`,
     );
 
@@ -40,11 +40,11 @@ class PlayerDao {
     return query
       .select({
         ...playerMapping,
-        rdgaNumber: `${this.#tableName}.rdga_number`,
+        rdgaNumber: `${this._tableName}.rdga_number`,
         avatarUrl: 'telegram_photo_url',
       })
       .orderBy('rdga_rating', 'desc')
-      .orderBy(`${this.#tableName}.rdga_number`, 'asc')
+      .orderBy(`${this._tableName}.rdga_number`, 'asc')
       .paginate({
         perPage: 30,
         currentPage: pageNumber,
@@ -53,18 +53,18 @@ class PlayerDao {
   }
 
   async getByRdgaNumber(rdgaNumber: number): Promise<IPlayer | null> {
-    const player = await db(this.#tableName)
+    const player = await db(this._tableName)
       .leftJoin(
         this.#authTableName,
-        `${this.#tableName}.rdga_number`,
+        `${this._tableName}.rdga_number`,
         `${this.#authTableName}.rdga_number`,
       )
       .select({
         ...playerMapping,
-        rdgaNumber: `${this.#tableName}.rdga_number`,
+        rdgaNumber: `${this._tableName}.rdga_number`,
         avatarUrl: 'telegram_photo_url',
       })
-      .where({ [`${this.#tableName}.rdga_number`]: rdgaNumber });
+      .where({ [`${this._tableName}.rdga_number`]: rdgaNumber });
 
     return player?.[0] ?? null;
   }
@@ -74,7 +74,7 @@ class PlayerDao {
     pdgaNumber?: number | null,
     metrixNumber?: number | null,
   ): Promise<IPlayerBase[]> {
-    const player = await db(this.#tableName)
+    const player = await db(this._tableName)
       .select(playerMapping)
       .where({ rdga_number: rdgaNumber })
       .orWhere({ pdga_number: pdgaNumber || 0 })
@@ -83,33 +83,12 @@ class PlayerDao {
     return player;
   }
 
-  async create(player: IPlayerDb): Promise<number> {
-    const createdPlayer = await db(this.#tableName)
-      .insert(player)
-      .returning('rdga_number');
-
-    return createdPlayer[0].rdga_number;
-  }
-
-  async update(player: IPlayerDb): Promise<IPlayerDb> {
-    const updatedPlayer = await db(this.#tableName)
-      .where({ rdga_number: player.rdga_number })
-      .update(player)
-      .returning('*');
-
-    return updatedPlayer[0];
-  }
-
-  async delete(rdgaNumber: number): Promise<void> {
-    await db(this.#tableName).where({ rdga_number: rdgaNumber }).del();
-  }
-
   async updateRdgaRating(
     rdgaNumber: number,
     rdgaRating: number,
     ratingDifference: number,
   ): Promise<IPlayerDb> {
-    const updatedPlayer = await db(this.#tableName)
+    const updatedPlayer = await db(this._tableName)
       .where({ rdga_number: rdgaNumber })
       .update({ rdga_rating: rdgaRating, rdga_rating_change: ratingDifference })
       .returning('*');
@@ -118,7 +97,7 @@ class PlayerDao {
   }
 
   async activatePlayerForCurrentYear(rdgaNumber: number): Promise<IPlayerDb> {
-    const updatedPlayer = await db(this.#tableName)
+    const updatedPlayer = await db(this._tableName)
       .where({ rdga_number: rdgaNumber })
       .update({
         active_to: `${new Date().getFullYear() + 1}-01-01T00:00:00.000Z`,

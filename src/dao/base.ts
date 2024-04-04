@@ -24,18 +24,15 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
     return results;
   }
 
-  protected async _createBase<TKey extends keyof TDataDb>(
+  protected async _createBase(
     value: TDataDb,
-    returningField: TKey,
-  ): Promise<TDataDb[TKey]> {
-    const createdValue = await db(this._tableName)
-      .insert(value)
-      .returning(returningField.toString());
+  ): Promise<TDataDb> {
+    const createdValue = await db(this._tableName).insert(value).returning('*');
 
-    return createdValue[0][returningField];
+    return createdValue[0];
   }
 
-  protected async _updateBase(value: TDataDb): Promise<TDataDb> {
+  protected async _updateBase(value: Partial<TDataDb>): Promise<TDataDb> {
     const updatedValue = await db(this._tableName)
       .where({ [this._primaryKeyName]: value[this._primaryKeyName] })
       .update(value)
@@ -52,14 +49,21 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
       .del();
   }
 
-  protected async _getByPrimaryKeyBase(
-    primaryKeyValue: TDataDb[TPrimaryKey],
+  protected async _getByKey<TKey extends keyof TDataDb>(
+    key: TKey,
+    keyValue: TDataDb[TKey],
   ): Promise<TData> {
     const value = await db(this._tableName)
       .select(this._mapping)
-      .where({ [this._primaryKeyName]: primaryKeyValue });
+      .where({ [key]: keyValue });
 
     return value[0];
+  }
+
+  protected async _getByPrimaryKeyBase(
+    primaryKeyValue: TDataDb[TPrimaryKey],
+  ): Promise<TData> {
+    return this._getByKey(this._primaryKeyName, primaryKeyValue);
   }
 
   async getAll(..._args: unknown[]): Promise<TData[]> {
@@ -67,10 +71,10 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
   }
 
   async create(value: TDataDb) {
-    return this._createBase(value, this._primaryKeyName);
+    return (await this._createBase(value));
   }
 
-  async update(value: TDataDb) {
+  async update(value: Partial<TDataDb>) {
     return this._updateBase(value);
   }
 

@@ -12,9 +12,9 @@ describe('Player Dao', () => {
     jest.clearAllMocks();
   });
 
-  describe('getAll', () => {
+  describe('getAllPaginated', () => {
     test('should use select from table player ', async () => {
-      await playerDao.getAll(1, 'testSurname', 'testTown', false);
+      await playerDao.getAllPaginated(1, 'testSurname', 'testTown', false);
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Player);
       expect(db().select).toHaveBeenCalledTimes(1);
@@ -122,53 +122,6 @@ describe('Player Dao', () => {
       expect(db().orWhere).toHaveBeenCalledTimes(2);
       expect(db().orWhere).toHaveBeenNthCalledWith(1, { pdga_number: 0 });
       expect(db().orWhere).toHaveBeenNthCalledWith(2, { metrix_number: 0 });
-    });
-  });
-
-  describe('create', () => {
-    test('should return player RDGA number', async () => {
-      (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);
-      jest.clearAllMocks();
-
-      const playerRdgaNumber = await playerDao.create(testPlayerDb);
-
-      expect(playerRdgaNumber).toBe(1);
-      expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith(Table.Player);
-      expect(db().insert).toHaveBeenCalledTimes(1);
-      expect(db().insert).toHaveBeenCalledWith(testPlayerDb);
-      expect(db().returning).toHaveBeenCalledTimes(1);
-      expect(db().returning).toHaveBeenCalledWith('rdga_number');
-    });
-  });
-
-  describe('update', () => {
-    test('should return updated player', async () => {
-      (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);
-      jest.clearAllMocks();
-
-      const updatedPlayer = await playerDao.update(testPlayerDb);
-
-      expect(updatedPlayer).toEqual(testPlayerDb);
-      expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith(Table.Player);
-      expect(db().update).toHaveBeenCalledTimes(1);
-      expect(db().update).toHaveBeenCalledWith(testPlayerDb);
-      expect(db().returning).toHaveBeenCalledTimes(1);
-      expect(db().returning).toHaveBeenCalledWith('*');
-    });
-  });
-
-  describe('delete', () => {
-    test('should delete player', async () => {
-      await playerDao.delete(1);
-
-      expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith(Table.Player);
-      expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
-      expect(db().del).toHaveBeenCalledTimes(1);
-      expect(db().del).toHaveBeenCalledWith();
     });
   });
 

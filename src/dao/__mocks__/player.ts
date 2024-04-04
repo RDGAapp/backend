@@ -1,5 +1,6 @@
 const playerDaoMock = {
   getAll: jest.fn(),
+  getAllPaginated: jest.fn(),
   getByRdgaNumber: jest.fn(),
   getByRdgaPdgaMetrixNumber: jest.fn(),
   create: jest.fn(),

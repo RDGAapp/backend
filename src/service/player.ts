@@ -30,7 +30,7 @@ class PlayerService {
     town: string,
     onlyActive: boolean,
   ): Promise<IWithPagination<IPlayer[]>> {
-    const playersDao = await playerDao.getAll(
+    const playersDao = await playerDao.getAllPaginated(
       pageNumber,
       surname,
       town,
@@ -73,9 +73,9 @@ class PlayerService {
       playerMapping,
     );
 
-    const playerRdgaNumber = await playerDao.create(playerDb);
+    const createdPlayer = await playerDao.create(playerDb);
 
-    return playerRdgaNumber;
+    return createdPlayer.rdga_number;
   }
 
   async update(player: IPlayerBase): Promise<IPlayerBase> {

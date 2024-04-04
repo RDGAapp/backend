@@ -14,7 +14,7 @@ class PostService {
     pageNumber: number;
     fromDateTime?: string;
   }): Promise<IWithPagination<IBlogPost[]>> {
-    const posts = await postsDao.getAll({ pageNumber, fromDateTime });
+    const posts = await postsDao.getAllPaginated({ pageNumber, fromDateTime });
 
     return posts;
   }
@@ -25,9 +25,9 @@ class PostService {
       postMapping,
     );
 
-    const postName = await postsDao.create(postDb);
+    const createdPost = await postsDao.create(postDb);
 
-    return postName;
+    return createdPost.header;
   }
 
   async update(post: Omit<IBlogPostBase, 'createdAt'>): Promise<IBlogPostBase> {

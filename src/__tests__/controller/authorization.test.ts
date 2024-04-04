@@ -41,12 +41,14 @@ describe('Authorization Controller', () => {
         {
           httpOnly: true,
           sameSite: 'strict',
+          secure: false,
           maxAge: 24 * 60 * 60 * 1000,
         },
       );
       expect(response.cookie).toHaveBeenNthCalledWith(2, 'rdga_number', 1, {
         httpOnly: true,
         sameSite: 'strict',
+        secure: false,
         maxAge: 24 * 60 * 60 * 1000,
       });
     });
@@ -147,12 +149,14 @@ describe('Authorization Controller', () => {
         {
           httpOnly: true,
           sameSite: 'strict',
+          secure: false,
           maxAge: 24 * 60 * 60 * 1000,
         },
       );
       expect(response.cookie).toHaveBeenNthCalledWith(2, 'rdga_number', 1, {
         httpOnly: true,
         sameSite: 'strict',
+        secure: false,
         maxAge: 24 * 60 * 60 * 1000,
       });
     });

@@ -20,17 +20,17 @@ describe('Post Service', () => {
 
   describe('getAll', () => {
     test('should return whatever postsDao returns', async () => {
-      (postsDao.getAll as jest.Mock).mockReturnValueOnce([]);
+      (postsDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
       const posts = await postsService.getAll({ pageNumber: 3 });
 
       expect(posts).toEqual([]);
-      expect(postsDao.getAll).toHaveBeenCalledTimes(1);
-      expect(postsDao.getAll).toHaveBeenCalledWith({ pageNumber: 3 });
+      expect(postsDao.getAllPaginated).toHaveBeenCalledTimes(1);
+      expect(postsDao.getAllPaginated).toHaveBeenCalledWith({ pageNumber: 3 });
     });
 
     test('should pass from', async () => {
-      (postsDao.getAll as jest.Mock).mockReturnValueOnce([]);
+      (postsDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
       const posts = await postsService.getAll({
         pageNumber: 3,
@@ -38,8 +38,8 @@ describe('Post Service', () => {
       });
 
       expect(posts).toEqual([]);
-      expect(postsDao.getAll).toHaveBeenCalledTimes(1);
-      expect(postsDao.getAll).toHaveBeenCalledWith({
+      expect(postsDao.getAllPaginated).toHaveBeenCalledTimes(1);
+      expect(postsDao.getAllPaginated).toHaveBeenCalledWith({
         pageNumber: 3,
         fromDateTime: 'testDateTime',
       });
@@ -48,7 +48,7 @@ describe('Post Service', () => {
 
   describe('create', () => {
     test('should return header', async () => {
-      (postsDao.create as jest.Mock).mockReturnValueOnce('Test');
+      (postsDao.create as jest.Mock).mockReturnValueOnce({ header: 'Test' });
 
       const testPostToCreate = testPost;
       const testPostDbToCreate = testPostDb;

@@ -24,7 +24,7 @@ describe('Role Service', () => {
 
   describe('create', () => {
     test('should return name', async () => {
-      (roleDao.create as jest.Mock).mockReturnValueOnce('Test');
+      (roleDao.create as jest.Mock).mockReturnValueOnce({ name: 'Test' });
 
       const testRoleToCreate = testRole;
       const testRoleDbToCreate = testRoleDb;
