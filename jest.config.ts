@@ -5,7 +5,11 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   verbose: true,
   moduleDirectories: ['node_modules', 'src'],
-  modulePathIgnorePatterns: ['__tests__/mocks/*', '<rootDir>/.*/__mocks__'],
+  modulePathIgnorePatterns: [
+    '__tests__/mocks/*',
+    '__tests__/app/*',
+    '<rootDir>/.*/__mocks__',
+  ],
   setupFiles: [
     '<rootDir>/.jest/setEnvVars.ts',
     '<rootDir>/.jest/loggerMock.ts',

@@ -24,9 +24,7 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
     return results;
   }
 
-  protected async _createBase(
-    value: TDataDb,
-  ): Promise<TDataDb> {
+  protected async _createBase(value: TDataDb): Promise<TDataDb> {
     const createdValue = await db(this._tableName).insert(value).returning('*');
 
     return createdValue[0];
@@ -66,19 +64,19 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
     return this._getByKey(this._primaryKeyName, primaryKeyValue);
   }
 
-  async getAll(..._args: unknown[]): Promise<TData[]> {
+  async getAll(..._args: unknown[]) {
     return this._getAllBase();
   }
 
   async create(value: TDataDb) {
-    return (await this._createBase(value));
+    return await this._createBase(value);
   }
 
   async update(value: Partial<TDataDb>) {
     return this._updateBase(value);
   }
 
-  async delete(primaryKeyValue: TDataDb[TPrimaryKey]): Promise<void> {
+  async delete(primaryKeyValue: TDataDb[TPrimaryKey]) {
     await this._deleteBase(primaryKeyValue);
   }
 
