@@ -1,4 +1,3 @@
-import TournamentType from '../../enums/TournamentType';
 import { Knex } from 'knex';
 
 const tableName = 'tournaments';
@@ -9,13 +8,13 @@ export async function up(knex: Knex): Promise<void> {
     DROP CONSTRAINT "tournaments_tournament_type_check",
     ADD CONSTRAINT "tournaments_tournament_type_check" 
     CHECK (tournament_type IN (
-      '${TournamentType.AllStar}',
-      '${TournamentType.BagTag}',
-      '${TournamentType.League}',
-      '${TournamentType.National}',
-      '${TournamentType.Regional}',
-      '${TournamentType.RussianChampionship}',
-      '${TournamentType.Federal}'
+      'МВЗ',
+      'bag-tag',
+      'лига',
+      'национальный тур',
+      'региональный',
+      'ЧР',
+      'федеральный'
     ))
   `);
 }
@@ -26,11 +25,11 @@ export async function down(knex: Knex): Promise<void> {
     DROP CONSTRAINT "tournaments_tournament_type_check",
     ADD CONSTRAINT "tournaments_tournament_type_check" 
     CHECK (tournament_type IN (
-      '${TournamentType.AllStar}',
-      '${TournamentType.BagTag}',
-      '${TournamentType.League}',
-      '${TournamentType.National}',
-      '${TournamentType.Regional}'
+      'МВЗ',
+      'bag-tag',
+      'лига',
+      'национальный тур',
+      'региональный'
     ))
   `);
 }

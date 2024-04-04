@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 import { fakerRU as faker } from '@faker-js/faker';
-import { ITournamentDb } from 'types/tournamentDb';
-import TournamentType from '../../enums/TournamentType';
+import { ITournamentDb } from '../../types/tournamentDb';
+import { Table, TournamentType } from '../../types/db';
 
-const tableName = 'tournaments';
+const tableName = Table.Tournament;
 const now = new Date();
 
 const tournaments: ITournamentDb[] = [];

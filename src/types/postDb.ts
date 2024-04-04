@@ -1,8 +1,5 @@
-export interface IBlogPostDb {
-  code: string;
-  author: string | null;
-  header: string;
-  text: string;
+import { Post } from './db';
+
+export interface IBlogPostDb extends Omit<Post, 'created_at'> {
   created_at: string;
-  author_rdga_number: number;
 }

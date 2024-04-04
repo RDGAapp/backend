@@ -1,3 +1,6 @@
+import { IAuthDataDb } from './authDataDb';
+import { IPlayer } from './player';
+
 export interface ITelegramAuthData {
   id: number;
   auth_date: number;
@@ -9,16 +12,16 @@ export interface ITelegramAuthData {
 }
 
 export interface IAuthData {
-  rdgaNumber: number;
-  telegramId: number;
-  telegramAuthDate: number;
-  telegramUsername: string;
-  telegramFirstName: string | null;
-  telegramLastName: string | null;
-  telegramPhotoUrl: string | null;
+  rdgaNumber: IAuthDataDb['rdga_number'];
+  telegramId: IAuthDataDb['telegram_id'];
+  telegramAuthDate: IAuthDataDb['telegram_auth_date'];
+  telegramUsername: IAuthDataDb['telegram_username'];
+  telegramFirstName: IAuthDataDb['telegram_first_name'];
+  telegramLastName: IAuthDataDb['telegram_last_name'];
+  telegramPhotoUrl: IAuthDataDb['telegram_photo_url'];
 }
 
 export interface IUserBaseInfo {
-  rdgaNumber: number;
-  avatarUrl: string | null;
+  rdgaNumber: IPlayer['rdgaNumber'];
+  avatarUrl: IAuthDataDb['telegram_photo_url'];
 }

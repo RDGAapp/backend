@@ -1,8 +1,9 @@
 import { Knex } from 'knex';
 import { fakerRU as faker } from '@faker-js/faker';
-import { IAuthDataDb } from 'types/authDataDb';
+import { IAuthDataDb } from '../../types/authDataDb';
+import { Table } from '../../types/db';
 
-const tableName = 'auth_data';
+const tableName = Table.AuthData;
 
 const authDatas: IAuthDataDb[] = [];
 const telegramIds: Record<number, Partial<IAuthDataDb>> = {

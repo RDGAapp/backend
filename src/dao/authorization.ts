@@ -2,34 +2,16 @@ import db from 'database';
 import authorizationMapping from 'mapping/authorization';
 import { IAuthData } from 'types/authData';
 import { IAuthDataDb } from 'types/authDataDb';
+import { Table } from 'types/db';
+import BaseDao from './base';
 
-class AuthorizationDao {
-  #tableName;
-
+class AuthorizationDao extends BaseDao<IAuthData, IAuthDataDb, 'rdga_number'> {
   constructor() {
-    this.#tableName = 'auth_data';
+    super(Table.AuthData, authorizationMapping, 'rdga_number');
   }
 
   async getByTelegramId(id: number): Promise<IAuthData | null> {
-    const authorization = await db(this.#tableName)
-      .select(authorizationMapping)
-      .where({ telegram_id: id });
-
-    return authorization?.[0] ?? null;
-  }
-
-  async getByRdgaNumber(rdgaNumber: number): Promise<IAuthData | null> {
-    const authorization = await db(this.#tableName)
-      .select(authorizationMapping)
-      .where({ rdga_number: rdgaNumber });
-
-    return authorization?.[0] ?? null;
-  }
-
-  async create(data: IAuthDataDb): Promise<IAuthDataDb> {
-    const authorization = await db(this.#tableName).insert(data).returning('*');
-
-    return authorization[0];
+    return this._getByKey('telegram_id', id);
   }
 
   async update(data: IAuthDataDb): Promise<IAuthDataDb> {
@@ -43,7 +25,7 @@ class AuthorizationDao {
       dataToUpdate.telegram_photo_url = data.telegram_photo_url;
     }
 
-    const authorization = await db(this.#tableName)
+    const authorization = await db(this._tableName)
       .where({ rdga_number: data.rdga_number })
       .update(dataToUpdate)
       .returning('*');

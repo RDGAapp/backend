@@ -1,5 +1,5 @@
 import authorizationDao from 'dao/authorization';
-import playersService from 'service/players';
+import playersService from 'service/player';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import { getTelegramLoginByRdgaNumber } from 'helpers/externalApiHelpers';
 import {
@@ -15,7 +15,7 @@ class AuthorizationService {
     rdgaNumber: number,
     hash: string,
   ): Promise<IUserBaseInfo> {
-    const authDataFromDb = await authorizationDao.getByRdgaNumber(rdgaNumber);
+    const authDataFromDb = await authorizationDao.getByPrimaryKey(rdgaNumber);
 
     if (!authDataFromDb) throw new Error('Data is corrupted');
 
@@ -67,7 +67,7 @@ class AuthorizationService {
     rdgaNumber: number,
     telegramAuthData: ITelegramAuthData,
   ): Promise<IUserBaseInfo> {
-    const authDataFromDb = await authorizationDao.getByRdgaNumber(rdgaNumber);
+    const authDataFromDb = await authorizationDao.getByPrimaryKey(rdgaNumber);
     if (authDataFromDb) throw new Error('Already registered');
 
     const playerFromDb = await playersService.checkIfPlayerExist({

@@ -1,11 +1,11 @@
-import TournamentType from 'enums/TournamentType';
+import { ITournamentDb } from './tournamentDb';
 
 export interface ITournament {
-  code: string;
-  name: string;
-  town: string;
-  startDate: string;
-  endDate: string;
-  tournamentType: TournamentType;
-  metrixId: string | null;
+  code: ITournamentDb['code'];
+  name: ITournamentDb['name'];
+  town: ITournamentDb['town'];
+  startDate: ITournamentDb['start_date'];
+  endDate: ITournamentDb['end_date'];
+  tournamentType: ITournamentDb['tournament_type'];
+  metrixId: ITournamentDb['metrix_id'];
 }

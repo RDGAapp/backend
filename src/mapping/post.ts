@@ -1,3 +1,6 @@
+import { IBlogPostBase } from 'types/post';
+import { IBlogPostDb } from 'types/postDb';
+
 export default {
   code: 'code',
   header: 'header',
@@ -5,4 +8,4 @@ export default {
   author: 'author',
   createdAt: 'created_at',
   authorRdgaNumber: 'author_rdga_number',
-} as const;
+} satisfies Record<keyof IBlogPostBase, keyof IBlogPostDb>;

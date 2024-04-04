@@ -1,7 +1,7 @@
 import fetchMock from 'jest-fetch-mock';
 import authorizationService from 'service/authorization';
 import authorizationDao from 'dao/authorization';
-import playersService from 'service/players';
+import playersService from 'service/player';
 
 import testAuthData from '../mocks/authorization';
 import { fullTelegramUser } from '../mocks/telegramUsers';
@@ -9,7 +9,7 @@ import testAuthDataDb from '../mocks/authorizationDb';
 import testPlayer from '../mocks/testPlayer';
 
 jest.mock('dao/authorization');
-jest.mock('service/players');
+jest.mock('service/player');
 fetchMock.enableMocks();
 
 describe('Authorization Service', () => {
@@ -73,7 +73,7 @@ describe('Authorization Service', () => {
           total: 1,
         }),
       );
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
@@ -113,7 +113,7 @@ describe('Authorization Service', () => {
           total: 1,
         }),
       );
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
@@ -143,7 +143,7 @@ describe('Authorization Service', () => {
     });
 
     test('should not create authData (already registered)', async () => {
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(
         testAuthData,
       );
 
@@ -155,7 +155,7 @@ describe('Authorization Service', () => {
     });
 
     test("should not create authData (player doesn't exist)", async () => {
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         null,
       );
@@ -174,7 +174,7 @@ describe('Authorization Service', () => {
           total: 0,
         }),
       );
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
@@ -193,7 +193,7 @@ describe('Authorization Service', () => {
           total: 10,
         }),
       );
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
@@ -216,7 +216,7 @@ describe('Authorization Service', () => {
           total: 1,
         }),
       );
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
@@ -234,7 +234,7 @@ describe('Authorization Service', () => {
       '8f6db6edb9965f49a0d3ff6dd62433afb90ff3f2081397035e3b03f84069d939';
 
     test('should return baseUserInfo', async () => {
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(
         testAuthData,
       );
 
@@ -244,30 +244,30 @@ describe('Authorization Service', () => {
         rdgaNumber: 1,
         avatarUrl: 'https://some.url/photo',
       });
-      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);
     });
 
     test('should throw with wrong hash', async () => {
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(
         testAuthData,
       );
 
       await expect(
         async () => await authorizationService.checkAuthData(1, 'hash'),
       ).rejects.toThrow('Data is corrupted');
-      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);
     });
 
     test('should throw if no user', async () => {
-      (authorizationDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
 
       await expect(
         async () => await authorizationService.checkAuthData(1, correctHash),
       ).rejects.toThrow('Data is corrupted');
-      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(authorizationDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);
     });
   });
 });

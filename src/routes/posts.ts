@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import postsController from 'controller/posts';
+import postsController from 'controller/post';
 import { response400Schema } from 'helpers/responses';
 import { z } from 'zod';
 

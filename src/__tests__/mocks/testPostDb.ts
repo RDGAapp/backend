@@ -31,4 +31,4 @@ export default {
     </ol>
   `,
   author_rdga_number: 1,
-} as IBlogPostDb;
+} satisfies IBlogPostDb;

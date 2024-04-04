@@ -1,11 +1,7 @@
-import TournamentType from 'enums/TournamentType';
+import { Tournament } from './db';
 
-export interface ITournamentDb {
-  code: string;
-  name: string;
-  town: string;
+export interface ITournamentDb
+  extends Omit<Tournament, 'start_date' | 'end_date'> {
   start_date: string;
   end_date: string;
-  tournament_type: TournamentType;
-  metrix_id: string | null;
 }

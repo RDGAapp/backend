@@ -1,4 +1,4 @@
-import TournamentType from 'enums/TournamentType';
+import { TournamentType } from 'types/db';
 import { ITournamentDb } from 'types/tournamentDb';
 
 export default {
@@ -9,4 +9,4 @@ export default {
   end_date: new Date('3000-1-1').toISOString(),
   tournament_type: TournamentType.AllStar,
   metrix_id: 'testMetrixId',
-} as ITournamentDb;
+} satisfies ITournamentDb;

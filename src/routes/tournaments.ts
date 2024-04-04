@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import tournamentsController from 'controller/tournaments';
+import tournamentsController from 'controller/tournament';
 import { response400Schema } from 'helpers/responses';
 import { z } from 'zod';
 

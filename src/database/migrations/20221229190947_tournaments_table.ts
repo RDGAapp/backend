@@ -1,4 +1,3 @@
-import TournamentType from '../../enums/TournamentType';
 import { Knex } from 'knex';
 
 const tableName = 'tournaments';
@@ -12,11 +11,11 @@ export async function up(knex: Knex): Promise<void> {
     table.dateTime('end_date').notNullable();
     table
       .enum('tournament_type', [
-        TournamentType.AllStar,
-        TournamentType.BagTag,
-        TournamentType.League,
-        TournamentType.National,
-        TournamentType.Regional,
+        'МВЗ',
+        'bag-tag',
+        'лига',
+        'национальный тур',
+        'региональный',
       ])
       .notNullable();
   });

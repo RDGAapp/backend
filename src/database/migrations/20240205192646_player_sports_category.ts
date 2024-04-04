@@ -1,4 +1,3 @@
-import SportsCategory from '../../enums/SportsCategory';
 import type { Knex } from 'knex';
 
 const tableName = 'players';
@@ -7,14 +6,14 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.alterTable(tableName, (table) => {
     table
       .enum('sports_category', [
-        SportsCategory.Master,
-        SportsCategory.Candidate,
-        SportsCategory.AdultFirst,
-        SportsCategory.AdultSecond,
-        SportsCategory.AdultThird,
-        SportsCategory.JuniorFirst,
-        SportsCategory.JuniorSecond,
-        SportsCategory.JuniorThird,
+        'master',
+        'candidate',
+        'adult-1',
+        'adult-2',
+        'adult-3',
+        'junior-1',
+        'junior-2',
+        'junior-3',
       ])
       .nullable()
       .defaultTo(null);

@@ -32,6 +32,7 @@
     "eslint": "8.57.0",
     "jest": "29.7.0",
     "jest-fetch-mock": "3.0.3",
+    "knex-types": "0.5.0",
     "nodemon": "3.1.0",
     "supertest": "6.3.4",
     "ts-jest": "29.1.2",
@@ -58,6 +59,7 @@
     "eslint:check": "eslint . --ext .ts",
     "types:check": "tsc --noEmit",
     "test": "TZ=UTC jest --runInBand --forceExit --detectOpenHandles",
-    "test:coverage": "TZ=UTC jest --coverage --runInBand --forceExit --detectOpenHandles"
+    "test:coverage": "TZ=UTC jest --coverage --runInBand --forceExit --detectOpenHandles",
+    "generate:types": "NODE_PATH=src npx ts-node src/knex-types.ts && cp ./src/types/db.ts ../web/src/types/db.ts"
   }
 }

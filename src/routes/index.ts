@@ -3,11 +3,11 @@ import playerRouter from 'routes/players';
 import tournamentsRouter from 'routes/tournaments';
 import postsRouter from 'routes/posts';
 import authorizationRouter from 'routes/authorization';
-import playerController from 'controller/players';
+import playerController from 'controller/player';
 
 const router = Router();
 
-router.get('/coffee', (req: Request, res: Response) => {
+router.get('/coffee', (_req: Request, res: Response) => {
   res.status(418).send("I'm a teapot");
 });
 
