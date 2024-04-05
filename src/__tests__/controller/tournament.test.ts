@@ -57,7 +57,7 @@ describe('Tournament Controller', () => {
   describe('create', () => {
     test('should create with 201 response', async () => {
       const request = { body: { ...testTournament } } as unknown as Request;
-      (tournamentsService.create as jest.Mock).mockReturnValueOnce(1);
+      (tournamentsService.create as jest.Mock).mockReturnValueOnce({ name: 1 });
 
       await tournamentsController.create(request, response);
 
@@ -201,15 +201,15 @@ describe('Tournament Controller', () => {
 
   describe('getByCode', () => {
     test('should response 200 if tournament found', async () => {
-      (tournamentsService.getByCode as jest.Mock).mockReturnValueOnce({
+      (tournamentsService.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         code: 'test',
       });
       const request = { tournamentCode: 'test' } as unknown as Request;
 
       await tournamentsController.getByCode(request, response);
 
-      expect(tournamentsService.getByCode).toHaveBeenCalledTimes(1);
-      expect(tournamentsService.getByCode).toHaveBeenCalledWith('test');
+      expect(tournamentsService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.getByPrimaryKey).toHaveBeenCalledWith('test');
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);
@@ -218,14 +218,16 @@ describe('Tournament Controller', () => {
 
     test('should handle service throw with 500', async () => {
       const request = { tournamentCode: 'test' } as unknown as Request;
-      (tournamentsService.getByCode as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
+      (tournamentsService.getByPrimaryKey as jest.Mock).mockImplementationOnce(
+        () => {
+          throw new Error('Test');
+        },
+      );
 
       await tournamentsController.getByCode(request, response);
 
-      expect(tournamentsService.getByCode).toHaveBeenCalledTimes(1);
-      expect(tournamentsService.getByCode).toHaveBeenCalledWith('test');
+      expect(tournamentsService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(tournamentsService.getByPrimaryKey).toHaveBeenCalledWith('test');
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledTimes(0);

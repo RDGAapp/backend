@@ -15,8 +15,8 @@ class BaseService<
     this._mapping = mapping;
   }
 
-  protected async _getAllBase() {
-    const values = await this._dao.getAll();
+  protected async _getAllBase(...args: unknown[]) {
+    const values = await this._dao.getAll(...args);
 
     return values;
   }
@@ -51,8 +51,8 @@ class BaseService<
     return this._dao.getByPrimaryKey(primaryKeyValue);
   }
 
-  async getAll(..._args: unknown[]) {
-    return this._getAllBase();
+  async getAll(...args: unknown[]) {
+    return this._getAllBase(...args);
   }
 
   async create(value: TData) {
