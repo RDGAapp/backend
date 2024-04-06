@@ -9,7 +9,10 @@ class PostController {
     const fromDateTime = request.query.from?.toString();
 
     try {
-      const posts = await postsService.getAll({ pageNumber, fromDateTime });
+      const posts = await postsService.getAllPaginated({
+        pageNumber,
+        fromDateTime,
+      });
 
       return response.status(200).json(posts);
     } catch (error) {
@@ -25,12 +28,12 @@ class PostController {
     }
 
     try {
-      const postHeader = await postsService.create({
+      const createdPost = await postsService.create({
         ...result.data,
         createdAt: new Date().toISOString(),
       });
 
-      response.status(201).send(`Пост "${postHeader}" создан`);
+      response.status(201).send(`Пост "${createdPost.header}" создан`);
     } catch (error) {
       return response500(response, error);
     }
@@ -73,7 +76,7 @@ class PostController {
     const { postCode } = request;
 
     try {
-      const post = await postsService.getByCode(postCode);
+      const post = await postsService.getByPrimaryKey(postCode);
 
       return response.status(200).json(post);
     } catch (error) {

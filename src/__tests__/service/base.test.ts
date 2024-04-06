@@ -24,6 +24,16 @@ describe('Base Service', () => {
       expect(testDao.getAll).toHaveBeenCalledTimes(1);
       expect(testDao.getAll).toHaveBeenCalledWith();
     });
+
+    test('should pass everything to testDao', async () => {
+      (testDao.getAll as jest.Mock).mockReturnValueOnce([]);
+
+      const roles = await testService.getAll('one', 'two', { 3: 'three' });
+
+      expect(roles).toEqual([]);
+      expect(testDao.getAll).toHaveBeenCalledTimes(1);
+      expect(testDao.getAll).toHaveBeenCalledWith('one', 'two', { 3: 'three' });
+    });
   });
 
   describe('create', () => {

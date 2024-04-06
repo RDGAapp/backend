@@ -86,9 +86,9 @@ describe('Post Dao', () => {
     });
   });
 
-  describe('getByCode', () => {
+  describe('getByPrimaryKey', () => {
     test('should getByCode post', async () => {
-      await postDao.getByCode('test');
+      await postDao.getByPrimaryKey('test');
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Post);

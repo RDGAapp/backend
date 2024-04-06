@@ -6,7 +6,7 @@ import { IBlogPost, IBlogPostBase } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 import BaseDao from './base';
 
-class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
+export class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
   #playersTableName;
   #authTableName;
 
@@ -56,7 +56,7 @@ class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
     return results;
   }
 
-  async getByCode(code: string): Promise<IBlogPost> {
+  async getByPrimaryKey(code: string): Promise<IBlogPost> {
     const post = await db(this._tableName)
       .leftJoin(
         this.#playersTableName,
