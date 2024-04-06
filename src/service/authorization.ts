@@ -9,8 +9,17 @@ import {
 import authorizationMapping from 'mapping/authorization';
 import { IAuthData, ITelegramAuthData, IUserBaseInfo } from 'types/authData';
 import { IAuthDataDb } from 'types/authDataDb';
+import BaseService from './base';
 
-class AuthorizationService {
+class AuthorizationService extends BaseService<
+  IAuthData,
+  IAuthDataDb,
+  typeof authorizationDao
+> {
+  constructor() {
+    super(authorizationDao, authorizationMapping);
+  }
+
   async checkAuthData(
     rdgaNumber: number,
     hash: string,

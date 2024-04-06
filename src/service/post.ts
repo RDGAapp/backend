@@ -1,11 +1,11 @@
-import postDao, { PostDao } from 'dao/post';
+import postDao from 'dao/post';
 import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
 import { IBlogPost, IBlogPostBase } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 import BaseService from './base';
 
-class PostService extends BaseService<IBlogPostBase, IBlogPostDb, PostDao> {
+class PostService extends BaseService<IBlogPostBase, IBlogPostDb, typeof postDao> {
   constructor() {
     super(postDao, postMapping);
   }

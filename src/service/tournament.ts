@@ -1,4 +1,4 @@
-import tournamentDao, { TournamentDao } from 'dao/tournament';
+import tournamentDao from 'dao/tournament';
 import tournamentMapping from 'mapping/tournament';
 import { ITournament } from 'types/tournament';
 import { ITournamentDb } from 'types/tournamentDb';
@@ -7,7 +7,7 @@ import BaseService from './base';
 class TournamentService extends BaseService<
   ITournament,
   ITournamentDb,
-  TournamentDao
+  typeof tournamentDao
 > {
   constructor() {
     super(tournamentDao, tournamentMapping);

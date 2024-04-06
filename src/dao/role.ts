@@ -4,7 +4,7 @@ import { IRole } from 'types/role';
 import { IRoleDb } from 'types/roleDb';
 import BaseDao from './base';
 
-export class RoleDao extends BaseDao<IRole, IRoleDb, 'code'> {
+class RoleDao extends BaseDao<IRole, IRoleDb, 'code'> {
   constructor() {
     super(Table.Role, roleMapping, 'code');
   }

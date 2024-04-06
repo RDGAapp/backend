@@ -6,7 +6,7 @@ import { ITournamentDb } from 'types/tournamentDb';
 import { Table } from 'types/db';
 import BaseDao from './base';
 
-export class TournamentDao extends BaseDao<ITournament, ITournamentDb, 'code'> {
+class TournamentDao extends BaseDao<ITournament, ITournamentDb, 'code'> {
   constructor() {
     super(Table.Tournament, tournamentMapping, 'code');
   }

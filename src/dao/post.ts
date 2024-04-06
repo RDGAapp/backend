@@ -6,7 +6,7 @@ import { IBlogPost, IBlogPostBase } from 'types/post';
 import { IBlogPostDb } from 'types/postDb';
 import BaseDao from './base';
 
-export class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
+class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
   #playersTableName;
   #authTableName;
 
