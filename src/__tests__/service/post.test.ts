@@ -12,27 +12,21 @@ describe('Post Service', () => {
     test('should return whatever postsDao returns', async () => {
       (postsDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
-      const posts = await postsService.getAllPaginated({ pageNumber: 3 });
+      const posts = await postsService.getAllPaginated(3);
 
       expect(posts).toEqual([]);
       expect(postsDao.getAllPaginated).toHaveBeenCalledTimes(1);
-      expect(postsDao.getAllPaginated).toHaveBeenCalledWith({ pageNumber: 3 });
+      expect(postsDao.getAllPaginated).toHaveBeenCalledWith(3);
     });
 
     test('should pass from', async () => {
       (postsDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
-      const posts = await postsService.getAllPaginated({
-        pageNumber: 3,
-        fromDateTime: 'testDateTime',
-      });
+      const posts = await postsService.getAllPaginated(3, 'testDateTime');
 
       expect(posts).toEqual([]);
       expect(postsDao.getAllPaginated).toHaveBeenCalledTimes(1);
-      expect(postsDao.getAllPaginated).toHaveBeenCalledWith({
-        pageNumber: 3,
-        fromDateTime: 'testDateTime',
-      });
+      expect(postsDao.getAllPaginated).toHaveBeenCalledWith(3, 'testDateTime');
     });
   });
 });

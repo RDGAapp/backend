@@ -12,6 +12,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
   constructor() {
     super(Table.Player, playerMapping, 'rdga_number');
     this.#authTableName = Table.AuthData;
+    this._perPageRecords = 30;
   }
 
   async getAllPaginated(
@@ -46,7 +47,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       .orderBy('rdga_rating', 'desc')
       .orderBy(`${this._tableName}.rdga_number`, 'asc')
       .paginate({
-        perPage: 30,
+        perPage: this._perPageRecords,
         currentPage: pageNumber,
         isLengthAware: true,
       });

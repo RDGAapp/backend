@@ -9,10 +9,10 @@ class PostController {
     const fromDateTime = request.query.from?.toString();
 
     try {
-      const posts = await postsService.getAllPaginated({
+      const posts = await postsService.getAllPaginated(
         pageNumber,
         fromDateTime,
-      });
+      );
 
       return response.status(200).json(posts);
     } catch (error) {

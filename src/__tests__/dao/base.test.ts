@@ -21,6 +21,22 @@ describe('Base Dao', () => {
     });
   });
 
+  describe('getAllPaginated', () => {
+    test('should use select from table post', async () => {
+      await testDao.getAllPaginated(1, 'some', 'test', 123);
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('test');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(testMapping);
+      expect(db().paginate).toHaveBeenCalledTimes(1);
+      expect(db().paginate).toHaveBeenCalledWith({
+        perPage: 30,
+        currentPage: 1,
+        isLengthAware: true,
+      });
+    });
+  });
+
   describe('create', () => {
     test('should return test role name ', async () => {
       (db().returning as jest.Mock).mockReturnValueOnce([testSome]);

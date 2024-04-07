@@ -1,10 +1,12 @@
 import db from 'database';
+import { IWithPagination } from 'knex-paginate';
 import { Table } from 'types/db';
 
 class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
   protected _tableName;
   protected _mapping;
   protected _primaryKeyName;
+  protected _perPageRecords = 30;
 
   constructor(
     tableName: Table,
@@ -20,6 +22,21 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
     const query = db(this._tableName);
 
     const results = query.select(this._mapping);
+
+    return results;
+  }
+
+  protected async _getAllPaginatedBase(
+    pageNumber: number,
+    ..._args: unknown[]
+  ): Promise<IWithPagination<TData[]>> {
+    const query = db(this._tableName);
+
+    const results = query.select(this._mapping).paginate({
+      perPage: this._perPageRecords,
+      currentPage: pageNumber,
+      isLengthAware: true,
+    });
 
     return results;
   }
@@ -66,6 +83,10 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
 
   async getAll(..._args: unknown[]) {
     return this._getAllBase();
+  }
+
+  async getAllPaginated(pageNumber: number, ...args: unknown[]) {
+    return this._getAllPaginatedBase(pageNumber, ...args);
   }
 
   async create(value: TDataDb) {

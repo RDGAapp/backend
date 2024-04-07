@@ -14,15 +14,13 @@ class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
     super(Table.Post, postMapping, 'code');
     this.#playersTableName = Table.Player;
     this.#authTableName = Table.AuthData;
+    this._perPageRecords = 10;
   }
 
-  async getAllPaginated({
-    pageNumber,
-    fromDateTime,
-  }: {
-    pageNumber: number;
-    fromDateTime?: string;
-  }): Promise<IWithPagination<IBlogPost[]>> {
+  async getAllPaginated(
+    pageNumber: number,
+    fromDateTime?: string,
+  ): Promise<IWithPagination<IBlogPost[]>> {
     let query = db(this._tableName)
       .leftJoin(
         this.#playersTableName,
@@ -48,7 +46,7 @@ class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
       })
       .orderBy('created_at', 'desc')
       .paginate({
-        perPage: 10,
+        perPage: this._perPageRecords,
         currentPage: pageNumber,
         isLengthAware: true,
       });

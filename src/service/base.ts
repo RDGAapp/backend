@@ -21,6 +21,12 @@ class BaseService<
     return values;
   }
 
+  protected async _getAllPaginated(pageNumber: number, ...args: unknown[]) {
+    const values = await this._dao.getAllPaginated(pageNumber, ...args);
+
+    return values;
+  }
+
   protected async _createBase(value: TData) {
     const valueDb = objectToDbObject<TData, TDataDb>(value, this._mapping);
 
@@ -53,6 +59,10 @@ class BaseService<
 
   async getAll(...args: unknown[]) {
     return this._getAllBase(...args);
+  }
+
+  async getAllPaginated(pageNumber: number, ...args: unknown[]) {
+    return this._getAllPaginated(pageNumber, ...args);
   }
 
   async create(value: TData) {

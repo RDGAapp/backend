@@ -12,7 +12,7 @@ describe('Post Dao', () => {
 
   describe('getAllPaginated', () => {
     test('should use select from table post', async () => {
-      await postDao.getAllPaginated({ pageNumber: 1 });
+      await postDao.getAllPaginated(1);
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().leftJoin).toHaveBeenCalledTimes(2);
@@ -46,7 +46,7 @@ describe('Post Dao', () => {
     });
 
     test('should use select from table post with from', async () => {
-      await postDao.getAllPaginated({ pageNumber: 1, fromDateTime: 'testDateTime' });
+      await postDao.getAllPaginated(1, 'testDateTime');
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.Post);
       expect(db().leftJoin).toHaveBeenCalledTimes(2);

@@ -36,6 +36,18 @@ describe('Base Service', () => {
     });
   });
 
+  describe('getAllPaginated', () => {
+    test('should return whatever testDao returns', async () => {
+      (testDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
+
+      const value = await testService.getAllPaginated(3);
+
+      expect(value).toEqual([]);
+      expect(testDao.getAllPaginated).toHaveBeenCalledTimes(1);
+      expect(testDao.getAllPaginated).toHaveBeenCalledWith(3);
+    });
+  });
+
   describe('create', () => {
     test('should return everything', async () => {
       (testDao.create as jest.Mock).mockReturnValueOnce('Test');

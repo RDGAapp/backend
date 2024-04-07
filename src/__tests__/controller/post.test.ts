@@ -44,9 +44,7 @@ describe('Post Controller', () => {
       await postsController.getAll(request, response);
 
       expect(postsService.getAllPaginated).toHaveBeenCalledTimes(1);
-      expect(postsService.getAllPaginated).toHaveBeenCalledWith({
-        pageNumber: 1,
-      });
+      expect(postsService.getAllPaginated).toHaveBeenCalledWith(1, undefined);
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);
@@ -65,10 +63,10 @@ describe('Post Controller', () => {
       );
 
       expect(postsService.getAllPaginated).toHaveBeenCalledTimes(1);
-      expect(postsService.getAllPaginated).toHaveBeenCalledWith({
-        pageNumber: 1,
-        fromDateTime: '2020-01-02T00:00:00.000Z',
-      });
+      expect(postsService.getAllPaginated).toHaveBeenCalledWith(
+        1,
+        '2020-01-02T00:00:00.000Z',
+      );
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);
