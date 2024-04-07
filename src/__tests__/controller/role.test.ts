@@ -68,7 +68,7 @@ describe('Role Controller', () => {
       const request = {
         body: { ...testRole },
       } as unknown as Request;
-      (roleService.create as jest.Mock).mockReturnValueOnce(1);
+      (roleService.create as jest.Mock).mockReturnValueOnce({ name: 1 });
 
       await roleController.create(request, response);
 
@@ -221,17 +221,17 @@ describe('Role Controller', () => {
     });
   });
 
-  describe('getByCode', () => {
+  describe('getByPrimaryKey', () => {
     test('should response 200 if post found', async () => {
-      (roleService.getByCode as jest.Mock).mockReturnValueOnce({
+      (roleService.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         code: 'test',
       });
       const request = { roleCode: 'test' } as unknown as Request;
 
       await roleController.getByCode(request, response);
 
-      expect(roleService.getByCode).toHaveBeenCalledTimes(1);
-      expect(roleService.getByCode).toHaveBeenCalledWith('test');
+      expect(roleService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(roleService.getByPrimaryKey).toHaveBeenCalledWith('test');
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);
@@ -240,14 +240,14 @@ describe('Role Controller', () => {
 
     test('should handle service throw with 500', async () => {
       const request = { roleCode: 'test' } as unknown as Request;
-      (roleService.getByCode as jest.Mock).mockImplementationOnce(() => {
+      (roleService.getByPrimaryKey as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
       await roleController.getByCode(request, response);
 
-      expect(roleService.getByCode).toHaveBeenCalledTimes(1);
-      expect(roleService.getByCode).toHaveBeenCalledWith('test');
+      expect(roleService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(roleService.getByPrimaryKey).toHaveBeenCalledWith('test');
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledTimes(0);

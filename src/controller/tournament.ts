@@ -26,9 +26,9 @@ class TournamentController {
     }
 
     try {
-      const tournamentName = await tournamentsService.create(result.data);
+      const tournament = await tournamentsService.create(result.data);
 
-      response.status(201).send(`Турнир ${tournamentName} создан`);
+      response.status(201).send(`Турнир ${tournament.name} создан`);
     } catch (error) {
       return response500(response, error);
     }
@@ -71,7 +71,7 @@ class TournamentController {
     const { tournamentCode } = request;
 
     try {
-      const tournament = await tournamentsService.getByCode(tournamentCode);
+      const tournament = await tournamentsService.getByPrimaryKey(tournamentCode);
 
       return response.status(200).json(tournament);
     } catch (error) {

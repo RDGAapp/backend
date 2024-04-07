@@ -33,6 +33,7 @@ describe('Post endpoints', () => {
     header: testPost.header,
     text: testPost.text,
     author: testPost.author,
+    createdAt: testPost.createdAt,
     authorRdgaNumber: testPlayer.rdgaNumber,
   };
 
@@ -241,7 +242,6 @@ describe('Post endpoints', () => {
       expect(response.body).toEqual({
         ...postToUpdate,
         code: testPost.code,
-        createdAt: new Date().toISOString(),
       });
     });
 

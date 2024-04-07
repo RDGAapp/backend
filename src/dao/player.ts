@@ -12,6 +12,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
   constructor() {
     super(Table.Player, playerMapping, 'rdga_number');
     this.#authTableName = Table.AuthData;
+    this._perPageRecords = 30;
   }
 
   async getAllPaginated(
@@ -46,13 +47,13 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       .orderBy('rdga_rating', 'desc')
       .orderBy(`${this._tableName}.rdga_number`, 'asc')
       .paginate({
-        perPage: 30,
+        perPage: this._perPageRecords,
         currentPage: pageNumber,
         isLengthAware: true,
       });
   }
 
-  async getByRdgaNumber(rdgaNumber: number): Promise<IPlayer | null> {
+  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayer> {
     const player = await db(this._tableName)
       .leftJoin(
         this.#authTableName,
@@ -66,7 +67,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       })
       .where({ [`${this._tableName}.rdga_number`]: rdgaNumber });
 
-    return player?.[0] ?? null;
+    return player?.[0];
   }
 
   async getByRdgaPdgaMetrixNumber(

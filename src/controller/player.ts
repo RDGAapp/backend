@@ -18,7 +18,7 @@ class PlayerController {
     const onlyActive = request.query.onlyActive === 'true' ? true : false;
 
     try {
-      const players = await playerService.getAll(
+      const players = await playerService.getAllPaginated(
         pageNumber,
         surname,
         town,
@@ -35,7 +35,7 @@ class PlayerController {
     const { rdgaNumber } = request;
 
     try {
-      const player = await playerService.getByRdgaNumber(rdgaNumber);
+      const player = await playerService.getByPrimaryKey(rdgaNumber);
 
       if (!player) {
         return response
@@ -56,11 +56,11 @@ class PlayerController {
     }
 
     try {
-      const playerRdgaNumber = await playerService.create(result.data);
+      const createdPlayer = await playerService.create(result.data);
 
       response
         .status(201)
-        .send(`Игрок с номером РДГА ${playerRdgaNumber} создан`);
+        .send(`Игрок с номером РДГА ${createdPlayer.rdga_number} создан`);
     } catch (error) {
       return response500(response, error);
     }
@@ -172,7 +172,7 @@ class PlayerController {
     }
 
     try {
-      const playerFromDb = await playerService.getByRdgaNumber(rdgaNumber);
+      const playerFromDb = await playerService.getByPrimaryKey(rdgaNumber);
       const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
 
       if (!playerFromDb) {

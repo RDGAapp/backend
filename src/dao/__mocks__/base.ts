@@ -1,4 +1,4 @@
-const postServiceMock = {
+const baseDaoMock = {
   getAll: jest.fn(),
   getAllPaginated: jest.fn(),
   create: jest.fn(),
@@ -7,4 +7,4 @@ const postServiceMock = {
   getByPrimaryKey: jest.fn(),
 };
 
-export default postServiceMock;
+export default baseDaoMock;

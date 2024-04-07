@@ -22,9 +22,9 @@ class RoleController {
     }
 
     try {
-      const roleName = await roleService.create(result.data);
+      const createdRole = await roleService.create(result.data);
 
-      response.status(201).send(`Role "${roleName}" created`);
+      response.status(201).send(`Role "${createdRole.name}" created`);
     } catch (error) {
       return response500(response, error);
     }
@@ -67,7 +67,7 @@ class RoleController {
     const { roleCode } = request;
 
     try {
-      const post = await roleService.getByCode(roleCode);
+      const post = await roleService.getByPrimaryKey(roleCode);
 
       return response.status(200).json(post);
     } catch (error) {

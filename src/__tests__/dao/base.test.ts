@@ -1,17 +1,8 @@
 import db from 'database';
-import BaseDao from 'dao/base';
-import { Table } from 'types/db';
+import testDao from '__tests__/app/dao';
+import { tableName, testMapping } from '__tests__/app/helpers';
 
 jest.mock('database');
-
-const tableName = 'test' as Table;
-const testMapping = { test: 'test_db' } as const;
-
-const testDao = new BaseDao<{ test: string }, { test_db: string }, 'test_db'>(
-  tableName,
-  testMapping,
-  'test_db',
-);
 
 const testSome = { test_db: 'some' };
 
@@ -27,6 +18,22 @@ describe('Base Dao', () => {
       expect(db).toHaveBeenCalledWith('test');
       expect(db().select).toHaveBeenCalledTimes(1);
       expect(db().select).toHaveBeenCalledWith({ test: 'test_db' });
+    });
+  });
+
+  describe('getAllPaginated', () => {
+    test('should use select from table post', async () => {
+      await testDao.getAllPaginated(1, 'some', 'test', 123);
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith('test');
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith(testMapping);
+      expect(db().paginate).toHaveBeenCalledTimes(1);
+      expect(db().paginate).toHaveBeenCalledWith({
+        perPage: 30,
+        currentPage: 1,
+        isLengthAware: true,
+      });
     });
   });
 

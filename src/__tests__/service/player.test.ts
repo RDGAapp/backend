@@ -18,27 +18,7 @@ describe('Player Service', () => {
     jest.clearAllMocks();
   });
 
-  describe('getAllPaginated', () => {
-    test('should return whatever playerDao returns', async () => {
-      (playerDao.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
-      const players = await playerService.getAll(
-        1,
-        'testSurname',
-        'testTown',
-        false,
-      );
-      expect(players).toEqual([]);
-      expect(playerDao.getAllPaginated).toHaveBeenCalledTimes(1);
-      expect(playerDao.getAllPaginated).toHaveBeenCalledWith(
-        1,
-        'testSurname',
-        'testTown',
-        false,
-      );
-    });
-  });
-
-  describe('getByRdgaNumber', () => {
+  describe('getByPrimaryKey', () => {
     test('should return player with metrix info', async () => {
       fetchMock.mockResponseOnce(
         JSON.stringify([
@@ -50,12 +30,12 @@ describe('Player Service', () => {
           [],
         ]),
       );
-      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce({
+      (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         pdgaNumber: null,
       });
 
-      const player = await playerService.getByRdgaNumber(1);
+      const player = await playerService.getByPrimaryKey(1);
 
       expect(player).toEqual({
         ...testPlayer,
@@ -65,19 +45,19 @@ describe('Player Service', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player without metrix info', async () => {
       fetchMock.mockResponseOnce(JSON.stringify([[], [], []]));
-      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce({
+      (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         pdgaNumber: null,
       });
 
-      const player = await playerService.getByRdgaNumber(1);
+      const player = await playerService.getByPrimaryKey(1);
 
       expect(player).toEqual({
         ...testPlayer,
@@ -87,8 +67,8 @@ describe('Player Service', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
@@ -96,12 +76,12 @@ describe('Player Service', () => {
       fetchMock.mockResponseOnce(
         '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
       );
-      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce({
+      (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         metrixNumber: null,
       });
 
-      const player = await playerService.getByRdgaNumber(1);
+      const player = await playerService.getByPrimaryKey(1);
 
       expect(player).toEqual({
         ...testPlayer,
@@ -111,19 +91,19 @@ describe('Player Service', () => {
         pdgaRating: 955,
         pdgaActiveTo: new Date('31-Dec-2024').toISOString(),
       });
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player without pdga info', async () => {
       fetchMock.mockResponseOnce('<html></html>');
-      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce({
+      (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         metrixNumber: null,
       });
 
-      const player = await playerService.getByRdgaNumber(1);
+      const player = await playerService.getByPrimaryKey(1);
 
       expect(player).toEqual({
         ...testPlayer,
@@ -133,19 +113,19 @@ describe('Player Service', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player without metrixNumber and pdgaNumber', async () => {
-      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce({
+      (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         metrixNumber: null,
         pdgaNumber: null,
       });
 
-      const player = await playerService.getByRdgaNumber(1);
+      const player = await playerService.getByPrimaryKey(1);
 
       expect(player).toEqual({
         ...testPlayer,
@@ -156,17 +136,17 @@ describe('Player Service', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
       expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     test('should return null', async () => {
-      (playerDao.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
-      const player = await playerService.getByRdgaNumber(1);
+      (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
+      const player = await playerService.getByPrimaryKey(1);
       expect(player).toEqual(null);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaNumber).toHaveBeenCalledWith(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
     });
   });
 
@@ -187,74 +167,6 @@ describe('Player Service', () => {
 
       const exist = await playerService.checkIfPlayerExist(testPlayer);
       expect(exist).toBe(testPlayer);
-    });
-  });
-
-  describe('create', () => {
-    test('should return rdga_number', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
-        [],
-      );
-      (playerDao.create as jest.Mock).mockReturnValueOnce({ rdga_number: 1 });
-
-      const playerId = await playerService.create(testPlayer);
-
-      expect(playerId).toBe(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.create).toHaveBeenCalledTimes(1);
-      expect(playerDao.create).toHaveBeenCalledWith(testPlayerDb);
-    });
-
-    test('should throw', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
-        { ...testPlayer },
-      ]);
-
-      const testFunction = async () => await playerService.create(testPlayer);
-
-      await expect(testFunction).rejects.toThrow(
-        'Игрок с таким номером RDGA, PDGA или Metrix уже существует',
-      );
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.create).toHaveBeenCalledTimes(0);
-    });
-  });
-
-  describe('update', () => {
-    test('should return updated player', async () => {
-      (playerDao.update as jest.Mock).mockReturnValueOnce(testPlayerDb);
-
-      const updatedPlayer = await playerService.update(testPlayer);
-
-      expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.update).toHaveBeenCalledTimes(1);
-      expect(playerDao.update).toHaveBeenCalledWith(testPlayerDb);
-    });
-  });
-
-  describe('delete', () => {
-    test('should call dao delete player', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
-        { ...testPlayer },
-      ]);
-
-      await playerService.delete(1);
-
-      expect(playerDao.delete).toHaveBeenCalledTimes(1);
-      expect(playerDao.delete).toHaveBeenCalledWith(1);
-    });
-
-    test('should throw if player not exist', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
-        [],
-      );
-
-      const testFunction = async () => await playerService.delete(1);
-
-      await expect(testFunction).rejects.toThrow(
-        'Игрока с таким номером РДГА нет в базе',
-      );
-      expect(playerDao.delete).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -351,7 +263,6 @@ describe('Player Service', () => {
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.create).toHaveBeenCalledTimes(0);
     });
   });
 });
