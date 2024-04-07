@@ -52,7 +52,7 @@ describe('Player Dao', () => {
       (db().where as jest.Mock).mockReturnValueOnce([testPlayer]);
       jest.clearAllMocks();
 
-      const player = await playerDao.getByRdgaNumber(24);
+      const player = await playerDao.getByPrimaryKey(24);
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith('player');
@@ -73,7 +73,7 @@ describe('Player Dao', () => {
       (db().where as jest.Mock).mockReturnValueOnce([]);
       jest.clearAllMocks();
 
-      const player = await playerDao.getByRdgaNumber(24);
+      const player = await playerDao.getByPrimaryKey(24);
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith('player');
@@ -87,7 +87,7 @@ describe('Player Dao', () => {
       expect(db().where).toHaveBeenCalledWith({
         [`${Table.Player}.rdga_number`]: 24,
       });
-      expect(player).toEqual(null);
+      expect(player).toEqual(undefined);
     });
   });
 

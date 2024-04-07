@@ -1,16 +1,23 @@
 import playerDao from 'dao/player';
-import objectToDbObject from 'helpers/objectToDbObject';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import playerMapping from 'mapping/player';
-import { IWithPagination } from 'knex-paginate';
-import { IPlayer, IPlayerBase, IPlayerExtended } from 'types/player';
+import { IPlayerBase, IPlayerExtended } from 'types/player';
 import { IPlayerDb } from 'types/playerDb';
 import {
   getMetrixDataByNumber,
   getPdgaDataByNumber,
 } from 'helpers/externalApiHelpers';
+import BaseService from './base';
 
-class PlayerService {
+class PlayerService extends BaseService<
+  IPlayerBase,
+  IPlayerDb,
+  typeof playerDao
+> {
+  constructor() {
+    super(playerDao, playerMapping);
+  }
+
   async checkIfPlayerExist(
     player: Partial<IPlayerBase>,
   ): Promise<null | IPlayerBase> {
@@ -24,24 +31,8 @@ class PlayerService {
     return existingPlayer[0];
   }
 
-  async getAll(
-    pageNumber: number,
-    surname: string,
-    town: string,
-    onlyActive: boolean,
-  ): Promise<IWithPagination<IPlayer[]>> {
-    const playersDao = await playerDao.getAllPaginated(
-      pageNumber,
-      surname,
-      town,
-      onlyActive,
-    );
-
-    return playersDao;
-  }
-
-  async getByRdgaNumber(rdgaNumber: number): Promise<IPlayerExtended | null> {
-    const playerDb = await playerDao.getByRdgaNumber(rdgaNumber);
+  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayerExtended> {
+    const playerDb = await playerDao.getByPrimaryKey(rdgaNumber);
 
     if (!playerDb) return playerDb;
 
@@ -61,44 +52,6 @@ class PlayerService {
     player = Object.assign({}, player, ...externalInfo);
 
     return player;
-  }
-
-  async create(player: IPlayerBase): Promise<number> {
-    const exist = await this.checkIfPlayerExist(player);
-    if (exist)
-      throw Error('Игрок с таким номером RDGA, PDGA или Metrix уже существует');
-
-    const playerDb = objectToDbObject<IPlayerBase, IPlayerDb>(
-      player,
-      playerMapping,
-    );
-
-    const createdPlayer = await playerDao.create(playerDb);
-
-    return createdPlayer.rdga_number;
-  }
-
-  async update(player: IPlayerBase): Promise<IPlayerBase> {
-    const playerDb = objectToDbObject<IPlayerBase, IPlayerDb>(
-      player,
-      playerMapping,
-    );
-
-    const updatedIPlayerDb = await playerDao.update(playerDb);
-
-    const updatedPlayer = dbObjectToObject<IPlayerDb, IPlayerBase>(
-      updatedIPlayerDb,
-      playerMapping,
-    );
-
-    return updatedPlayer;
-  }
-
-  async delete(rdgaNumber: number): Promise<void> {
-    const exist = await this.checkIfPlayerExist({ rdgaNumber });
-    if (!exist) throw Error('Игрока с таким номером РДГА нет в базе');
-
-    await playerDao.delete(rdgaNumber);
   }
 
   async updateRdgaRating(

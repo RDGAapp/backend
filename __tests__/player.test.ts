@@ -554,7 +554,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        "Something's wrong: Error: Игрок с таким номером RDGA, PDGA или Metrix уже существует",
+        'Something\'s wrong: error: insert into "player" ("active_to", "metrix_number", "name", "pdga_number", "rdga_number", "rdga_rating", "rdga_rating_change", "sports_category", "surname", "town") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning * - duplicate key value violates unique constraint "player_pkey"',
       );
     });
 
@@ -658,13 +658,10 @@ describe('Player endpoints', () => {
       expect(getResponse.status).toBe(404);
     });
 
-    test('should return 500 if player does not exist', async () => {
+    test('should return 200 even if player does not exist', async () => {
       const response = await request(app).del('/players/1');
 
-      expect(response.status).toBe(500);
-      expect(response.text).toEqual(
-        "Something's wrong: Error: Игрока с таким номером РДГА нет в базе",
-      );
+      expect(response.status).toBe(200);
     });
 
     test('should return 400 if rdgaNumber is not a number', async () => {

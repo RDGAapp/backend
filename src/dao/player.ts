@@ -53,7 +53,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       });
   }
 
-  async getByRdgaNumber(rdgaNumber: number): Promise<IPlayer | null> {
+  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayer> {
     const player = await db(this._tableName)
       .leftJoin(
         this.#authTableName,
@@ -67,7 +67,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       })
       .where({ [`${this._tableName}.rdga_number`]: rdgaNumber });
 
-    return player?.[0] ?? null;
+    return player?.[0];
   }
 
   async getByRdgaPdgaMetrixNumber(

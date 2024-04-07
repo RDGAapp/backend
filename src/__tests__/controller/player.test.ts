@@ -15,12 +15,12 @@ describe('Player Controller', () => {
     const request = { query: {} } as Request;
 
     test('should response 200 and replace query with default values', async () => {
-      (playerService.getAll as jest.Mock).mockReturnValueOnce([]);
+      (playerService.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
       await playerController.getAll(request, response);
 
-      expect(playerService.getAll).toHaveBeenCalledTimes(1);
-      expect(playerService.getAll).toHaveBeenCalledWith(1, '', '', false);
+      expect(playerService.getAllPaginated).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllPaginated).toHaveBeenCalledWith(1, '', '', false);
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);
@@ -28,7 +28,7 @@ describe('Player Controller', () => {
     });
 
     test('should response 200 and use query values', async () => {
-      (playerService.getAll as jest.Mock).mockReturnValueOnce([]);
+      (playerService.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
       const request = {
         query: {
           page: 2,
@@ -40,8 +40,8 @@ describe('Player Controller', () => {
 
       await playerController.getAll(request, response);
 
-      expect(playerService.getAll).toHaveBeenCalledTimes(1);
-      expect(playerService.getAll).toHaveBeenCalledWith(
+      expect(playerService.getAllPaginated).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllPaginated).toHaveBeenCalledWith(
         2,
         'testSurname',
         'Somewhere',
@@ -54,13 +54,13 @@ describe('Player Controller', () => {
     });
 
     test('should handle service throw with 500', async () => {
-      (playerService.getAll as jest.Mock).mockImplementationOnce(() => {
+      (playerService.getAllPaginated as jest.Mock).mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
       await playerController.getAll(request, response);
 
-      expect(playerService.getAll).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllPaginated).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledTimes(0);
@@ -74,14 +74,14 @@ describe('Player Controller', () => {
   describe('getByRdgaNumber', () => {
     test('should response 200 if player found', async () => {
       const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.getByRdgaNumber as jest.Mock).mockReturnValueOnce(
+      (playerService.getByPrimaryKey as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
 
       await playerController.getByRdgaNumber(request, response);
 
-      expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerService.getByRdgaNumber).toHaveBeenCalledWith(24);
+      expect(playerService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerService.getByPrimaryKey).toHaveBeenCalledWith(24);
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledTimes(1);
@@ -90,12 +90,12 @@ describe('Player Controller', () => {
 
     test("should response 404 if player wasn't found", async () => {
       const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.getByRdgaNumber as jest.Mock).mockReturnValueOnce(null);
+      (playerService.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
 
       await playerController.getByRdgaNumber(request, response);
 
-      expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerService.getByRdgaNumber).toHaveBeenCalledWith(24);
+      expect(playerService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerService.getByPrimaryKey).toHaveBeenCalledWith(24);
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.send).toHaveBeenCalledTimes(1);
@@ -106,7 +106,7 @@ describe('Player Controller', () => {
 
     test('should handle service throw with 500', async () => {
       const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.getByRdgaNumber as jest.Mock).mockImplementationOnce(
+      (playerService.getByPrimaryKey as jest.Mock).mockImplementationOnce(
         () => {
           throw new Error('Test');
         },
@@ -114,8 +114,8 @@ describe('Player Controller', () => {
 
       await playerController.getByRdgaNumber(request, response);
 
-      expect(playerService.getByRdgaNumber).toHaveBeenCalledTimes(1);
-      expect(playerService.getByRdgaNumber).toHaveBeenCalledWith(24);
+      expect(playerService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(playerService.getByPrimaryKey).toHaveBeenCalledWith(24);
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledTimes(0);
@@ -129,7 +129,7 @@ describe('Player Controller', () => {
   describe('create', () => {
     test('should create with 201 response', async () => {
       const request = { body: { ...testPlayer } } as unknown as Request;
-      (playerService.create as jest.Mock).mockReturnValueOnce(1);
+      (playerService.create as jest.Mock).mockReturnValueOnce({ rdga_number: 1});
 
       await playerController.create(request, response);
 
