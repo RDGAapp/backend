@@ -3,6 +3,5 @@ declare namespace Express {
     rdgaNumber: number;
     tournamentCode: string;
     postCode: string;
-    roleCode: string;
   }
 }

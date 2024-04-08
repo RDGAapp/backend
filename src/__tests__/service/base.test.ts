@@ -1,13 +1,7 @@
-import BaseService from 'service/base';
 import testDao from '__tests__/app/dao';
-import { ITest, ITestDb, testMapping } from '__tests__/app/helpers';
+import testService from '__tests__/app/service';
 
 jest.mock('__tests__/app/dao');
-
-const testService = new BaseService<ITest, ITestDb, typeof testDao>(
-  testDao,
-  testMapping,
-);
 
 describe('Base Service', () => {
   afterEach(() => {
