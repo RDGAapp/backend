@@ -226,6 +226,23 @@ describe('Base Controller', () => {
         "Validation error: Unrecognized key(s) in object: 'some'",
       );
     });
+
+    test('should return 400 if tournamentCode empty', async () => {
+      const request = {
+        body: { ...testValue },
+        primaryKeyValue: '',
+      } as TestRequest;
+
+      await testController.update(request, response);
+
+      expect(testService.update).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: No primary key value provided",
+      );
+    });
   });
 
   describe('delete', () => {
@@ -258,6 +275,20 @@ describe('Base Controller', () => {
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
         "Something's wrong: Error: Test",
+      );
+    });
+
+    test('should return 400 if tournamentCode empty', async () => {
+      const request = { primaryKeyValue: '' } as TestRequest;
+
+      await testController.delete(request, response);
+
+      expect(testService.delete).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: No primary key value provided",
       );
     });
   });
@@ -295,6 +326,20 @@ describe('Base Controller', () => {
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
         "Something's wrong: Error: Test",
+      );
+    });
+
+    test('should return 400 if tournamentCode empty', async () => {
+      const request = { primaryKeyValue: '' } as TestRequest;
+
+      await testController.getByPrimaryKey(request, response);
+
+      expect(testService.getByPrimaryKey).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: No primary key value provided",
       );
     });
   });

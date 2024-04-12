@@ -58,7 +58,7 @@ describe('Tournament endpoints', () => {
         .post('/tournaments')
         .send(testTournament);
       expect(response.status).toBe(201);
-      expect(response.text).toBe('Турнир Test создан');
+      expect(response.text).toBe('Value "Test" created');
 
       const getAllResponse = await request(app).get('/tournaments');
       expect(getAllResponse.status).toBe(200);
@@ -135,8 +135,8 @@ describe('Tournament endpoints', () => {
       await request(app).post('/tournaments').send(testTournament);
       const response = await request(app).del('/tournaments/test');
 
-      expect(response.status).toBe(200);
-      expect(response.text).toEqual('Турнир test удален');
+      expect(response.status).toBe(201);
+      expect(response.text).toEqual('Value "test" deleted');
 
       const getResponse = await request(app).get('/tournaments');
       expect(getResponse.body.length).toBe(0);

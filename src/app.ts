@@ -14,7 +14,7 @@ app.use(
     origin:
       process.env.NODE_ENV === 'production'
         ? 'https://rdga.ru'
-        : 'http://192.168.50.164:3000',
+        : 'http://localhost:3000',
     credentials: true,
   }),
 );

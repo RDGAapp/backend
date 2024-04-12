@@ -6,7 +6,7 @@ import { ZodError, fromZodError } from 'zod-validation-error';
 import { ZodTypeAny } from 'zod';
 
 export type RdgaRequest<TDataDb, TPrimaryKeyDb extends keyof TDataDb> = Request & {
-  primaryKeyValue: TDataDb[TPrimaryKeyDb];
+  primaryKeyValue?: TDataDb[TPrimaryKeyDb];
 };
 
 class BaseController<
@@ -125,6 +125,10 @@ class BaseController<
     }
 
     try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+
       const updatedValue = await this._service.update({
         ...result.data,
         [this._primaryKey]: primaryKeyValue,
@@ -143,6 +147,10 @@ class BaseController<
     const { primaryKeyValue } = request;
 
     try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+
       await this._service.delete(primaryKeyValue);
 
       return this._response201(response, primaryKeyValue, 'deleted');
@@ -158,6 +166,10 @@ class BaseController<
     const { primaryKeyValue } = request;
 
     try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+
       const value = await this._service.getByPrimaryKey(primaryKeyValue);
 
       return this._response200(response, value);

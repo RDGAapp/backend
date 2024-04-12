@@ -1,82 +1,40 @@
-import { Request, Response } from 'express';
-import tournamentsService from 'service/tournament';
-import { response400Schema, response500 } from 'helpers/responses';
+import { Response } from 'express';
+import tournamentService from 'service/tournament';
+import tournamentDao from 'dao/tournament';
 import { tournamentPutSchema, tournamentSchema } from 'schemas';
 import { ITournament } from 'types/tournament';
+import { ITournamentDb } from 'types/tournamentDb';
+import BaseController, { RdgaRequest } from './base';
 
-class TournamentController {
-  async getAll(request: Request, response: Response) {
+class TournamentController extends BaseController<
+  ITournament,
+  ITournamentDb,
+  'code',
+  'code',
+  typeof tournamentService,
+  typeof tournamentDao
+> {
+  constructor() {
+    super(
+      tournamentService,
+      'code',
+      'code',
+      tournamentSchema,
+      tournamentPutSchema,
+      'name',
+    );
+  }
+
+  async getAll(
+    request: RdgaRequest<ITournamentDb, 'code'>,
+    response: Response,
+  ) {
     const from = (request.query.from as string) || '';
     const to = (request.query.to as string) || '';
 
-    try {
-      const tournaments = await tournamentsService.getAll(from, to);
+    const tournaments = await tournamentService.getAll(from, to);
 
-      return response.status(200).json(tournaments);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async create(request: Request, response: Response) {
-    const result = tournamentSchema.safeParse(request.body);
-
-    if (!result.success) {
-      return response400Schema(response, result.error);
-    }
-
-    try {
-      const tournament = await tournamentsService.create(result.data);
-
-      response.status(201).send(`Турнир ${tournament.name} создан`);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async update(request: Request, response: Response) {
-    const { tournamentCode } = request;
-
-    const result = tournamentPutSchema.safeParse(request.body);
-
-    if (!result.success) {
-      return response400Schema(response, result.error);
-    }
-
-    try {
-      const updatedTournament = await tournamentsService.update({
-        code: tournamentCode,
-        ...result.data,
-      } as ITournament);
-
-      return response.status(200).json(updatedTournament);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async delete(request: Request, response: Response) {
-    const { tournamentCode } = request;
-
-    try {
-      await tournamentsService.delete(tournamentCode);
-
-      return response.status(200).send(`Турнир ${tournamentCode} удален`);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async getByCode(request: Request, response: Response) {
-    const { tournamentCode } = request;
-
-    try {
-      const tournament = await tournamentsService.getByPrimaryKey(tournamentCode);
-
-      return response.status(200).json(tournament);
-    } catch (error) {
-      return response500(response, error);
-    }
+    return this._response200(response, tournaments);
   }
 }
 
