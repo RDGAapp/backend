@@ -3,7 +3,7 @@ import BaseService from 'service/base';
 import BaseDao from 'dao/base';
 import logger from 'helpers/logger';
 import { ZodError, fromZodError } from 'zod-validation-error';
-import { ZodTypeAny } from 'zod';
+import { z } from 'zod';
 
 export type RdgaRequest<TDataDb, TPrimaryKeyDb extends keyof TDataDb> = Request & {
   primaryKeyValue?: TDataDb[TPrimaryKeyDb];
@@ -28,8 +28,8 @@ class BaseController<
     service: TService,
     primaryKey: TPrimaryKey,
     primaryKeyDb: TPrimaryKeyDb,
-    createSchema: ZodTypeAny,
-    updateSchema: ZodTypeAny,
+    createSchema: z.ZodSchema,
+    updateSchema: z.ZodSchema,
     displayProperty?: keyof TDataDb,
   ) {
     this._service = service;
