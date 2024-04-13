@@ -16,6 +16,8 @@ router.use('/tournaments', tournamentsRouter);
 router.use('/posts', postsRouter);
 router.use('/authorization', authorizationRouter);
 
-router.post('/bitrix/update', playerController.updatePlayerFromBitrix);
+router.post('/bitrix/update', (request, response) =>
+  playerController.updatePlayerFromBitrix(request, response),
+);
 
 export default router;

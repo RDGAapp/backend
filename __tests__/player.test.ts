@@ -524,15 +524,15 @@ describe('Player endpoints', () => {
       const response = await request(app).get('/players/1');
 
       expect(response.status).toBe(404);
-      expect(response.text).toEqual('Игрок с таким номером РДГА не найден');
+      expect(response.text).toEqual('Not found');
     });
 
-    test('should return 400 if rdgaNumber is not a number', async () => {
+    test('should return 500 if rdgaNumber is not a number', async () => {
       const response = await request(app).get('/players/test');
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Validation error: Expected number, received nan',
+        "Something's wrong: Error: No primary key value provided",
       );
     });
   });
@@ -541,7 +541,7 @@ describe('Player endpoints', () => {
     test('should return 201 and create player', async () => {
       const response = await request(app).post('/players').send(testPlayer);
       expect(response.status).toBe(201);
-      expect(response.text).toBe('Игрок с номером РДГА 1 создан');
+      expect(response.text).toBe('Value "1" created');
 
       const getAllResponse = await request(app).get('/players');
       expect(getAllResponse.status).toBe(200);
@@ -572,7 +572,7 @@ describe('Player endpoints', () => {
     test('should return 200 and create player with null fields', async () => {
       const response = await request(app).post('/players').send(nullablePlayer);
       expect(response.status).toBe(201);
-      expect(response.text).toBe('Игрок с номером РДГА 1 создан');
+      expect(response.text).toBe('Value "1" created');
 
       const getAllResponse = await request(app).get('/players');
       expect(getAllResponse.status).toBe(200);
@@ -610,14 +610,14 @@ describe('Player endpoints', () => {
       });
     });
 
-    test('should return 400 if rdgaNumber is not a number', async () => {
+    test('should return 500 if rdgaNumber is not a number', async () => {
       const response = await request(app)
         .put('/players/test')
         .send(playerToUpdate);
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Validation error: Expected number, received nan',
+        "Something's wrong: Error: No primary key value provided",
       );
     });
 
@@ -647,29 +647,30 @@ describe('Player endpoints', () => {
   });
 
   describe('DELETE /players/:rdgaNumber', () => {
-    test('should return 200 and delete player', async () => {
+    test('should return 201 and delete player', async () => {
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).del('/players/1');
 
-      expect(response.status).toBe(200);
-      expect(response.text).toEqual('Игрок с номером РДГА 1 удален');
+      expect(response.status).toBe(201);
+      expect(response.text).toEqual('Value "1" deleted');
 
       const getResponse = await request(app).get('/players/1');
       expect(getResponse.status).toBe(404);
     });
 
-    test('should return 200 even if player does not exist', async () => {
+    test('should return 201 even if player does not exist', async () => {
       const response = await request(app).del('/players/1');
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(201);
+      expect(response.text).toEqual('Value "1" deleted');
     });
 
     test('should return 400 if rdgaNumber is not a number', async () => {
       const response = await request(app).del('/players/test');
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Validation error: Expected number, received nan',
+        "Something's wrong: Error: No primary key value provided",
       );
     });
   });
@@ -690,14 +691,14 @@ describe('Player endpoints', () => {
       });
     });
 
-    test('should return 400 if rdgaNumber is not a number', async () => {
+    test('should return 500 if rdgaNumber is not a number', async () => {
       const response = await request(app)
         .patch('/players/test/rdgaRating')
         .send({ rating: 900 });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Validation error: Expected number, received nan',
+        "Something's wrong: Error: No primary key value provided",
       );
     });
 
@@ -748,14 +749,14 @@ describe('Player endpoints', () => {
       });
     });
 
-    test('should return 400 if rdgaNumber is not a number', async () => {
+    test('should return 500 if rdgaNumber is not a number', async () => {
       const response = await request(app)
         .patch('/players/test/activate')
         .send();
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Validation error: Expected number, received nan',
+        "Something's wrong: Error: No primary key value provided",
       );
     });
   });

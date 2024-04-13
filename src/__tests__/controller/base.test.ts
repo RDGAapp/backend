@@ -342,5 +342,19 @@ describe('Base Controller', () => {
         "Something's wrong: Error: No primary key value provided",
       );
     });
+
+    test('should response 404 if post not found', async () => {
+      (testService.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
+      const request = { primaryKeyValue: 'test' } as TestRequest;
+
+      await testController.getByPrimaryKey(request, response);
+
+      expect(testService.getByPrimaryKey).toHaveBeenCalledTimes(1);
+      expect(testService.getByPrimaryKey).toHaveBeenCalledWith('test');
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(404);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith('Not found');
+    });
   });
 });

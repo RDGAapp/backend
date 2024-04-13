@@ -1,16 +1,37 @@
 import { Request, Response } from 'express';
 import playerService from 'service/player';
+import playerDao from 'dao/player';
 import {
   playerSchema,
   playerPutSchema,
   playerUpdateRatingSchema,
   multipleRdgaRatingUpdateSchema,
 } from 'schemas';
-import { response500, response400Schema } from 'helpers/responses';
-import { IPlayer, IPlayerBase } from 'types/player';
+import { IPlayerBase } from 'types/player';
 import logger from 'helpers/logger';
 import { getPlayerDataFromBitrix } from 'helpers/externalApiHelpers';
-class PlayerController {
+import BaseController, { RdgaRequest } from './base';
+import { IPlayerDb } from 'types/playerDb';
+
+class PlayerController extends BaseController<
+  IPlayerBase,
+  IPlayerDb,
+  'rdgaNumber',
+  'rdga_number',
+  typeof playerService,
+  typeof playerDao
+> {
+  constructor() {
+    super(
+      playerService,
+      'rdgaNumber',
+      'rdga_number',
+      playerSchema,
+      playerPutSchema,
+      'rdga_number',
+    );
+  }
+
   async getAll(request: Request, response: Response) {
     const pageNumber = Number(request.query.page) || 1;
     const surname = (request.query.surname as string) || '';
@@ -25,114 +46,58 @@ class PlayerController {
         onlyActive,
       );
 
-      return response.status(200).json(players);
+      return this._response200(response, players);
     } catch (error) {
-      return response500(response, error);
+      return this._response500(response, error);
     }
   }
 
-  async getByRdgaNumber(request: Request, response: Response) {
-    const { rdgaNumber } = request;
-
-    try {
-      const player = await playerService.getByPrimaryKey(rdgaNumber);
-
-      if (!player) {
-        return response
-          .status(404)
-          .send('Игрок с таким номером РДГА не найден');
-      }
-      return response.status(200).json(player);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async create(request: Request, response: Response) {
-    const result = playerSchema.safeParse(request.body);
-
-    if (!result.success) {
-      return response400Schema(response, result.error);
-    }
-
-    try {
-      const createdPlayer = await playerService.create(result.data);
-
-      response
-        .status(201)
-        .send(`Игрок с номером РДГА ${createdPlayer.rdga_number} создан`);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async update(request: Request, response: Response) {
-    const { rdgaNumber } = request;
-
-    const result = playerPutSchema.safeParse(request.body);
-
-    if (!result.success) {
-      return response400Schema(response, result.error);
-    }
-
-    try {
-      const updatedPlayer = await playerService.update({
-        rdgaNumber,
-        ...result.data,
-      } as IPlayer);
-
-      return response.status(200).json(updatedPlayer);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async delete(request: Request, response: Response) {
-    const { rdgaNumber } = request;
-
-    try {
-      await playerService.delete(rdgaNumber);
-
-      return response
-        .status(200)
-        .send(`Игрок с номером РДГА ${rdgaNumber} удален`);
-    } catch (error) {
-      return response500(response, error);
-    }
-  }
-
-  async updateRdgaRating(request: Request, response: Response) {
-    const { rdgaNumber } = request;
+  async updateRdgaRating(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
 
     const result = playerUpdateRatingSchema.safeParse(request.body);
     if (!result.success) {
-      return response400Schema(response, result.error);
+      return this._response400Schema(response, result.error);
     }
     const { rating } = result.data;
 
     try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+
       const updatedPlayer = await playerService.updateRdgaRating(
-        rdgaNumber,
+        primaryKeyValue,
         rating,
       );
 
-      return response.status(200).json(updatedPlayer);
+      return this._response200(response, updatedPlayer);
     } catch (error) {
-      return response500(response, error);
+      return this._response500(response, error);
     }
   }
 
-  async activatePlayerForCurrentYear(request: Request, response: Response) {
-    const { rdgaNumber } = request;
+  async activatePlayerForCurrentYear(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
 
     try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+
       const updatedPlayer = await playerService.activatePlayerForCurrentYear(
-        rdgaNumber,
+        primaryKeyValue,
       );
 
-      return response.status(200).json(updatedPlayer);
+      return this._response200(response, updatedPlayer);
     } catch (error) {
-      return response500(response, error);
+      return this._response500(response, error);
     }
   }
 
@@ -140,7 +105,7 @@ class PlayerController {
     logger.info('multipleUpdateRdgaRating request acquired');
     const result = multipleRdgaRatingUpdateSchema.safeParse(request.body);
     if (!result.success) {
-      return response400Schema(response, result.error);
+      return this._response400Schema(response, result.error);
     }
 
     const errors: unknown[] = [];
@@ -162,13 +127,13 @@ class PlayerController {
       }),
     );
 
-    return response.status(200).json({ updatedPlayers, errors });
+    return this._response200(response, { updatedPlayers, errors });
   }
 
   async updatePlayerFromBitrix(request: Request, response: Response) {
     const rdgaNumber = Number(request.query.rdgaNumber);
     if (isNaN(rdgaNumber)) {
-      return response500(response, new Error('Invalid rdgaNumber'));
+      return this._response500(response, new Error('Invalid rdgaNumber'));
     }
 
     try {
@@ -179,7 +144,10 @@ class PlayerController {
         const newPlayerNumber = await playerService.create(playerFromBitrix);
 
         if (!newPlayerNumber) {
-          return response500(response, new Error('Player was not created'));
+          return this._response500(
+            response,
+            new Error('Player was not created'),
+          );
         }
       }
 
@@ -187,9 +155,9 @@ class PlayerController {
         rdgaNumber,
       );
 
-      return response.status(200).json(updatedPlayer);
+      return this._response200(response, updatedPlayer);
     } catch (error) {
-      return response500(response, error);
+      return this._response500(response, error);
     }
   }
 }

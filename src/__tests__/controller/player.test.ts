@@ -71,214 +71,11 @@ describe('Player Controller', () => {
     });
   });
 
-  describe('getByRdgaNumber', () => {
-    test('should response 200 if player found', async () => {
-      const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.getByPrimaryKey as jest.Mock).mockReturnValueOnce(
-        testPlayer,
-      );
-
-      await playerController.getByRdgaNumber(request, response);
-
-      expect(playerService.getByPrimaryKey).toHaveBeenCalledTimes(1);
-      expect(playerService.getByPrimaryKey).toHaveBeenCalledWith(24);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledTimes(1);
-      expect(response.json).toHaveBeenCalledWith(testPlayer);
-    });
-
-    test("should response 404 if player wasn't found", async () => {
-      const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
-
-      await playerController.getByRdgaNumber(request, response);
-
-      expect(playerService.getByPrimaryKey).toHaveBeenCalledTimes(1);
-      expect(playerService.getByPrimaryKey).toHaveBeenCalledWith(24);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(404);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Игрок с таким номером РДГА не найден',
-      );
-    });
-
-    test('should handle service throw with 500', async () => {
-      const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.getByPrimaryKey as jest.Mock).mockImplementationOnce(
-        () => {
-          throw new Error('Test');
-        },
-      );
-
-      await playerController.getByRdgaNumber(request, response);
-
-      expect(playerService.getByPrimaryKey).toHaveBeenCalledTimes(1);
-      expect(playerService.getByPrimaryKey).toHaveBeenCalledWith(24);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.json).toHaveBeenCalledTimes(0);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-  });
-
-  describe('create', () => {
-    test('should create with 201 response', async () => {
-      const request = { body: { ...testPlayer } } as unknown as Request;
-      (playerService.create as jest.Mock).mockReturnValueOnce({ rdga_number: 1});
-
-      await playerController.create(request, response);
-
-      expect(playerService.create).toHaveBeenCalledTimes(1);
-      expect(playerService.create).toHaveBeenCalledWith(testPlayer);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(201);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Игрок с номером РДГА 1 создан',
-      );
-    });
-
-    test('should return 500 if something went wrong', async () => {
-      const request = { body: { ...testPlayer } } as unknown as Request;
-      (playerService.create as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await playerController.create(request, response);
-
-      expect(playerService.create).toHaveBeenCalledTimes(1);
-      expect(playerService.create).toHaveBeenCalledWith(testPlayer);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-
-    test('should return 400 if data is corrupted', async () => {
-      const request = {
-        body: { ...testPlayer, pdgaNumber: 'test' },
-      } as unknown as Request;
-
-      await playerController.create(request, response);
-
-      expect(playerService.create).toHaveBeenCalledTimes(0);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Validation error: Expected number, received string at "pdgaNumber"',
-      );
-    });
-  });
-
-  describe('update', () => {
-    test('should update with 200 response', async () => {
-      const request = {
-        body: { ...testPlayer },
-        rdgaNumber: 1,
-      } as unknown as Request;
-      delete request.body.rdgaNumber;
-      (playerService.update as jest.Mock).mockReturnValueOnce(testPlayer);
-
-      await playerController.update(request, response);
-
-      expect(playerService.update).toHaveBeenCalledTimes(1);
-      expect(playerService.update).toHaveBeenCalledWith(testPlayer);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledTimes(1);
-      expect(response.json).toHaveBeenCalledWith(testPlayer);
-    });
-
-    test('should return 500 if something went wrong', async () => {
-      const request = {
-        body: { ...testPlayer },
-        rdgaNumber: 1,
-      } as unknown as Request;
-      delete request.body.rdgaNumber;
-      (playerService.update as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await playerController.update(request, response);
-
-      expect(playerService.update).toHaveBeenCalledTimes(1);
-      expect(playerService.update).toHaveBeenCalledWith(testPlayer);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.json).toHaveBeenCalledTimes(0);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-
-    test('should return 400 if data is corrupted', async () => {
-      const request = {
-        body: { ...testPlayer, pdgaNumber: 'test' },
-        rdgaNumber: 1,
-      } as unknown as Request;
-
-      await playerController.update(request, response);
-
-      expect(playerService.update).toHaveBeenCalledTimes(0);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Validation error: Expected number, received string at "pdgaNumber"; Unrecognized key(s) in object: \'rdgaNumber\'',
-      );
-    });
-  });
-
-  describe('delete', () => {
-    test('should response 200 if player found and deleted', async () => {
-      const request = { rdgaNumber: 24 } as unknown as Request;
-
-      await playerController.delete(request, response);
-
-      expect(playerService.delete).toHaveBeenCalledTimes(1);
-      expect(playerService.delete).toHaveBeenCalledWith(24);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Игрок с номером РДГА 24 удален',
-      );
-    });
-
-    test('should handle service throw with 500', async () => {
-      const request = { rdgaNumber: 24 } as unknown as Request;
-      (playerService.delete as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await playerController.delete(request, response);
-
-      expect(playerService.delete).toHaveBeenCalledTimes(1);
-      expect(playerService.delete).toHaveBeenCalledWith(24);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.json).toHaveBeenCalledTimes(0);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-  });
-
   describe('updateRdgaRating', () => {
     test('should update with 200 response', async () => {
       const request = {
         body: { rating: 900 },
-        rdgaNumber: 1,
+        primaryKeyValue: 1,
       } as unknown as Request;
       (playerService.updateRdgaRating as jest.Mock).mockReturnValueOnce(
         testPlayer,
@@ -297,7 +94,7 @@ describe('Player Controller', () => {
     test('should return 500 if something went wrong', async () => {
       const request = {
         body: { rating: 900 },
-        rdgaNumber: 1,
+        primaryKeyValue: 1,
       } as unknown as Request;
       (playerService.updateRdgaRating as jest.Mock).mockImplementationOnce(
         () => {
@@ -339,7 +136,7 @@ describe('Player Controller', () => {
   describe('activatePlayerForCurrentYear', () => {
     test('should activate with 200 response', async () => {
       const request = {
-        rdgaNumber: 1,
+        primaryKeyValue: 1,
       } as unknown as Request;
       (
         playerService.activatePlayerForCurrentYear as jest.Mock
@@ -361,7 +158,7 @@ describe('Player Controller', () => {
 
     test('should return 500 if something went wrong', async () => {
       const request = {
-        rdgaNumber: 1,
+        primaryKeyValue: 1,
       } as unknown as Request;
       (
         playerService.activatePlayerForCurrentYear as jest.Mock

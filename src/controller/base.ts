@@ -180,6 +180,10 @@ class BaseController<
 
       const value = await this._service.getByPrimaryKey(primaryKeyValue);
 
+      if (!value) {
+        return this._response404(response);
+      }
+
       return this._response200(response, value);
     } catch (error) {
       return this._response500(response, error);
