@@ -1,8 +1,12 @@
 import { CookieOptions, Request, Response } from 'express';
 import authorizationService from 'service/authorization';
-import { response500, response400Schema } from 'helpers/responses';
+import authorizationDao from 'dao/authorization';
 import { telegramAuthorizationData } from 'schemas';
 import { checkTgAuthorization } from 'helpers/telegramHelper';
+import BaseController from './base';
+import { IAuthData } from 'types/authData';
+import { IAuthDataDb } from 'types/authDataDb';
+import { z } from 'zod';
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -22,51 +26,72 @@ const setCookie = (
 
 const clearCookies = (response: Response): Response =>
   response.clearCookie('authorization_hash').clearCookie('rdga_number');
-class AuthorizationController {
+class AuthorizationController extends BaseController<
+  IAuthData,
+  IAuthDataDb,
+  'rdgaNumber',
+  'rdga_number',
+  typeof authorizationService,
+  typeof authorizationDao
+> {
+  constructor() {
+    super(
+      authorizationService,
+      'rdgaNumber',
+      'rdga_number',
+      z.any(),
+      z.any(),
+      'rdga_number',
+    );
+  }
+
+  protected _response401(response: Response) {
+    return clearCookies(response).status(401).send('Not authorized');
+  }
+
   async login(request: Request, response: Response) {
     const result = telegramAuthorizationData.safeParse(request.body);
 
     if (!result.success) {
-      return response400Schema(response, result.error);
+      return this._response400Schema(response, result.error);
     }
 
     if (!checkTgAuthorization(result.data)) {
-      return response.status(400).send('Your data is corrupted');
+      return this._response400(response, 'Your data is corrupted');
     }
 
     try {
       const authData = await authorizationService.updateAuthData(result.data);
 
       if (!authData) {
-        return response.status(404).send('No such authorization');
+        return this._response404(response);
       }
 
-      return setCookie(response, result.data.hash, authData.rdgaNumber)
-        .status(200)
-        .json({
-          rdgaNumber: authData.rdgaNumber,
-          avatarUrl: authData.avatarUrl,
-        });
+      return this._response200(
+        setCookie(response, result.data.hash, authData.rdgaNumber),
+        { rdgaNumber: authData.rdgaNumber, avatarUrl: authData.avatarUrl },
+      );
     } catch (error) {
-      return response500(response, error);
+      return this._response500(response, error);
     }
   }
 
   async register(request: Request, response: Response) {
     const { rdgaNumber, ...tgAuthData } = request.body;
     if (isNaN(Number(rdgaNumber))) {
-      return response
-        .status(400)
-        .send('RDGA number is incorrect or not defined');
+      return this._response400(
+        response,
+        'RDGA number is incorrect or not defined',
+      );
     }
 
     const result = telegramAuthorizationData.safeParse(tgAuthData);
     if (!result.success) {
-      return response400Schema(response, result.error);
+      return this._response400Schema(response, result.error);
     }
 
     if (!checkTgAuthorization(result.data)) {
-      return response.status(400).send('Your data is corrupted');
+      return this._response400(response, 'Your data is corrupted');
     }
 
     try {
@@ -75,33 +100,30 @@ class AuthorizationController {
         result.data,
       );
 
-      return setCookie(response, result.data.hash, authData.rdgaNumber)
-        .status(200)
-        .json({
+      return this._response200(
+        setCookie(response, result.data.hash, authData.rdgaNumber),
+        {
           rdgaNumber: authData.rdgaNumber,
           avatarUrl: authData.avatarUrl,
-        });
+        },
+      );
     } catch (error) {
-      return response500(response, error);
+      return this._response500(response, error);
     }
   }
 
   async logout(_request: Request, response: Response) {
-    return response
-      .clearCookie('authorization_hash')
-      .clearCookie('rdga_number')
-      .status(200)
-      .send();
+    return clearCookies(response).status(201).send();
   }
 
   async authorize(request: Request, response: Response) {
-    const rdgaNumber: string = request.cookies.rdga_number;
-    const hash: string = request.cookies.authorization_hash;
+    const { rdga_number: rdgaNumber, authorization_hash: hash } =
+      request.cookies;
 
     const numberedRdgaNumber = Number(rdgaNumber);
 
     if (!rdgaNumber || !hash || isNaN(numberedRdgaNumber)) {
-      return clearCookies(response).status(401).send('Not authorized');
+      return this._response401(response);
     }
 
     try {
@@ -110,9 +132,9 @@ class AuthorizationController {
         hash,
       );
 
-      return response.status(200).json(baseUserInfo);
+      return this._response200(response, baseUserInfo);
     } catch (_error) {
-      return clearCookies(response).status(401).send('Not authorized');
+      return this._response401(response);
     }
   }
 }

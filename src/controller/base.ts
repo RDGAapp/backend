@@ -52,8 +52,16 @@ class BaseController<
     return response.status(201).send(`Value "${value}" ${action}`);
   }
 
+  protected _response400(response: Response, error: string) {
+    return response.status(400).send(error);
+  }
+
   protected _response400Schema(response: Response, error: ZodError) {
     return response.status(400).send(fromZodError(error).toString());
+  }
+
+  protected _response404(response: Response) {
+    return response.status(404).send('Not found');
   }
 
   protected _response500(response: Response, error: unknown) {

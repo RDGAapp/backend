@@ -67,7 +67,7 @@ describe('Authorization Controller', () => {
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(404);
       expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('No such authorization');
+      expect(response.send).toHaveBeenCalledWith('Not found');
     });
 
     test('should response 400', async () => {
@@ -244,7 +244,7 @@ describe('Authorization Controller', () => {
       await authorizationController.logout({} as Request, response);
 
       expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.status).toHaveBeenCalledWith(201);
       expect(response.clearCookie).toHaveBeenCalledTimes(2);
       expect(response.clearCookie).toHaveBeenNthCalledWith(
         1,
