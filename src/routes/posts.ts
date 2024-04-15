@@ -3,21 +3,18 @@ import postController from 'controller/post';
 import { z } from 'zod';
 import { RdgaRequest } from 'controller/base';
 import { IBlogPostDb } from 'types/postDb';
+import { getPrimaryKeyFromParam } from 'helpers/routerHelper';
 
 const router = Router();
 
 router
   .route('/')
-  .get((request, response) =>
-    postController.getAllPaginated(request, response),
-  )
+  .get((request, response) => postController.getAllPaginated(request, response))
   .post((request, response) => postController.create(request, response));
 
 router
   .route('/:postCode')
-  .get((request, response) =>
-    postController.getByPrimaryKey(request, response),
-  )
+  .get((request, response) => postController.getByPrimaryKey(request, response))
   .put((request, response) => postController.update(request, response))
   .delete((request, response) => postController.delete(request, response));
 
@@ -29,13 +26,7 @@ router.param(
     next,
     postCodeParam,
   ) => {
-    const result = z.string().safeParse(postCodeParam);
-    let postCode = '';
-    if (result.success) {
-      postCode = result.data;
-    }
-
-    request.primaryKeyValue = postCode;
+    request.primaryKeyValue = getPrimaryKeyFromParam(postCodeParam, z.string());
     next();
   },
 );

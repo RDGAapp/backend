@@ -3,6 +3,7 @@ import roleController from 'controller/role';
 import { z } from 'zod';
 import { RdgaRequest } from 'controller/base';
 import { IRoleDb } from 'types/roleDb';
+import { getPrimaryKeyFromParam } from 'helpers/routerHelper';
 
 const router = Router();
 
@@ -18,14 +19,8 @@ router
 
 router.param(
   'roleCode',
-  (request: RdgaRequest<IRoleDb, 'code'>, _response, next, postCodeParam) => {
-    const result = z.string().safeParse(postCodeParam);
-    let postCode = '';
-    if (result.success) {
-      postCode = result.data;
-    }
-
-    request.primaryKeyValue = postCode;
+  (request: RdgaRequest<IRoleDb, 'code'>, _response, next, roleCodeParam) => {
+    request.primaryKeyValue = getPrimaryKeyFromParam(roleCodeParam, z.string());
     next();
   },
 );

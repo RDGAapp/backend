@@ -3,6 +3,7 @@ import playerController from 'controller/player';
 import { z } from 'zod';
 import { RdgaRequest } from 'controller/base';
 import { IPlayerDb } from 'types/playerDb';
+import { getPrimaryKeyFromParam } from 'helpers/routerHelper';
 
 const router = Router();
 
@@ -40,12 +41,10 @@ router.param(
     next,
     rdgaNumberParam,
   ) => {
-    const result = z.number().positive().safeParse(Number(rdgaNumberParam));
-    let primaryKey = 0;
-    if (result.success) {
-      primaryKey = result.data;
-    }
-    request.primaryKeyValue = primaryKey;
+    request.primaryKeyValue = getPrimaryKeyFromParam(
+      Number(rdgaNumberParam),
+      z.number().positive(),
+    );
     next();
   },
 );

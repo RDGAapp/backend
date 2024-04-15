@@ -3,6 +3,7 @@ import tournamentController from 'controller/tournament';
 import { z } from 'zod';
 import { ITournamentDb } from 'types/tournamentDb';
 import { RdgaRequest } from 'controller/base';
+import { getPrimaryKeyFromParam } from 'helpers/routerHelper';
 
 const router = Router();
 
@@ -29,13 +30,10 @@ router.param(
     next,
     tournamentCodeParam,
   ) => {
-    const result = z.string().safeParse(tournamentCodeParam);
-    let tournamentCode = '';
-    if (result.success) {
-      tournamentCode = result.data;
-    }
-
-    request.primaryKeyValue = tournamentCode;
+    request.primaryKeyValue = getPrimaryKeyFromParam(
+      tournamentCodeParam,
+      z.string(),
+    );
     next();
   },
 );
