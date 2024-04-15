@@ -135,7 +135,7 @@ describe('Authorization endpoints', () => {
         .send(fullTelegramUser);
 
       expect(response.status).toBe(404);
-      expect(response.text).toEqual('No such authorization');
+      expect(response.text).toEqual('Not found');
     });
 
     test('should return 400 corrupted hash', async () => {
@@ -183,10 +183,10 @@ describe('Authorization endpoints', () => {
 
       const authorizeResponse1 = await agent.get('/authorization/authorize');
       expect(authorizeResponse1.status).toBe(200);
-
+      
       const response = await agent.get('/authorization/logout');
-      expect(response.status).toBe(200);
-
+      expect(response.status).toBe(201);
+      
       const authorizeResponse2 = await agent.get('/authorization/authorize');
       expect(authorizeResponse2.status).toBe(401);
     });

@@ -2,27 +2,10 @@ import { Request } from 'express';
 import postsController from 'controller/post';
 import postsService from 'service/post';
 import response from '../mocks/response';
-import testPost from '__tests__/mocks/testPost';
 
 jest.mock('service/post');
 
 describe('Post Controller', () => {
-  const testPostWithoutDate = {
-    code: testPost.code,
-    header: testPost.header,
-    text: testPost.text,
-    author: testPost.author,
-    authorRdgaNumber: testPost.authorRdgaNumber,
-  };
-
-  const testPostWithoutCode = {
-    header: testPost.header,
-    text: testPost.text,
-    author: testPost.author,
-    authorRdgaNumber: testPost.authorRdgaNumber,
-    createdAt: testPost.createdAt,
-  };
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -41,7 +24,7 @@ describe('Post Controller', () => {
     test('should response 200', async () => {
       (postsService.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
-      await postsController.getAll(request, response);
+      await postsController.getAllPaginated(request, response);
 
       expect(postsService.getAllPaginated).toHaveBeenCalledTimes(1);
       expect(postsService.getAllPaginated).toHaveBeenCalledWith(1, undefined);
@@ -54,7 +37,7 @@ describe('Post Controller', () => {
     test('should pass town', async () => {
       (postsService.getAllPaginated as jest.Mock).mockReturnValueOnce([]);
 
-      await postsController.getAll(
+      await postsController.getAllPaginated(
         {
           ...request,
           query: { from: new Date().toISOString() },
@@ -78,206 +61,9 @@ describe('Post Controller', () => {
         throw new Error('Test');
       });
 
-      await postsController.getAll(request, response);
+      await postsController.getAllPaginated(request, response);
 
       expect(postsService.getAllPaginated).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.json).toHaveBeenCalledTimes(0);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-  });
-
-  describe('create', () => {
-    test('should create with 201 response', async () => {
-      const request = {
-        body: { ...testPostWithoutDate },
-      } as unknown as Request;
-      (postsService.create as jest.Mock).mockReturnValueOnce({ header: 1 });
-
-      await postsController.create(request, response);
-
-      expect(postsService.create).toHaveBeenCalledTimes(1);
-      expect(postsService.create).toHaveBeenCalledWith({
-        ...testPostWithoutDate,
-        createdAt: new Date().toISOString(),
-      });
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(201);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('Пост "1" создан');
-    });
-
-    test('should return 500 if something went wrong', async () => {
-      const request = {
-        body: { ...testPostWithoutDate },
-      } as unknown as Request;
-      (postsService.create as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await postsController.create(request, response);
-
-      expect(postsService.create).toHaveBeenCalledTimes(1);
-      expect(postsService.create).toHaveBeenCalledWith({
-        ...testPostWithoutDate,
-        createdAt: new Date().toISOString(),
-      });
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-
-    test('should return 400 if data is corrupted', async () => {
-      const request = {
-        body: { ...testPostWithoutDate, header: 1 },
-      } as unknown as Request;
-
-      await postsController.create(request, response);
-
-      expect(postsService.create).toHaveBeenCalledTimes(0);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Validation error: Expected string, received number at "header"',
-      );
-    });
-  });
-
-  describe('update', () => {
-    test('should update with 200 response', async () => {
-      const request = {
-        body: { ...testPostWithoutCode },
-        postCode: 'test',
-      } as unknown as Request;
-
-      (postsService.update as jest.Mock).mockReturnValueOnce(testPost);
-
-      await postsController.update(request, response);
-
-      expect(postsService.update).toHaveBeenCalledTimes(1);
-      expect(postsService.update).toHaveBeenCalledWith({
-        ...testPostWithoutCode,
-        code: 'test',
-      });
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledTimes(1);
-      expect(response.json).toHaveBeenCalledWith(testPost);
-    });
-
-    test('should return 500 if something went wrong', async () => {
-      const request = {
-        body: { ...testPostWithoutCode },
-        postCode: 'test',
-      } as unknown as Request;
-      delete request.body.rdgaNumber;
-      (postsService.update as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await postsController.update(request, response);
-
-      expect(postsService.update).toHaveBeenCalledTimes(1);
-      expect(postsService.update).toHaveBeenCalledWith({
-        ...testPostWithoutCode,
-        code: 'test',
-      });
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.json).toHaveBeenCalledTimes(0);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-
-    test('should return 400 if data is corrupted', async () => {
-      const request = {
-        body: { ...testPost },
-        postCode: 'test',
-      } as unknown as Request;
-
-      await postsController.update(request, response);
-
-      expect(postsService.update).toHaveBeenCalledTimes(0);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Validation error: Unrecognized key(s) in object: 'code'",
-      );
-    });
-  });
-
-  describe('delete', () => {
-    test('should response 200 if post found and deleted', async () => {
-      const request = { postCode: 'test' } as unknown as Request;
-
-      await postsController.delete(request, response);
-
-      expect(postsService.delete).toHaveBeenCalledTimes(1);
-      expect(postsService.delete).toHaveBeenCalledWith('test');
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith('Пост test удален');
-    });
-
-    test('should handle service throw with 500', async () => {
-      const request = { postCode: 'test' } as unknown as Request;
-      (postsService.delete as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await postsController.delete(request, response);
-
-      expect(postsService.delete).toHaveBeenCalledTimes(1);
-      expect(postsService.delete).toHaveBeenCalledWith('test');
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.json).toHaveBeenCalledTimes(0);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        "Something's wrong: Error: Test",
-      );
-    });
-  });
-
-  describe('getByCode', () => {
-    test('should response 200 if post found', async () => {
-      (postsService.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
-        code: 'test',
-      });
-      const request = { postCode: 'test' } as unknown as Request;
-
-      await postsController.getByCode(request, response);
-
-      expect(postsService.getByPrimaryKey).toHaveBeenCalledTimes(1);
-      expect(postsService.getByPrimaryKey).toHaveBeenCalledWith('test');
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledTimes(1);
-      expect(response.json).toHaveBeenCalledWith({ code: 'test' });
-    });
-
-    test('should handle service throw with 500', async () => {
-      const request = { postCode: 'test' } as unknown as Request;
-      (postsService.getByPrimaryKey as jest.Mock).mockImplementationOnce(() => {
-        throw new Error('Test');
-      });
-
-      await postsController.getByCode(request, response);
-
-      expect(postsService.getByPrimaryKey).toHaveBeenCalledTimes(1);
-      expect(postsService.getByPrimaryKey).toHaveBeenCalledWith('test');
       expect(response.status).toHaveBeenCalledTimes(1);
       expect(response.status).toHaveBeenCalledWith(500);
       expect(response.json).toHaveBeenCalledTimes(0);

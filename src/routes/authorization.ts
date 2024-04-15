@@ -3,12 +3,28 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.route('/login').post(authorizationController.login);
+router
+  .route('/login')
+  .post((request, response) =>
+    authorizationController.login(request, response),
+  );
 
-router.route('/register').post(authorizationController.register);
+router
+  .route('/register')
+  .post((request, response) =>
+    authorizationController.register(request, response),
+  );
 
-router.route('/logout').get(authorizationController.logout);
+router
+  .route('/logout')
+  .get((request, response) =>
+    authorizationController.logout(request, response),
+  );
 
-router.route('/authorize').get(authorizationController.authorize);
+router
+  .route('/authorize')
+  .get((request, response) =>
+    authorizationController.authorize(request, response),
+  );
 
 export default router;

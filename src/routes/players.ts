@@ -1,34 +1,51 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import playerController from 'controller/player';
-import { response400Schema } from 'helpers/responses';
 import { z } from 'zod';
+import { RdgaRequest } from 'controller/base';
+import { IPlayerDb } from 'types/playerDb';
 
 const router = Router();
 
-router.route('/').get(playerController.getAll).post(playerController.create);
+router
+  .route('/')
+  .get((request, response) => playerController.getAll(request, response))
+  .post((request, response) => playerController.create(request, response));
 
-router.patch('/:rdgaNumber/rdgaRating', playerController.updateRdgaRating);
-router.patch(
-  '/:rdgaNumber/activate',
-  playerController.activatePlayerForCurrentYear,
+router.patch('/:rdgaNumber/rdgaRating', (request, response) =>
+  playerController.updateRdgaRating(request, response),
+);
+router.patch('/:rdgaNumber/activate', (request, response) =>
+  playerController.activatePlayerForCurrentYear(request, response),
 );
 
 router
   .route('/:rdgaNumber')
-  .get(playerController.getByRdgaNumber)
-  .put(playerController.update)
-  .delete(playerController.delete);
+  .get((request, response) =>
+    playerController.getByPrimaryKey(request, response),
+  )
+  .put((request, response) => playerController.update(request, response))
+  .delete((request, response) => playerController.delete(request, response));
 
 router
   .route('/rdgaRating/multiple')
-  .put(playerController.multipleUpdateRdgaRating);
+  .put((request, response) =>
+    playerController.multipleUpdateRdgaRating(request, response),
+  );
 
 router.param(
   'rdgaNumber',
-  (request: Request, response: Response, next, rdgaNumberParam) => {
+  (
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    _response,
+    next,
+    rdgaNumberParam,
+  ) => {
     const result = z.number().positive().safeParse(Number(rdgaNumberParam));
-    if (!result.success) return response400Schema(response, result.error);
-    request.rdgaNumber = result.data;
+    let primaryKey = 0;
+    if (result.success) {
+      primaryKey = result.data;
+    }
+    request.primaryKeyValue = primaryKey;
     next();
   },
 );

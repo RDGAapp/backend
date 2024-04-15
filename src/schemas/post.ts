@@ -7,8 +7,7 @@ export const postSchema = z.strictObject({
   header: z.string(),
   text: z.string(),
   authorRdgaNumber: playerSchema.shape.rdgaNumber,
+  createdAt: z.string().datetime(),
 });
 
-export const postPutSchema = postSchema
-  .omit({ code: true })
-  .extend({ createdAt: z.string().datetime() });
+export const postPutSchema = postSchema.omit({ code: true });

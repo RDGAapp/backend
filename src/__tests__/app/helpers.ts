@@ -9,4 +9,5 @@ export interface ITest {
 
 export interface ITestDb {
   test_db: string;
+  display_db: string;
 }

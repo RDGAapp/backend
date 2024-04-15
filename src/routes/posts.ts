@@ -1,27 +1,41 @@
-import { Request, Response, Router } from 'express';
-import postsController from 'controller/post';
-import { response400Schema } from 'helpers/responses';
+import { Router } from 'express';
+import postController from 'controller/post';
 import { z } from 'zod';
+import { RdgaRequest } from 'controller/base';
+import { IBlogPostDb } from 'types/postDb';
 
 const router = Router();
 
-router.route('/').get(postsController.getAll).post(postsController.create);
+router
+  .route('/')
+  .get((request, response) =>
+    postController.getAllPaginated(request, response),
+  )
+  .post((request, response) => postController.create(request, response));
 
 router
   .route('/:postCode')
-  .get(postsController.getByCode)
-  .put(postsController.update)
-  .delete(postsController.delete);
+  .get((request, response) =>
+    postController.getByPrimaryKey(request, response),
+  )
+  .put((request, response) => postController.update(request, response))
+  .delete((request, response) => postController.delete(request, response));
 
 router.param(
   'postCode',
-  (request: Request, response: Response, next, postCodeParam) => {
+  (
+    request: RdgaRequest<IBlogPostDb, 'code'>,
+    _response,
+    next,
+    postCodeParam,
+  ) => {
     const result = z.string().safeParse(postCodeParam);
-    if (!result.success) {
-      return response400Schema(response, result.error);
+    let postCode = '';
+    if (result.success) {
+      postCode = result.data;
     }
 
-    request.postCode = result.data;
+    request.primaryKeyValue = postCode;
     next();
   },
 );

@@ -4,7 +4,7 @@ import { tableName, testMapping } from '__tests__/app/helpers';
 
 jest.mock('database');
 
-const testSome = { test_db: 'some' };
+const testSome = { test_db: 'some', display_db: 'more' };
 
 describe('Base Dao', () => {
   afterEach(() => {

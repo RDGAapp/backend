@@ -1,4 +1,4 @@
-const roleServiceMock = {
+const baseServiceMock = {
   getAll: jest.fn(),
   getAllPaginated: jest.fn(),
   create: jest.fn(),
@@ -7,4 +7,4 @@ const roleServiceMock = {
   getByPrimaryKey: jest.fn(),
 };
 
-export default roleServiceMock;
+export default baseServiceMock;

@@ -13,22 +13,6 @@ describe('Post endpoints', () => {
     await db.migrate.rollback();
   });
 
-  beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
-  });
-
-  afterAll(() => {
-    jest.useRealTimers();
-  });
-
-  const testPostWithoutCreatedAt = {
-    code: testPost.code,
-    header: testPost.header,
-    text: testPost.text,
-    author: testPost.author,
-    authorRdgaNumber: testPlayer.rdgaNumber,
-  };
-
   const testPostWithoutCode = {
     header: testPost.header,
     text: testPost.text,
@@ -65,9 +49,8 @@ describe('Post endpoints', () => {
     });
 
     test('should return 200 with someData', async () => {
-      const postToCreate = testPostWithoutCreatedAt;
       await request(app).post('/players').send(testPlayer);
-      await request(app).post('/posts').send(postToCreate);
+      await request(app).post('/posts').send(testPost);
 
       const response = await request(app).get('/posts');
 
@@ -76,7 +59,6 @@ describe('Post endpoints', () => {
         data: [
           {
             ...responseTestPost,
-            createdAt: new Date().toISOString(),
           },
         ],
         pagination: {
@@ -93,14 +75,13 @@ describe('Post endpoints', () => {
     });
 
     test('should return 200 with sorted values by createdAt', async () => {
-      const postToCreate = testPostWithoutCreatedAt;
       await request(app).post('/players').send(testPlayer);
       jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
-      await request(app).post('/posts').send(postToCreate);
+      await request(app).post('/posts').send(testPost);
       jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       await request(app)
         .post('/posts')
-        .send({ ...postToCreate, code: 'test2' });
+        .send({ ...testPost, code: 'test2' });
 
       const response = await request(app).get('/posts');
 
@@ -110,11 +91,9 @@ describe('Post endpoints', () => {
           {
             ...responseTestPost,
             code: 'test2',
-            createdAt: new Date().toISOString(),
           },
           {
             ...responseTestPost,
-            createdAt: new Date('2010-01-01').toISOString(),
           },
         ],
         pagination: {
@@ -131,14 +110,17 @@ describe('Post endpoints', () => {
     });
 
     test('should filter by createdAt', async () => {
-      const postToCreate = testPostWithoutCreatedAt;
       await request(app).post('/players').send(testPlayer);
-      jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
-      await request(app).post('/posts').send(postToCreate);
-      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       await request(app)
         .post('/posts')
-        .send({ ...postToCreate, code: 'test2' });
+        .send({ ...testPost, createdAt: new Date('2010-01-01').toISOString() });
+      await request(app)
+        .post('/posts')
+        .send({
+          ...testPost,
+          code: 'test2',
+          createdAt: new Date('2020-01-01').toISOString(),
+        });
 
       const response = await request(app).get(
         '/posts?from=2010-01-01T00:00:00.000Z',
@@ -169,11 +151,9 @@ describe('Post endpoints', () => {
   describe('POST /posts', () => {
     test('should return 201 and create post', async () => {
       await request(app).post('/players').send(testPlayer);
-      const response = await request(app)
-        .post('/posts')
-        .send(testPostWithoutCreatedAt);
+      const response = await request(app).post('/posts').send(testPost);
       expect(response.status).toBe(201);
-      expect(response.text).toBe('Пост "Обновление сайта" создан');
+      expect(response.text).toBe('Value "Обновление сайта" created');
 
       const getAllResponse = await request(app).get('/posts');
       expect(getAllResponse.status).toBe(200);
@@ -181,7 +161,6 @@ describe('Post endpoints', () => {
         data: [
           {
             ...responseTestPost,
-            createdAt: new Date().toISOString(),
           },
         ],
         pagination: {
@@ -199,10 +178,8 @@ describe('Post endpoints', () => {
 
     test('should return 500 if tournament already exists', async () => {
       await request(app).post('/players').send(testPlayer);
-      await request(app).post('/posts').send(testPostWithoutCreatedAt);
-      const response = await request(app)
-        .post('/posts')
-        .send(testPostWithoutCreatedAt);
+      await request(app).post('/posts').send(testPost);
+      const response = await request(app).post('/posts').send(testPost);
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
@@ -213,7 +190,7 @@ describe('Post endpoints', () => {
     test('should return 400 if any of the data is corrupted', async () => {
       const response = await request(app)
         .post('/posts')
-        .send({ ...testPostWithoutCreatedAt, header: 1 });
+        .send({ ...testPost, header: 1 });
 
       expect(response.status).toBe(400);
       expect(response.text).toEqual(
@@ -225,7 +202,7 @@ describe('Post endpoints', () => {
   describe('PUT /posts/:postCode', () => {
     beforeEach(async () => {
       await request(app).post('/players').send(testPlayer);
-      await request(app).post('/posts').send(testPostWithoutCreatedAt);
+      await request(app).post('/posts').send(testPost);
     });
 
     const postToUpdate: Partial<typeof testPostWithoutCode> = {
@@ -259,11 +236,11 @@ describe('Post endpoints', () => {
 
   describe('DELETE /posts/:postCode', () => {
     test('should return 200 and delete post', async () => {
-      await request(app).post('/posts').send(testPostWithoutCreatedAt);
+      await request(app).post('/posts').send(testPost);
       const response = await request(app).del('/posts/site_update_1');
 
-      expect(response.status).toBe(200);
-      expect(response.text).toEqual('Пост site_update_1 удален');
+      expect(response.status).toBe(201);
+      expect(response.text).toEqual('Value "site_update_1" deleted');
 
       const getResponse = await request(app).get('/posts');
       expect(getResponse.body.data.length).toBe(0);
@@ -273,13 +250,12 @@ describe('Post endpoints', () => {
   describe('GET /posts/:postCode', () => {
     test('should return 200 and get tournament', async () => {
       await request(app).post('/players').send(testPlayer);
-      await request(app).post('/posts').send(testPostWithoutCreatedAt);
+      await request(app).post('/posts').send(testPost);
       const response = await request(app).get('/posts/site_update_1');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         ...responseTestPost,
-        createdAt: new Date().toISOString(),
       });
     });
   });
