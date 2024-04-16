@@ -285,13 +285,17 @@ describe('Player Service', () => {
       });
     });
 
-    test('should not call create', async () => {
+    test('should throw and not call create', async () => {
       (playerRoleDao.getAllByPlayer as jest.Mock).mockReturnValueOnce([
         { playerRdgaNumber: 1, roleCode: 'test' },
       ]);
 
-      await playerService.addRoleToPlayer(1, 'test');
+      const testFunction = async () =>
+        await playerService.addRoleToPlayer(1, 'test');
 
+      await expect(testFunction).rejects.toThrow(
+        'Player already has this role',
+      );
       expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledTimes(1);
       expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledWith(1);
       expect(playerRoleDao.create).toHaveBeenCalledTimes(0);
@@ -303,7 +307,10 @@ describe('Player Service', () => {
       await playerService.removeRoleFromPlayer(1, 'test');
 
       expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledTimes(1);
-      expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledWith(1, 'test');
+      expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledWith(
+        1,
+        'test',
+      );
     });
   });
 });

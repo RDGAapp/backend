@@ -101,7 +101,9 @@ class PlayerService extends BaseService<
   ) {
     const playerRoles = await playerRoleDao.getAllByPlayer(rdgaNumber);
 
-    if (playerRoles.some((role) => role.roleCode === roleCode)) return;
+    if (playerRoles.some((role) => role.roleCode === roleCode)) {
+      throw new Error('Player already has this role');
+    }
 
     await playerRoleDao.create({
       player_rdga_number: rdgaNumber,
