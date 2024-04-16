@@ -1,7 +1,7 @@
-import { IPlayerRoleDb } from './playerRoleDb';
+import { IPlayerDb } from './playerDb';
+import { IBlogPostDb } from './postDb';
 
 export interface IPlayerRole {
-  id: IPlayerRoleDb['id'];
-  playerRdgaNumber: IPlayerRoleDb['player_rdga_number'];
-  roleCode: IPlayerRoleDb['role_code'];
+  playerRdgaNumber: IPlayerDb['rdga_number'];
+  roleCode: IBlogPostDb['code'];
 }

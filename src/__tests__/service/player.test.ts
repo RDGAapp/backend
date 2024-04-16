@@ -2,11 +2,13 @@ import fetchMock from 'jest-fetch-mock';
 
 import playerService from 'service/player';
 import playerDao from 'dao/player';
+import playerRoleDao from 'dao/playerRole';
 
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
 
 jest.mock('dao/player');
+jest.mock('dao/playerRole');
 fetchMock.enableMocks();
 
 describe('Player Service', () => {
@@ -263,6 +265,45 @@ describe('Player Service', () => {
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('addRoleToPlayer', () => {
+    test('should call create', async () => {
+      (playerRoleDao.getAllByPlayer as jest.Mock).mockReturnValueOnce([
+        { playerRdgaNumber: 1, roleCode: 'not_test' },
+      ]);
+
+      await playerService.addRoleToPlayer(1, 'test');
+
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledWith(1);
+      expect(playerRoleDao.create).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.create).toHaveBeenCalledWith({
+        player_rdga_number: 1,
+        role_code: 'test',
+      });
+    });
+
+    test('should not call create', async () => {
+      (playerRoleDao.getAllByPlayer as jest.Mock).mockReturnValueOnce([
+        { playerRdgaNumber: 1, roleCode: 'test' },
+      ]);
+
+      await playerService.addRoleToPlayer(1, 'test');
+
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledWith(1);
+      expect(playerRoleDao.create).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('removeRoleFromPlayer', () => {
+    test('should call removeRoleFromPlayer', async () => {
+      await playerService.removeRoleFromPlayer(1, 'test');
+
+      expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledWith(1, 'test');
     });
   });
 });

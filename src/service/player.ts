@@ -1,4 +1,5 @@
 import playerDao from 'dao/player';
+import playerRoleDao from 'dao/playerRole';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import playerMapping from 'mapping/player';
 import { IPlayerBase, IPlayerExtended } from 'types/player';
@@ -8,6 +9,7 @@ import {
   getPdgaDataByNumber,
 } from 'helpers/externalApiHelpers';
 import BaseService from './base';
+import { IRoleDb } from 'types/roleDb';
 
 class PlayerService extends BaseService<
   IPlayerBase,
@@ -91,6 +93,27 @@ class PlayerService extends BaseService<
     );
 
     return player;
+  }
+
+  async addRoleToPlayer(
+    rdgaNumber: IPlayerDb['rdga_number'],
+    roleCode: IRoleDb['code'],
+  ) {
+    const playerRoles = await playerRoleDao.getAllByPlayer(rdgaNumber);
+
+    if (playerRoles.some((role) => role.roleCode === roleCode)) return;
+
+    await playerRoleDao.create({
+      player_rdga_number: rdgaNumber,
+      role_code: roleCode,
+    });
+  }
+
+  async removeRoleFromPlayer(
+    rdgaNumber: IPlayerDb['rdga_number'],
+    roleCode: IRoleDb['code'],
+  ) {
+    await playerRoleDao.removeRoleFromPlayer(rdgaNumber, roleCode);
   }
 }
 
