@@ -1,4 +1,5 @@
 import playerRoleMapping from 'mapping/playerRole';
+import roleMapping from 'mapping/role';
 import { Table } from 'types/db';
 import BaseDao from './base';
 import { IPlayerRole } from 'types/playerRole';
@@ -10,6 +11,8 @@ class RoleDao extends BaseDao<
   IPlayerRoleDb,
   'player_rdga_number'
 > {
+  #roleTableName = Table.Role;
+
   constructor() {
     super(Table.PlayerRoles, playerRoleMapping, 'player_rdga_number');
   }
@@ -19,7 +22,7 @@ class RoleDao extends BaseDao<
   ): Promise<IPlayerRole[]> {
     return db(this._tableName)
       .where({ player_rdga_number: rdgaNumber })
-      .select(playerRoleMapping);
+      .select(this._mapping);
   }
 
   async removeRoleFromPlayer(
@@ -29,6 +32,17 @@ class RoleDao extends BaseDao<
     return db(this._tableName)
       .where({ player_rdga_number: rdgaNumber, role_code: roleCode })
       .del();
+  }
+
+  async getPlayerPermissions(rdgaNumber: IPlayerRole['playerRdgaNumber']) {
+    return db(this._tableName)
+      .leftJoin(
+        this.#roleTableName,
+        `${this._tableName}.role_code`,
+        `${this.#roleTableName}.code`,
+      )
+      .where({ player_rdga_number: rdgaNumber })
+      .select({ ...this._mapping, ...roleMapping });
   }
 }
 

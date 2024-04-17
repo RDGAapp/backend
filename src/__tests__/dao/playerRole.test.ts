@@ -1,6 +1,7 @@
 import db from 'database';
 import playerRoleDao from 'dao/playerRole';
 import playerRoleMapping from 'mapping/playerRole';
+import roleMapping from 'mapping/role';
 import { Table } from 'types/db';
 
 jest.mock('database');
@@ -34,9 +35,33 @@ describe('PlayerRole Dao', () => {
       expect(db().where).toHaveBeenCalledTimes(1);
       expect(db().where).toHaveBeenCalledWith({
         player_rdga_number: 1,
-        role_code: 'su'
+        role_code: 'su',
       });
       expect(db().del).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getPlayerPermissions', () => {
+    test('should use join + select', async () => {
+      await playerRoleDao.getPlayerPermissions(1);
+
+      expect(db).toHaveBeenCalledTimes(1);
+      expect(db).toHaveBeenCalledWith(Table.PlayerRoles);
+      expect(db().leftJoin).toHaveBeenCalledTimes(1);
+      expect(db().leftJoin).toHaveBeenCalledWith(
+        Table.Role,
+        `${Table.PlayerRoles}.role_code`,
+        `${Table.Role}.code`,
+      );
+      expect(db().select).toHaveBeenCalledTimes(1);
+      expect(db().select).toHaveBeenCalledWith({
+        ...playerRoleMapping,
+        ...roleMapping,
+      });
+      expect(db().where).toHaveBeenCalledTimes(1);
+      expect(db().where).toHaveBeenCalledWith({
+        player_rdga_number: 1,
+      });
     });
   });
 });
