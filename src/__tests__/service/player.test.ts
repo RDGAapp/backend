@@ -313,4 +313,34 @@ describe('Player Service', () => {
       );
     });
   });
+
+  describe('getAllPermissions', () => {
+    test('should call getPlayerPermissions', async () => {
+      (playerRoleDao.getPlayerPermissions as jest.Mock).mockReturnValueOnce([
+        {
+          code: 'test',
+          name: 'test name',
+          canManagePlayers: true,
+          canManageTournaments: true,
+          canManageBlogPost: false,
+          canManageBlogPosts: true,
+          canManageRoles: false,
+          canAssignRoles: true,
+        },
+      ]);
+
+      const permissions = await playerService.getAllPermissions(1);
+
+      expect(permissions).toEqual({
+        canManagePlayers: true,
+        canManageTournaments: true,
+        canManageBlogPost: false,
+        canManageBlogPosts: true,
+        canManageRoles: false,
+        canAssignRoles: true,
+      });
+      expect(playerRoleDao.getPlayerPermissions).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getPlayerPermissions).toHaveBeenCalledWith(1);
+    });
+  });
 });

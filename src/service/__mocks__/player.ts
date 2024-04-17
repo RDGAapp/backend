@@ -6,6 +6,7 @@ const playerServiceMock = {
 
   addRoleToPlayer: jest.fn(),
   removeRoleFromPlayer: jest.fn(),
+  getAllPermissions: jest.fn(),
 
   getAll: jest.fn(),
   getAllPaginated: jest.fn(),

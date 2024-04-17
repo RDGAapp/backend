@@ -5,6 +5,7 @@ import BaseDao from './base';
 import { IPlayerRole } from 'types/playerRole';
 import { IPlayerRoleDb } from 'types/playerRoleDb';
 import db from 'database';
+import { IRole } from 'types/role';
 
 class RoleDao extends BaseDao<
   IPlayerRole,
@@ -34,7 +35,9 @@ class RoleDao extends BaseDao<
       .del();
   }
 
-  async getPlayerPermissions(rdgaNumber: IPlayerRole['playerRdgaNumber']) {
+  async getPlayerPermissions(
+    rdgaNumber: IPlayerRole['playerRdgaNumber'],
+  ): Promise<(IRole & IPlayerRoleDb)[]> {
     return db(this._tableName)
       .leftJoin(
         this.#roleTableName,
