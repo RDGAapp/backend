@@ -160,6 +160,48 @@ class PlayerController extends BaseController<
       return this._response500(response, error);
     }
   }
+
+  async addRoleToPlayer(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    const roleCode = request.body;
+
+    try {
+      if (!primaryKeyValue || !roleCode) {
+        throw new Error('No primary key or role code value provided');
+      }
+
+      await this._service.addRoleToPlayer(primaryKeyValue, roleCode);
+
+      return this._response201(response, roleCode, 'added');
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
+
+  async removeRoleFromPlayer(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    const roleCode = request.body;
+
+    try {
+      if (!primaryKeyValue || !roleCode) {
+        throw new Error('No primary key or role code value provided');
+      }
+
+      await this._service.removeRoleFromPlayer(primaryKeyValue, roleCode);
+
+      return this._response201(response, roleCode, 'removed');
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
 }
 
 export default new PlayerController();
