@@ -161,13 +161,49 @@ class PlayerController extends BaseController<
     }
   }
 
+  async getPlayerPermissions(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+      const playerPermissions = await this._service.getAllPermissions(primaryKeyValue);
+
+      return this._response200(response, playerPermissions);
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
+
+  async getPlayerRoles(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+      const playerRoles = await this._service.getAllRoles(primaryKeyValue);
+
+      return this._response200(response, playerRoles);
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
+
   async addRoleToPlayer(
     request: RdgaRequest<IPlayerDb, 'rdga_number'>,
     response: Response,
   ) {
     const { primaryKeyValue } = request;
 
-    const roleCode = request.body;
+    const roleCode = request.body[0];
 
     try {
       if (!primaryKeyValue || !roleCode) {
@@ -188,7 +224,7 @@ class PlayerController extends BaseController<
   ) {
     const { primaryKeyValue } = request;
 
-    const roleCode = request.body;
+    const roleCode = request.body[0];
 
     try {
       if (!primaryKeyValue || !roleCode) {

@@ -315,8 +315,8 @@ describe('Player Service', () => {
   });
 
   describe('getAllPermissions', () => {
-    test('should call getPlayerPermissions', async () => {
-      (playerRoleDao.getPlayerPermissions as jest.Mock).mockReturnValueOnce([
+    test('should call getPlayerRoles', async () => {
+      (playerRoleDao.getPlayerRoles as jest.Mock).mockReturnValueOnce([
         {
           code: 'test',
           name: 'test name',
@@ -339,8 +339,34 @@ describe('Player Service', () => {
         canManageRoles: false,
         canAssignRoles: true,
       });
-      expect(playerRoleDao.getPlayerPermissions).toHaveBeenCalledTimes(1);
-      expect(playerRoleDao.getPlayerPermissions).toHaveBeenCalledWith(1);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('getAllRoles', () => {
+    test('should call getPlayerRoles', async () => {
+      const mockedRoles = [
+        {
+          code: 'test',
+          name: 'test name',
+          canManagePlayers: true,
+          canManageTournaments: true,
+          canManageBlogPost: false,
+          canManageBlogPosts: true,
+          canManageRoles: false,
+          canAssignRoles: true,
+        },
+      ];
+      (playerRoleDao.getPlayerRoles as jest.Mock).mockReturnValueOnce(
+        mockedRoles,
+      );
+
+      const roles = await playerService.getAllRoles(1);
+
+      expect(roles).toEqual(mockedRoles);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledWith(1);
     });
   });
 });

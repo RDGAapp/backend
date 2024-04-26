@@ -33,6 +33,24 @@ router
     playerController.multipleUpdateRdgaRating(request, response),
   );
 
+router
+  .route('/:rdgaNumber/permissions')
+  .get((request, response) =>
+    playerController.getPlayerPermissions(request, response),
+  );
+
+router
+  .route('/:rdgaNumber/roles')
+  .get((request, response) =>
+    playerController.getPlayerRoles(request, response),
+  )
+  .post((request, response) =>
+    playerController.addRoleToPlayer(request, response),
+  )
+  .delete((request, response) =>
+    playerController.removeRoleFromPlayer(request, response),
+  );
+
 router.param(
   'rdgaNumber',
   (

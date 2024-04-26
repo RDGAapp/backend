@@ -35,7 +35,7 @@ class RoleDao extends BaseDao<
       .del();
   }
 
-  async getPlayerPermissions(
+  async getPlayerRoles(
     rdgaNumber: IPlayerRole['playerRdgaNumber'],
   ): Promise<(IRole & IPlayerRoleDb)[]> {
     return db(this._tableName)

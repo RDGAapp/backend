@@ -259,7 +259,7 @@ describe('Player Controller', () => {
 
   describe('addRoleToPlayer', () => {
     test('should response 200', async () => {
-      const request = { primaryKeyValue: 1, body: 'su' } as Request;
+      const request = { primaryKeyValue: 1, body: ['su'] } as Request;
 
       await playerController.addRoleToPlayer(request, response);
 
@@ -272,7 +272,7 @@ describe('Player Controller', () => {
     });
 
     test('should handle service throw with 500', async () => {
-      const request = { primaryKeyValue: 1, body: 'su' } as Request;
+      const request = { primaryKeyValue: 1, body: ['su'] } as Request;
       (playerService.addRoleToPlayer as jest.Mock).mockImplementationOnce(
         () => {
           throw new Error('Test');
@@ -293,7 +293,7 @@ describe('Player Controller', () => {
     });
 
     test('should return 400 if primaryKey empty', async () => {
-      const request = { primaryKeyValue: 0 } as Request;
+      const request = { primaryKeyValue: 0, body: [] } as Request;
 
       await playerController.addRoleToPlayer(request, response);
 
@@ -307,7 +307,7 @@ describe('Player Controller', () => {
     });
 
     test('should return 400 if roleCode empty', async () => {
-      const request = { primaryKeyValue: 1 } as Request;
+      const request = { primaryKeyValue: 1, body: [] } as Request;
 
       await playerController.addRoleToPlayer(request, response);
 
@@ -323,7 +323,7 @@ describe('Player Controller', () => {
 
   describe('removeRoleFromPlayer', () => {
     test('should response 200', async () => {
-      const request = { primaryKeyValue: 1, body: 'su' } as Request;
+      const request = { primaryKeyValue: 1, body: ['su'] } as Request;
 
       await playerController.removeRoleFromPlayer(request, response);
 
@@ -336,7 +336,7 @@ describe('Player Controller', () => {
     });
 
     test('should handle service throw with 500', async () => {
-      const request = { primaryKeyValue: 1, body: 'su' } as Request;
+      const request = { primaryKeyValue: 1, body: ['su'] } as Request;
       (playerService.removeRoleFromPlayer as jest.Mock).mockImplementationOnce(
         () => {
           throw new Error('Test');
@@ -357,7 +357,7 @@ describe('Player Controller', () => {
     });
 
     test('should return 400 if primaryKey empty', async () => {
-      const request = { primaryKeyValue: 0 } as Request;
+      const request = { primaryKeyValue: 0, body: [] } as Request;
 
       await playerController.removeRoleFromPlayer(request, response);
 
@@ -371,7 +371,7 @@ describe('Player Controller', () => {
     });
 
     test('should return 400 if roleCode empty', async () => {
-      const request = { primaryKeyValue: 1 } as Request;
+      const request = { primaryKeyValue: 1, body: [] } as Request;
 
       await playerController.removeRoleFromPlayer(request, response);
 
@@ -381,6 +381,114 @@ describe('Player Controller', () => {
       expect(response.send).toHaveBeenCalledTimes(1);
       expect(response.send).toHaveBeenCalledWith(
         "Something's wrong: Error: No primary key or role code value provided",
+      );
+    });
+  });
+
+  describe('getAllRoles', () => {
+    test('should response 200', async () => {
+      (playerService.getAllRoles as jest.Mock).mockReturnValueOnce([]);
+      const request = { primaryKeyValue: 1 } as Request;
+
+      await playerController.getPlayerRoles(request, response);
+
+      expect(playerService.getAllRoles).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllRoles).toHaveBeenCalledWith(1);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith([]);
+    });
+
+    test('should handle service throw with 500', async () => {
+      const request = { primaryKeyValue: 1 } as Request;
+      (playerService.getAllRoles as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.getPlayerRoles(request, response);
+
+      expect(playerService.getAllRoles).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllRoles).toHaveBeenCalledWith(1);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: Test",
+      );
+    });
+
+    test('should return 400 if primaryKey empty', async () => {
+      const request = { primaryKeyValue: 0 } as Request;
+
+      await playerController.getPlayerRoles(request, response);
+
+      expect(playerService.getAllRoles).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: No primary key value provided",
+      );
+    });
+  });
+
+  describe('getAllPermissions', () => {
+    test('should response 200', async () => {
+      const mockedPermissions = {
+        canManagePlayers: true,
+        canManageTournaments: true,
+        canManageBlogPost: false,
+        canManageBlogPosts: true,
+        canManageRoles: false,
+        canAssignRoles: true,
+      };
+      (playerService.getAllPermissions as jest.Mock).mockReturnValueOnce(
+        mockedPermissions,
+      );
+      const request = { primaryKeyValue: 1 } as Request;
+
+      await playerController.getPlayerPermissions(request, response);
+
+      expect(playerService.getAllPermissions).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllPermissions).toHaveBeenCalledWith(1);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.json).toHaveBeenCalledTimes(1);
+      expect(response.json).toHaveBeenCalledWith(mockedPermissions);
+    });
+
+    test('should handle service throw with 500', async () => {
+      const request = { primaryKeyValue: 1 } as Request;
+      (playerService.getAllPermissions as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test');
+      });
+
+      await playerController.getPlayerPermissions(request, response);
+
+      expect(playerService.getAllPermissions).toHaveBeenCalledTimes(1);
+      expect(playerService.getAllPermissions).toHaveBeenCalledWith(1);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.json).toHaveBeenCalledTimes(0);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: Test",
+      );
+    });
+
+    test('should return 400 if primaryKey empty', async () => {
+      const request = { primaryKeyValue: 0 } as Request;
+
+      await playerController.getPlayerPermissions(request, response);
+
+      expect(playerService.getAllPermissions).toHaveBeenCalledTimes(0);
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledTimes(1);
+      expect(response.send).toHaveBeenCalledWith(
+        "Something's wrong: Error: No primary key value provided",
       );
     });
   });

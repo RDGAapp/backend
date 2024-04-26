@@ -41,9 +41,9 @@ describe('PlayerRole Dao', () => {
     });
   });
 
-  describe('getPlayerPermissions', () => {
+  describe('getPlayerRoles', () => {
     test('should use join + select', async () => {
-      await playerRoleDao.getPlayerPermissions(1);
+      await playerRoleDao.getPlayerRoles(1);
 
       expect(db).toHaveBeenCalledTimes(1);
       expect(db).toHaveBeenCalledWith(Table.PlayerRoles);

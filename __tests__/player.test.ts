@@ -826,4 +826,99 @@ describe('Player endpoints', () => {
       });
     });
   });
+
+  describe('GET /players/:rdgaNumber/permissions', () => {
+    test('should return 200 with all false permissions', async () => {
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).get('/players/1/permissions');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        canManagePlayers: false,
+        canManageTournaments: false,
+        canManageBlogPost: false,
+        canManageBlogPosts: false,
+        canManageRoles: false,
+        canAssignRoles: false,
+      });
+    });
+
+    test('should return 200 with someData', async () => {
+      await request(app).post('/players').send(testPlayer);
+      await request(app).post('/players/1/roles').send(['su']);
+
+      const response = await request(app).get('/players/1/permissions');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        canManagePlayers: true,
+        canManageTournaments: true,
+        canManageBlogPost: true,
+        canManageBlogPosts: true,
+        canManageRoles: true,
+        canAssignRoles: true,
+      });
+    });
+  });
+
+  describe('GET /players/:rdgaNumber/roles', () => {
+    test('should return 200 with empty array', async () => {
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).get('/players/1/roles');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    test('should return 200 with someData', async () => {
+      await request(app).post('/players').send(testPlayer);
+      await request(app).post('/players/1/roles').send(['su']);
+
+      const response = await request(app).get('/players/1/roles');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([
+        {
+          canManagePlayers: true,
+          canManageTournaments: true,
+          canManageBlogPost: true,
+          canManageBlogPosts: true,
+          canManageRoles: true,
+          canAssignRoles: true,
+          code: 'su',
+          name: 'SuperUser',
+          playerRdgaNumber: 1,
+          roleCode: 'su',
+        },
+      ]);
+    });
+  });
+
+  describe('POST /players/:rdgaNumber/roles', () => {
+    test('should return 200', async () => {
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).post('/players/1/roles').send(['su']);
+
+      expect(response.status).toBe(201);
+      expect(response.text).toEqual('Value "su" added');
+    });
+  });
+
+  describe('DELETE /players/:rdgaNumber/roles', () => {
+    test('should return 200 with someData', async () => {
+      await request(app).post('/players').send(testPlayer);
+      await request(app).post('/players/1/roles').send(['su']);
+      const responseDel = await request(app)
+        .del('/players/1/roles')
+        .send(['su']);
+
+      expect(responseDel.status).toBe(201);
+      expect(responseDel.text).toBe('Value "su" removed');
+
+      const response = await request(app).get('/players/1/roles');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+  });
 });

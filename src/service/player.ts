@@ -120,7 +120,7 @@ class PlayerService extends BaseService<
   }
 
   async getAllPermissions(rdgaNumber: IPlayerDb['rdga_number']) {
-    const playerRoles = await playerRoleDao.getPlayerPermissions(rdgaNumber);
+    const playerRoles = await playerRoleDao.getPlayerRoles(rdgaNumber);
 
     return {
       canManagePlayers: playerRoles.some((role) => role.canManagePlayers),
@@ -132,6 +132,10 @@ class PlayerService extends BaseService<
       canManageRoles: playerRoles.some((role) => role.canManageRoles),
       canAssignRoles: playerRoles.some((role) => role.canAssignRoles),
     } satisfies Omit<IRole, 'code' | 'name'>;
+  }
+
+  async getAllRoles(rdgaNumber: IPlayerDb['rdga_number']) {
+    return await playerRoleDao.getPlayerRoles(rdgaNumber);
   }
 }
 
