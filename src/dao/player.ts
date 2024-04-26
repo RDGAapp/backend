@@ -17,8 +17,8 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
 
   async getAllPaginated(
     pageNumber: number,
-    surname: string,
-    town: string,
+    surname: IPlayerDb['surname'],
+    town: IPlayerDb['town'],
     onlyActive: boolean,
   ): Promise<IWithPagination<IPlayer[]>> {
     let query = db(this._tableName).leftJoin(
@@ -53,7 +53,9 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       });
   }
 
-  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayer> {
+  async getByPrimaryKey(
+    rdgaNumber: IPlayerDb['rdga_number'],
+  ): Promise<IPlayer> {
     const player = await db(this._tableName)
       .leftJoin(
         this.#authTableName,
@@ -71,9 +73,9 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
   }
 
   async getByRdgaPdgaMetrixNumber(
-    rdgaNumber?: number,
-    pdgaNumber?: number | null,
-    metrixNumber?: number | null,
+    rdgaNumber?: IPlayerDb['rdga_number'],
+    pdgaNumber?: IPlayerDb['pdga_number'],
+    metrixNumber?: IPlayerDb['metrix_number'],
   ): Promise<IPlayerBase[]> {
     const player = await db(this._tableName)
       .select(playerMapping)
@@ -85,9 +87,9 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
   }
 
   async updateRdgaRating(
-    rdgaNumber: number,
-    rdgaRating: number,
-    ratingDifference: number,
+    rdgaNumber: IPlayerDb['rdga_number'],
+    rdgaRating: IPlayerDb['rdga_rating'],
+    ratingDifference: IPlayerDb['rdga_rating_change'],
   ): Promise<IPlayerDb> {
     const updatedPlayer = await db(this._tableName)
       .where({ rdga_number: rdgaNumber })
@@ -97,7 +99,9 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
     return updatedPlayer[0];
   }
 
-  async activatePlayerForCurrentYear(rdgaNumber: number): Promise<IPlayerDb> {
+  async activatePlayerForCurrentYear(
+    rdgaNumber: IPlayerDb['rdga_number'],
+  ): Promise<IPlayerDb> {
     const updatedPlayer = await db(this._tableName)
       .where({ rdga_number: rdgaNumber })
       .update({

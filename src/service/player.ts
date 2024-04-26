@@ -1,4 +1,5 @@
 import playerDao from 'dao/player';
+import playerRoleDao from 'dao/playerRole';
 import dbObjectToObject from 'helpers/dbObjectToObject';
 import playerMapping from 'mapping/player';
 import { IPlayerBase, IPlayerExtended } from 'types/player';
@@ -8,6 +9,8 @@ import {
   getPdgaDataByNumber,
 } from 'helpers/externalApiHelpers';
 import BaseService from './base';
+import { IRoleDb } from 'types/roleDb';
+import { IRole } from 'types/role';
 
 class PlayerService extends BaseService<
   IPlayerBase,
@@ -91,6 +94,48 @@ class PlayerService extends BaseService<
     );
 
     return player;
+  }
+
+  async addRoleToPlayer(
+    rdgaNumber: IPlayerDb['rdga_number'],
+    roleCode: IRoleDb['code'],
+  ) {
+    const playerRoles = await playerRoleDao.getAllByPlayer(rdgaNumber);
+
+    if (playerRoles.some((role) => role.roleCode === roleCode)) {
+      throw new Error('Player already has this role');
+    }
+
+    await playerRoleDao.create({
+      player_rdga_number: rdgaNumber,
+      role_code: roleCode,
+    });
+  }
+
+  async removeRoleFromPlayer(
+    rdgaNumber: IPlayerDb['rdga_number'],
+    roleCode: IRoleDb['code'],
+  ) {
+    await playerRoleDao.removeRoleFromPlayer(rdgaNumber, roleCode);
+  }
+
+  async getAllPermissions(rdgaNumber: IPlayerDb['rdga_number']) {
+    const playerRoles = await playerRoleDao.getPlayerRoles(rdgaNumber);
+
+    return {
+      canManagePlayers: playerRoles.some((role) => role.canManagePlayers),
+      canManageTournaments: playerRoles.some(
+        (role) => role.canManageTournaments,
+      ),
+      canManageBlogPost: playerRoles.some((role) => role.canManageBlogPost),
+      canManageBlogPosts: playerRoles.some((role) => role.canManageBlogPosts),
+      canManageRoles: playerRoles.some((role) => role.canManageRoles),
+      canAssignRoles: playerRoles.some((role) => role.canAssignRoles),
+    } satisfies Omit<IRole, 'code' | 'name'>;
+  }
+
+  async getAllRoles(rdgaNumber: IPlayerDb['rdga_number']) {
+    return await playerRoleDao.getPlayerRoles(rdgaNumber);
   }
 }
 

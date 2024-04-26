@@ -2,11 +2,13 @@ import fetchMock from 'jest-fetch-mock';
 
 import playerService from 'service/player';
 import playerDao from 'dao/player';
+import playerRoleDao from 'dao/playerRole';
 
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
 
 jest.mock('dao/player');
+jest.mock('dao/playerRole');
 fetchMock.enableMocks();
 
 describe('Player Service', () => {
@@ -263,6 +265,108 @@ describe('Player Service', () => {
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('addRoleToPlayer', () => {
+    test('should call create', async () => {
+      (playerRoleDao.getAllByPlayer as jest.Mock).mockReturnValueOnce([
+        { playerRdgaNumber: 1, roleCode: 'not_test' },
+      ]);
+
+      await playerService.addRoleToPlayer(1, 'test');
+
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledWith(1);
+      expect(playerRoleDao.create).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.create).toHaveBeenCalledWith({
+        player_rdga_number: 1,
+        role_code: 'test',
+      });
+    });
+
+    test('should throw and not call create', async () => {
+      (playerRoleDao.getAllByPlayer as jest.Mock).mockReturnValueOnce([
+        { playerRdgaNumber: 1, roleCode: 'test' },
+      ]);
+
+      const testFunction = async () =>
+        await playerService.addRoleToPlayer(1, 'test');
+
+      await expect(testFunction).rejects.toThrow(
+        'Player already has this role',
+      );
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledWith(1);
+      expect(playerRoleDao.create).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('removeRoleFromPlayer', () => {
+    test('should call removeRoleFromPlayer', async () => {
+      await playerService.removeRoleFromPlayer(1, 'test');
+
+      expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.removeRoleFromPlayer).toHaveBeenCalledWith(
+        1,
+        'test',
+      );
+    });
+  });
+
+  describe('getAllPermissions', () => {
+    test('should call getPlayerRoles', async () => {
+      (playerRoleDao.getPlayerRoles as jest.Mock).mockReturnValueOnce([
+        {
+          code: 'test',
+          name: 'test name',
+          canManagePlayers: true,
+          canManageTournaments: true,
+          canManageBlogPost: false,
+          canManageBlogPosts: true,
+          canManageRoles: false,
+          canAssignRoles: true,
+        },
+      ]);
+
+      const permissions = await playerService.getAllPermissions(1);
+
+      expect(permissions).toEqual({
+        canManagePlayers: true,
+        canManageTournaments: true,
+        canManageBlogPost: false,
+        canManageBlogPosts: true,
+        canManageRoles: false,
+        canAssignRoles: true,
+      });
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('getAllRoles', () => {
+    test('should call getPlayerRoles', async () => {
+      const mockedRoles = [
+        {
+          code: 'test',
+          name: 'test name',
+          canManagePlayers: true,
+          canManageTournaments: true,
+          canManageBlogPost: false,
+          canManageBlogPosts: true,
+          canManageRoles: false,
+          canAssignRoles: true,
+        },
+      ];
+      (playerRoleDao.getPlayerRoles as jest.Mock).mockReturnValueOnce(
+        mockedRoles,
+      );
+
+      const roles = await playerService.getAllRoles(1);
+
+      expect(roles).toEqual(mockedRoles);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledTimes(1);
+      expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledWith(1);
     });
   });
 });

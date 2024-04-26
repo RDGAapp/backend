@@ -160,6 +160,84 @@ class PlayerController extends BaseController<
       return this._response500(response, error);
     }
   }
+
+  async getPlayerPermissions(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+      const playerPermissions = await this._service.getAllPermissions(primaryKeyValue);
+
+      return this._response200(response, playerPermissions);
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
+
+  async getPlayerRoles(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    try {
+      if (!primaryKeyValue) {
+        throw new Error('No primary key value provided');
+      }
+      const playerRoles = await this._service.getAllRoles(primaryKeyValue);
+
+      return this._response200(response, playerRoles);
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
+
+  async addRoleToPlayer(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    const roleCode = request.body[0];
+
+    try {
+      if (!primaryKeyValue || !roleCode) {
+        throw new Error('No primary key or role code value provided');
+      }
+
+      await this._service.addRoleToPlayer(primaryKeyValue, roleCode);
+
+      return this._response201(response, roleCode, 'added');
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
+
+  async removeRoleFromPlayer(
+    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
+    response: Response,
+  ) {
+    const { primaryKeyValue } = request;
+
+    const roleCode = request.body[0];
+
+    try {
+      if (!primaryKeyValue || !roleCode) {
+        throw new Error('No primary key or role code value provided');
+      }
+
+      await this._service.removeRoleFromPlayer(primaryKeyValue, roleCode);
+
+      return this._response201(response, roleCode, 'removed');
+    } catch (error) {
+      return this._response500(response, error);
+    }
+  }
 }
 
 export default new PlayerController();
