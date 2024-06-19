@@ -111,21 +111,19 @@ class PlayerController extends BaseController<
     const errors: unknown[] = [];
     const updatedPlayers: IPlayerBase[] = [];
 
-    await Promise.all(
-      result.data.map(async (updateRatingValue) => {
-        try {
-          const { rdgaNumber, rating } = updateRatingValue;
-          const updatedPlayer = await playerService.updateRdgaRating(
-            rdgaNumber,
-            rating,
-          );
+    for (const updateRatingValue of result.data) {
+      try {
+        const { rdgaNumber, rating } = updateRatingValue;
+        const updatedPlayer = await playerService.updateRdgaRating(
+          rdgaNumber,
+          rating,
+        );
 
-          updatedPlayers.push(updatedPlayer);
-        } catch (error) {
-          errors.push(error);
-        }
-      }),
-    );
+        updatedPlayers.push(updatedPlayer);
+      } catch (error) {
+        errors.push(error);
+      }
+    }
 
     return this._response200(response, { updatedPlayers, errors });
   }
@@ -171,7 +169,9 @@ class PlayerController extends BaseController<
       if (!primaryKeyValue) {
         throw new Error('No primary key value provided');
       }
-      const playerPermissions = await this._service.getAllPermissions(primaryKeyValue);
+      const playerPermissions = await this._service.getAllPermissions(
+        primaryKeyValue,
+      );
 
       return this._response200(response, playerPermissions);
     } catch (error) {

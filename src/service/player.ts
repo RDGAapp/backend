@@ -62,7 +62,7 @@ class PlayerService extends BaseService<
     rdgaRating: number,
   ): Promise<IPlayerBase> {
     const existingPlayer = await this.checkIfPlayerExist({ rdgaNumber });
-    if (!existingPlayer)
+    if (existingPlayer?.rdgaNumber !== rdgaNumber)
       throw Error(`Игрока с номером РДГА ${rdgaNumber} нет в базе`);
 
     const ratingDifference = rdgaRating - (existingPlayer.rdgaRating || 0);
