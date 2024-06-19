@@ -2815,10 +2815,10 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knex-paginate@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/knex-paginate/-/knex-paginate-3.1.2.tgz#93fb29bb91ea2c51da03b058d5cb8185977ed813"
-  integrity sha512-9ThZspp+ZyA0M6lEGFSG5+U1r2+6OJWZDb46vONShciXxQMmEK+m7zNMqRi3OlAgPyb/OODAg7qY8ErhH14xwA==
+knex-paginate@3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/knex-paginate/-/knex-paginate-3.1.4.tgz#49f0255600eaa4f4df40e325603aaa12e4fde1b5"
+  integrity sha512-aug+5Ko2lS8PlOOR5GVTTRQzpW47AU77K1PYFy4K9wJqsntPgxV+POyOX08YpM3gdK+pEVBgcbuGt/+XPpnXkQ==
 
 knex-types@0.5.0:
   version "0.5.0"
