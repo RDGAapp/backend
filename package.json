@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.1",
   "main": "server.js",
-  "type": "module",
   "dependencies": {
     "@tsconfig/node18": "18.2.4",
     "@types/cookie-parser": "1.4.7",
