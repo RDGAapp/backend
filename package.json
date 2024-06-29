@@ -23,20 +23,20 @@
     "zod-validation-error": "3.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "9.6.0",
     "@faker-js/faker": "8.4.1",
     "@types/jest": "29.5.12",
     "@types/supertest": "6.0.2",
-    "@typescript-eslint/eslint-plugin": "7.14.1",
-    "@typescript-eslint/parser": "7.14.1",
     "dotenv": "16.4.5",
-    "eslint": "8.57.0",
+    "eslint": "9.6.0",
     "jest": "29.7.0",
     "jest-fetch-mock": "3.0.3",
     "knex-types": "0.5.0",
     "nodemon": "3.1.4",
     "supertest": "7.0.0",
     "ts-jest": "29.1.5",
-    "ts-node": "10.9.2"
+    "ts-node": "10.9.2",
+    "typescript-eslint": "7.14.1"
   },
   "scripts": {
     "clean:build": "rm -rf dist",
@@ -56,7 +56,7 @@
     "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
     "seed:make": "knex seed:make -x ts",
     "seed:run": "knex seed:run --knexfile src/database/knexfile.ts",
-    "eslint:check": "eslint . --ext .ts",
+    "eslint:check": "eslint .",
     "types:check": "tsc --noEmit",
     "test": "TZ=UTC jest --runInBand --forceExit --detectOpenHandles",
     "test:coverage": "TZ=UTC jest --coverage --runInBand --forceExit --detectOpenHandles",
