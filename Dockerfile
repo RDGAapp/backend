@@ -1,4 +1,4 @@
-FROM node:21-alpine
+FROM oven/bun:1-alpine
 
 WORKDIR /app
 
@@ -14,10 +14,10 @@ ARG BITRIX_URL
 
 ENV PORT=$PORT DATABASE=$DATABASE DATABASE_HOST=$DATABASE_HOST DATABASE_USER=$DATABASE_USER DATABASE_PASSWORD=$DATABASE_PASSWORD TG_BOT_TOKEN=$TG_BOT_TOKEN BITRIX_URL=$BITRIX_URL
 
-RUN yarn install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production
 
-RUN yarn build
+RUN bun run build
 
 EXPOSE 8080
 
-CMD yarn migrate:latest:production && yarn start
+CMD bun migrate:latest:production && bun run start
