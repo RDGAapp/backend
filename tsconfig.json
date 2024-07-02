@@ -4,7 +4,10 @@
   },
   "compilerOptions": {
     "target": "es2020",
-    "types": ["node", "jest"],
+    "types": [
+      "node",
+      "jest"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,7 +22,7 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "./dist"
   },
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "@tsconfig/node21/tsconfig.json",
   "include": [
     "src/**/*"
   ],
