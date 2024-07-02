@@ -16,8 +16,6 @@ ENV PORT=$PORT DATABASE=$DATABASE DATABASE_HOST=$DATABASE_HOST DATABASE_USER=$DA
 
 RUN bun install --frozen-lockfile --production
 
-RUN bun run build
-
 EXPOSE 8080
 
 CMD bun migrate:latest:production && bun run start

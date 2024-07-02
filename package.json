@@ -36,11 +36,7 @@
     "typescript-eslint": "7.15.0"
   },
   "scripts": {
-    "clean:build": "rm -rf dist",
-    "clean:packages": "rm -rf node_modules",
-    "clean:all": "rm -rf node_modules dist",
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "start": "NODE_PATH=dist NODE_ENV=production bun dist/server.js",
+    "start": "NODE_ENV=production bun src/server.ts",
     "start:dev": "trap 'bun database:stop' EXIT; bun database:start:dev && export $(cat .env.local | xargs) && bun --hot src/server.ts",
     "database:start": "docker run --name rdga_db --rm -d -p 5432:5432 -e POSTGRES_USER=rdga_dev -e POSTGRES_PASSWORD=java_script_i_love_it -e POSTGRES_DB=rdga_dev_db postgres:16-alpine",
     "database:start:dev": "bun database:start && bun migrate:latest && bun seed:run",
@@ -50,7 +46,7 @@
     "migrate:up": "bunx knex migrate:up --knexfile database/knexfile.ts",
     "migrate:down": "bunx knex migrate:down --knexfile src/database/knexfile.ts",
     "migrate:rollback": "bunx knex migrate:rollback --knexfile src/database/knexfile.ts",
-    "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
+    "migrate:latest:production": "bunx knex migrate:latest --knexfile src/database/knexfile.ts --env production",
     "seed:make": "knex seed:make -x ts",
     "seed:run": "knex seed:run --knexfile src/database/knexfile.ts",
     "eslint:check": "eslint .",
