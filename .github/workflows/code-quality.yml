@@ -11,32 +11,35 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
       -
+        name: Install bun
+        uses: oven-sh/setup-bun@v1
+      -
         name: Cache dependencies
         uses: actions/cache@v4
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('**/bun.lockb') }}
       -
         name: Install dependencies
-        run: yarn install
+        run: bun install
       -
         name: Check ESLint
-        run: yarn eslint:check
+        run: bun eslint:check
       -
         name: Check Types
-        run: yarn types:check
+        run: bun types:check
       -
         name: Start database for tests
-        run: yarn database:start
+        run: bun database:start
       -
         name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v8
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: yarn test:coverage
+          coverageCommand: bun test:coverage
           debug: true
       -
         name: Stop database
-        run: yarn database:stop
+        run: bun database:stop
