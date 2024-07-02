@@ -50,7 +50,7 @@
     "migrate:up": "bunx knex migrate:up --knexfile database/knexfile.ts",
     "migrate:down": "bunx knex migrate:down --knexfile src/database/knexfile.ts",
     "migrate:rollback": "bunx knex migrate:rollback --knexfile src/database/knexfile.ts",
-    "migrate:latest:production": "bunx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
+    "migrate:latest:production": "npx knex migrate:latest --knexfile dist/database/knexfile.js --env production",
     "seed:make": "knex seed:make -x ts",
     "seed:run": "knex seed:run --knexfile src/database/knexfile.ts",
     "eslint:check": "eslint .",
