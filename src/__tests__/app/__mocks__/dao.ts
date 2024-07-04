@@ -1,8 +1,10 @@
+import { mock } from 'bun:test';
+
 export default {
-  getAll: jest.fn(),
-  getAllPaginated: jest.fn(),
-  create: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  getByPrimaryKey: jest.fn(),
+  getAll: mock(),
+  getAllPaginated: mock(),
+  create: mock(),
+  update: mock(),
+  delete: mock(),
+  getByPrimaryKey: mock(),
 };

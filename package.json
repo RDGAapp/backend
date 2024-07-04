@@ -25,7 +25,7 @@
   "devDependencies": {
     "@eslint/js": "9.6.0",
     "@faker-js/faker": "8.4.1",
-    "@types/bun": "^1.1.6",
+    "@types/bun": "1.1.6",
     "@types/supertest": "6.0.2",
     "bun-bagel": "^1.0.8",
     "eslint": "9.6.0",
@@ -47,6 +47,7 @@
     "migrate:latest:production": "bunx knex migrate:latest --knexfile src/database/knexfile.ts --env production",
     "seed:make": "knex seed:make -x ts",
     "seed:run": "knex seed:run --knexfile src/database/knexfile.ts",
+    "check": "bun eslint:check && bun types:check",
     "eslint:check": "eslint .",
     "types:check": "tsc --noEmit",
     "test": "bun test --preload ./.test/setupTests.ts",
