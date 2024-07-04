@@ -1,17 +1,17 @@
-import db from 'database';
-import { IWithPagination } from 'knex-paginate';
+import { db } from 'database';
 import playerMapping from 'mapping/player';
-import { Table } from 'types/db';
 import { IPlayer, IPlayerBase } from 'types/player';
 import { IPlayerDb } from 'types/playerDb';
 import BaseDao from './base';
+import { authData, player } from 'database/schema';
+import { and, asc, count, desc, eq, gt, ilike } from 'drizzle-orm';
 
-class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
-  #authTableName;
+class PlayerDao extends BaseDao<'rdgaNumber'> {
+  #authTable;
 
   constructor() {
-    super(Table.Player, playerMapping, 'rdga_number');
-    this.#authTableName = Table.AuthData;
+    super(player, 'rdgaNumber');
+    this.#authTable = authData;
     this._perPageRecords = 30;
   }
 
@@ -20,37 +20,28 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
     surname: IPlayerDb['surname'],
     town: IPlayerDb['town'],
     onlyActive: boolean,
-  ): Promise<IWithPagination<IPlayer[]>> {
-    let query = db(this._tableName).leftJoin(
-      this.#authTableName,
-      `${this._tableName}.rdga_number`,
-      `${this.#authTableName}.rdga_number`,
-    );
+  ) {
+    const queries = [];
 
     if (surname) {
-      query = query.where('surname', 'ilike', `%${surname}%`);
+      queries.push(ilike(player.surname, `%${surname}%`));
     }
     if (town) {
-      query = query.where({ town });
+      queries.push(eq(player.town, town));
     }
 
     if (onlyActive) {
-      query = query.where('active_to', '>', 'now()');
+      queries.push(gt(player.activeTo, 'now()'));
     }
 
-    return query
-      .select({
-        ...playerMapping,
-        rdgaNumber: `${this._tableName}.rdga_number`,
-        avatarUrl: 'telegram_photo_url',
-      })
-      .orderBy('rdga_rating', 'desc')
-      .orderBy(`${this._tableName}.rdga_number`, 'asc')
-      .paginate({
-        perPage: this._perPageRecords,
-        currentPage: pageNumber,
-        isLengthAware: true,
-      });
+    return db
+      .select({ total: count(), records: player })
+      .from(this._table)
+      .leftJoin(this.#authTable, eq(player.rdgaNumber, authData.rdgaNumber))
+      .where(and(...queries))
+      .orderBy(desc(player.rdgaRating), asc(player.rdgaNumber))
+      .limit(this._perPageRecords)
+      .offset((pageNumber - 1) * this._perPageRecords);
   }
 
   async getByPrimaryKey(

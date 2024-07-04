@@ -4,7 +4,7 @@ import { Table } from 'types/db';
 import BaseDao from './base';
 import { IPlayerRole } from 'types/playerRole';
 import { IPlayerRoleDb } from 'types/playerRoleDb';
-import db from 'database';
+import { db } from 'database';
 import { IRole } from 'types/role';
 
 class RoleDao extends BaseDao<

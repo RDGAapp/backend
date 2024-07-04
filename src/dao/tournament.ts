@@ -1,4 +1,4 @@
-import db from 'database';
+import { db } from 'database';
 import tournamentMapping from 'mapping/tournament';
 import { getMonday } from 'helpers/dateHelpers';
 import { ITournament } from 'types/tournament';

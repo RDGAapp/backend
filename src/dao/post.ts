@@ -1,4 +1,4 @@
-import db from 'database';
+import { db } from 'database';
 import { IWithPagination } from 'knex-paginate';
 import postMapping from 'mapping/post';
 import { Table } from 'types/db';

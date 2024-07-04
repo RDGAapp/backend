@@ -1,0 +1,552 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.knex_migrations": {
+      "name": "knex_migrations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "batch": {
+          "name": "batch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "migration_time": {
+          "name": "migration_time",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.knex_migrations_lock": {
+      "name": "knex_migrations_lock",
+      "schema": "",
+      "columns": {
+        "index": {
+          "name": "index",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "is_locked": {
+          "name": "is_locked",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.auth_data": {
+      "name": "auth_data",
+      "schema": "",
+      "columns": {
+        "rdga_number": {
+          "name": "rdga_number",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "telegram_id": {
+          "name": "telegram_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "telegram_auth_date": {
+          "name": "telegram_auth_date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "telegram_username": {
+          "name": "telegram_username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "telegram_first_name": {
+          "name": "telegram_first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "telegram_last_name": {
+          "name": "telegram_last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "telegram_photo_url": {
+          "name": "telegram_photo_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "auth_data_rdga_number_foreign": {
+          "name": "auth_data_rdga_number_foreign",
+          "tableFrom": "auth_data",
+          "tableTo": "player",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "rdga_number"
+          ],
+          "columnsTo": [
+            "rdga_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "auth_data_rdga_number_unique": {
+          "columns": [
+            "rdga_number"
+          ],
+          "nullsNotDistinct": false,
+          "name": "auth_data_rdga_number_unique"
+        },
+        "auth_data_telegram_id_unique": {
+          "columns": [
+            "telegram_id"
+          ],
+          "nullsNotDistinct": false,
+          "name": "auth_data_telegram_id_unique"
+        },
+        "auth_data_telegram_username_unique": {
+          "columns": [
+            "telegram_username"
+          ],
+          "nullsNotDistinct": false,
+          "name": "auth_data_telegram_username_unique"
+        }
+      }
+    },
+    "public.post": {
+      "name": "post",
+      "schema": "",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "author": {
+          "name": "author",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "header": {
+          "name": "header",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author_rdga_number": {
+          "name": "author_rdga_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "posts_author_rdga_number_foreign": {
+          "name": "posts_author_rdga_number_foreign",
+          "tableFrom": "post",
+          "tableTo": "player",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "author_rdga_number"
+          ],
+          "columnsTo": [
+            "rdga_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "posts_code_unique": {
+          "columns": [
+            "code"
+          ],
+          "nullsNotDistinct": false,
+          "name": "posts_code_unique"
+        }
+      }
+    },
+    "public.player": {
+      "name": "player",
+      "schema": "",
+      "columns": {
+        "rdga_number": {
+          "name": "rdga_number",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "surname": {
+          "name": "surname",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL::character varying"
+        },
+        "rdga_rating": {
+          "name": "rdga_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rdga_rating_change": {
+          "name": "rdga_rating_change",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "town": {
+          "name": "town",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL::character varying"
+        },
+        "pdga_number": {
+          "name": "pdga_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metrix_number": {
+          "name": "metrix_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active_to": {
+          "name": "active_to",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2023-04-01'"
+        },
+        "sports_category": {
+          "name": "sports_category",
+          "type": "sports_category",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "player_rdga_number_unique": {
+          "columns": [
+            "rdga_number"
+          ],
+          "nullsNotDistinct": false,
+          "name": "player_rdga_number_unique"
+        },
+        "player_pdga_number_unique": {
+          "columns": [
+            "pdga_number"
+          ],
+          "nullsNotDistinct": false,
+          "name": "player_pdga_number_unique"
+        },
+        "player_metrix_number_unique": {
+          "columns": [
+            "metrix_number"
+          ],
+          "nullsNotDistinct": false,
+          "name": "player_metrix_number_unique"
+        }
+      }
+    },
+    "public.tournament": {
+      "name": "tournament",
+      "schema": "",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "town": {
+          "name": "town",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "metrix_id": {
+          "name": "metrix_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL::character varying"
+        },
+        "tournament_type": {
+          "name": "tournament_type",
+          "type": "tournament_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'regional'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tournaments_code_unique": {
+          "columns": [
+            "code"
+          ],
+          "nullsNotDistinct": false,
+          "name": "tournaments_code_unique"
+        }
+      }
+    },
+    "public.player_roles": {
+      "name": "player_roles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "player_rdga_number": {
+          "name": "player_rdga_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_code": {
+          "name": "role_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "player_roles_player_rdga_number_foreign": {
+          "name": "player_roles_player_rdga_number_foreign",
+          "tableFrom": "player_roles",
+          "tableTo": "player",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "player_rdga_number"
+          ],
+          "columnsTo": [
+            "rdga_number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "player_roles_role_code_foreign": {
+          "name": "player_roles_role_code_foreign",
+          "tableFrom": "player_roles",
+          "tableTo": "role",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "role_code"
+          ],
+          "columnsTo": [
+            "code"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.role": {
+      "name": "role",
+      "schema": "",
+      "columns": {
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_manage_players": {
+          "name": "can_manage_players",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "can_manage_tournaments": {
+          "name": "can_manage_tournaments",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "can_manage_blog_post": {
+          "name": "can_manage_blog_post",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "can_manage_blog_posts": {
+          "name": "can_manage_blog_posts",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "can_manage_roles": {
+          "name": "can_manage_roles",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "can_assign_roles": {
+          "name": "can_assign_roles",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "role_code_unique": {
+          "columns": [
+            "code"
+          ],
+          "nullsNotDistinct": false,
+          "name": "role_code_unique"
+        }
+      }
+    }
+  },
+  "enums": {
+    "public.sports_category": {
+      "name": "sports_category",
+      "values": [
+        "master",
+        "candidate",
+        "adult-first",
+        "adult-second",
+        "adult-third",
+        "junior-first",
+        "junior-second",
+        "junior-third"
+      ],
+      "schema": "public"
+    },
+    "public.tournament_type": {
+      "name": "tournament_type",
+      "values": [
+        "russian_championship",
+        "pro",
+        "federal",
+        "league",
+        "all_star",
+        "regional",
+        "national"
+      ],
+      "schema": "public"
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {}
+  }
+}

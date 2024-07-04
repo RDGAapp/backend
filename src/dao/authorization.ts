@@ -1,4 +1,4 @@
-import db from 'database';
+import { db } from 'database';
 import authorizationMapping from 'mapping/authorization';
 import { IAuthData } from 'types/authData';
 import { IAuthDataDb } from 'types/authDataDb';
@@ -25,7 +25,7 @@ class AuthorizationDao extends BaseDao<IAuthData, IAuthDataDb, 'rdga_number'> {
       dataToUpdate.telegram_photo_url = data.telegram_photo_url;
     }
 
-    const authorization = await db(this._tableName)
+    const authorization = await db.select(this._tableName)
       .where({ rdga_number: data.rdga_number })
       .update(dataToUpdate)
       .returning('*');
