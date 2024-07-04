@@ -1,12 +1,8 @@
 {
-  "ts-node": {
-    "files": true,
-  },
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ESNext",
     "types": [
-      "node",
-      "jest"
+      "node"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -20,7 +16,6 @@
     "isolatedModules": true,
     "baseUrl": "src",
     "noFallthroughCasesInSwitch": true,
-    "outDir": "./dist"
   },
   "extends": "@tsconfig/node21/tsconfig.json",
   "include": [

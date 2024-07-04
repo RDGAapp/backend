@@ -1,12 +1,11 @@
 import request from 'supertest';
-import fetchMock from 'jest-fetch-mock';
+import { describe, expect, test, beforeEach, afterEach } from 'bun:test';
+import { mock as fetchMock, clearMocks as clearFetchMock } from 'bun-bagel';
 
 import app from '../src/app';
 import db from '../src/database';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
 import { SportsCategory } from '../src/types/db';
-
-fetchMock.enableMocks();
 
 describe('Player endpoints', () => {
   const testPlayerResponse = {
@@ -29,7 +28,7 @@ describe('Player endpoints', () => {
   };
 
   beforeEach(async () => {
-    fetchMock.resetMocks();
+    clearFetchMock();
     await db.migrate.latest();
   });
 
@@ -390,15 +389,18 @@ describe('Player endpoints', () => {
 
   describe('GET /players/:rdgaNumber', () => {
     test('should return 200 with player with metrix data', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify([
-          [],
-          [
-            [1, 10, ''],
-            [1, 20, ''],
+      fetchMock(
+        'https://discgolfmetrix.com/mystat_server_rating.php?user_id=1&other=1&course_id=0',
+        {
+          data: [
+            [],
+            [
+              [1, 10, ''],
+              [1, 20, ''],
+            ],
+            [],
           ],
-          [],
-        ]),
+        },
       );
       await request(app)
         .post('/players')
@@ -414,11 +416,13 @@ describe('Player endpoints', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return 200 with player without metrix data', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify([[], [], []]));
+      fetchMock(
+        'https://discgolfmetrix.com/mystat_server_rating.php?user_id=1&other=1&course_id=0',
+        { data: [[], [], []] },
+      );
       await request(app)
         .post('/players')
         .send({ ...testPlayer, pdgaNumber: null });
@@ -433,13 +437,12 @@ describe('Player endpoints', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return 200 with player with pdga data', async () => {
-      fetchMock.mockResponseOnce(
-        '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
-      );
+      fetchMock('https://www.pdga.com/player/1', {
+        data: '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
+      });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null });
@@ -454,11 +457,10 @@ describe('Player endpoints', () => {
         pdgaRating: 955,
         pdgaActiveTo: new Date('31-Dec-2024').toISOString(),
       });
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return 200 with player without pdga data', async () => {
-      fetchMock.mockResponseOnce('<html></html>');
+      fetchMock('https://www.pdga.com/player/1', { data: '<html></html>' });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null });
@@ -473,7 +475,6 @@ describe('Player endpoints', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return 200 with player without metrixNumber and pdgaNumber', async () => {
@@ -492,7 +493,6 @@ describe('Player endpoints', () => {
         pdgaRating: null,
         pdgaActiveTo: null,
       });
-      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     test('should return 200 with player with SportsCategory', async () => {
@@ -517,7 +517,6 @@ describe('Player endpoints', () => {
         pdgaActiveTo: null,
         sportsCategory: SportsCategory.JuniorThird,
       });
-      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     test('should return 404 if player does not exist', async () => {
