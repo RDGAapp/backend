@@ -1,3 +1,4 @@
+import { describe, expect, test, beforeEach, afterEach, setSystemTime } from 'bun:test';
 import request from 'supertest';
 import app from '../src/app';
 import db from '../src/database';
@@ -76,9 +77,9 @@ describe('Post endpoints', () => {
 
     test('should return 200 with sorted values by createdAt', async () => {
       await request(app).post('/players').send(testPlayer);
-      jest.useFakeTimers().setSystemTime(new Date('2010-01-01'));
+      setSystemTime(new Date('2010-01-01'));
       await request(app).post('/posts').send(testPost);
-      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+      setSystemTime(new Date('2020-01-01'));
       await request(app)
         .post('/posts')
         .send({ ...testPost, code: 'test2' });
