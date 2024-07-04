@@ -1,5 +1,5 @@
 const tournamentDaoMock = {
-  getAll: jest.fn(),
+  getAll: mock(),
 };
 
 export default tournamentDaoMock;

@@ -1,9 +1,20 @@
+import {
+  describe,
+  expect,
+  test,
+  afterEach,
+  jest,
+  beforeAll,
+  afterAll,
+  setSystemTime,
+} from 'bun:test';
 import { Request } from 'express';
 import postsController from 'controller/post';
 import postsService from 'service/post';
 import response from '../mocks/response';
+import { mockPostServices } from '__tests__/mocks/modules';
 
-jest.mock('service/post');
+mockPostServices();
 
 describe('Post Controller', () => {
   afterEach(() => {
@@ -11,11 +22,11 @@ describe('Post Controller', () => {
   });
 
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2020-01-02'));
+    setSystemTime(new Date('2020-01-02'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    setSystemTime();
   });
 
   describe('getAllPaginated', () => {

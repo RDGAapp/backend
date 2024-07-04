@@ -1,6 +1,6 @@
 const postDaoMock = {
-  getAllPaginated: jest.fn(),
-  getByPrimaryKey: jest.fn(),
+  getAllPaginated: mock(),
+  getByPrimaryKey: mock(),
 };
 
 export default postDaoMock;

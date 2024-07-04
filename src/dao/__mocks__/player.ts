@@ -1,9 +1,9 @@
 const playerDaoMock = {
-  getAllPaginated: jest.fn(),
-  getByPrimaryKey: jest.fn(),
-  getByRdgaPdgaMetrixNumber: jest.fn(),
-  updateRdgaRating: jest.fn(),
-  activatePlayerForCurrentYear: jest.fn(),
+  getAllPaginated: mock(),
+  getByPrimaryKey: mock(),
+  getByRdgaPdgaMetrixNumber: mock(),
+  updateRdgaRating: mock(),
+  activatePlayerForCurrentYear: mock(),
 };
 
 export default playerDaoMock;

@@ -1,3 +1,4 @@
+import { describe, expect, test, mock, afterEach, jest } from 'bun:test';
 import response from '../mocks/response';
 import testService from '__tests__/app/service';
 import testController, {
@@ -6,7 +7,16 @@ import testController, {
 import { RdgaRequest } from 'controller/base';
 import { ITestDb } from '__tests__/app/helpers';
 
-jest.mock('__tests__/app/service');
+mock.module('__tests__/app/service', () => ({
+  default: {
+    getAll: mock(),
+    getAllPaginated: mock(),
+    create: mock(),
+    update: mock(),
+    delete: mock(),
+    getByPrimaryKey: mock(),
+  },
+}));
 
 type TestRequest = RdgaRequest<ITestDb, 'test_db'>;
 

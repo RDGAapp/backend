@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "types": [
-      "node"
+      "node",
+      "bun"
     ],
     "allowJs": true,
     "skipLibCheck": true,
