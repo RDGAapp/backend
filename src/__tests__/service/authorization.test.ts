@@ -157,9 +157,8 @@ describe('Authorization Service', () => {
         testAuthData,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow('Already registered');
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -170,9 +169,8 @@ describe('Authorization Service', () => {
         null,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow("Player doesn't exist");
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -193,8 +191,7 @@ describe('Authorization Service', () => {
       );
 
       expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow('Bitrix error: more or less than 1 contact found');
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -214,9 +211,8 @@ describe('Authorization Service', () => {
         testPlayer,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow('Bitrix error: more or less than 1 contact found');
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -240,9 +236,8 @@ describe('Authorization Service', () => {
         testPlayer,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow("This rdgaNumber doesn't belong to this telegram");
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -272,9 +267,9 @@ describe('Authorization Service', () => {
         testAuthData,
       );
 
-      await expect(
-        async () => await authorizationService.checkAuthData(1, 'hash'),
-      ).rejects.toThrow('Data is corrupted');
+      expect(authorizationService.checkAuthData(1, 'hash')).rejects.toThrow(
+        'Data is corrupted',
+      );
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);
     });
@@ -282,8 +277,8 @@ describe('Authorization Service', () => {
     test('should throw if no user', async () => {
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
 
-      await expect(
-        async () => await authorizationService.checkAuthData(1, correctHash),
+      expect(
+        authorizationService.checkAuthData(1, correctHash),
       ).rejects.toThrow('Data is corrupted');
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);

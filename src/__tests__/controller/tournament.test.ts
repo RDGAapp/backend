@@ -33,9 +33,9 @@ describe('Tournament Controller', () => {
         throw new Error('Test');
       });
 
-      await expect(
-        async () => await tournamentsController.getAll(request, response),
-      ).rejects.toThrow('Test');
+      expect(tournamentsController.getAll(request, response)).rejects.toThrow(
+        'Test',
+      );
       expect(tournamentsService.getAll).toHaveBeenCalledTimes(1);
     });
   });
