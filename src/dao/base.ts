@@ -77,7 +77,7 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
 
   protected async _getByPrimaryKeyBase(
     primaryKeyValue: TDataDb[TPrimaryKey],
-  ): Promise<TData> {
+  ): Promise<TData | null> {
     return this._getByKey(this._primaryKeyName, primaryKeyValue);
   }
 

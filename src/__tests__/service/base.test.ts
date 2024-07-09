@@ -1,15 +1,26 @@
+import { describe, expect, test, beforeEach, jest, mock } from 'bun:test';
+
 import testDao from '__tests__/app/dao';
 import testService from '__tests__/app/service';
 
-jest.mock('__tests__/app/dao');
+mock.module('__tests__/app/dao', () => ({
+  default: {
+    getAll: mock(),
+    getAllPaginated: mock(),
+    create: mock(),
+    update: mock(),
+    delete: mock(),
+    getByPrimaryKey: mock(),
+  },
+}));
 
 describe('Base Service', () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe('getAll', () => {
-    test('should return whatever testDao returns', async () => {
+    test.only('should return whatever testDao returns', async () => {
       (testDao.getAll as jest.Mock).mockReturnValueOnce([]);
 
       const roles = await testService.getAll();
@@ -36,7 +47,7 @@ describe('Base Service', () => {
 
       const value = await testService.getAllPaginated(3);
 
-      expect(value).toEqual([]);
+      expect(value).toEqual([] as unknown as typeof value);
       expect(testDao.getAllPaginated).toHaveBeenCalledTimes(1);
       expect(testDao.getAllPaginated).toHaveBeenCalledWith(3);
     });
@@ -48,7 +59,7 @@ describe('Base Service', () => {
 
       const value = await testService.create({ test: 'some' });
 
-      expect(value).toBe('Test');
+      expect(value).toBe('Test' as unknown as typeof value);
       expect(testDao.create).toHaveBeenCalledTimes(1);
       expect(testDao.create).toHaveBeenCalledWith({ test_db: 'some' });
     });

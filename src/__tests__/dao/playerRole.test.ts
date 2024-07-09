@@ -1,10 +1,13 @@
+import { describe, expect, test, afterEach, jest } from 'bun:test';
+
 import db from 'database';
 import playerRoleDao from 'dao/playerRole';
 import playerRoleMapping from 'mapping/playerRole';
 import roleMapping from 'mapping/role';
 import { Table } from 'types/db';
+import { mockDatabase } from '__tests__/mocks/modules';
 
-jest.mock('database');
+mockDatabase();
 
 describe('PlayerRole Dao', () => {
   afterEach(() => {
