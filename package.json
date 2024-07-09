@@ -50,8 +50,7 @@
     "check": "bun eslint:check && bun types:check",
     "eslint:check": "eslint .",
     "types:check": "tsc --noEmit",
-    "test": "bun test --preload ./.test/setupTests.ts",
-    "test:coverage": "bun test --coverage --preload ./.test/setupTests.ts",
+    "test:coverage": "bun test --coverage",
     "generate:types": "NODE_PATH=src bun src/knex-types.ts && cp ./src/types/db.ts ../web/src/types/db.ts"
   }
 }

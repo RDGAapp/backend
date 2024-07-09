@@ -1,9 +1,12 @@
+import { describe, expect, test, afterEach, jest } from 'bun:test';
+
 import db from 'database';
 import postDao from 'dao/post';
 import postMapping from 'mapping/post';
 import { Table } from 'types/db';
+import { mockDatabase } from '__tests__/mocks/modules';
 
-jest.mock('database');
+mockDatabase();
 
 describe('Post Dao', () => {
   afterEach(() => {

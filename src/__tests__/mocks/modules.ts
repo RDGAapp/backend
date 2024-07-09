@@ -63,3 +63,47 @@ export const mockAuthorizationDao = () => {
     },
   }));
 };
+
+export const mockPlayerDao = () => {
+  mock.module('dao/player', () => ({
+    default: {
+      getAllPaginated: mock(),
+      getByPrimaryKey: mock(),
+      getByRdgaPdgaMetrixNumber: mock(),
+      updateRdgaRating: mock(),
+      activatePlayerForCurrentYear: mock(),
+    },
+  }));
+};
+
+export const mockPlayerRoleDao = () => {
+  mock.module('dao/playerRole', () => ({
+    default: {
+      create: mock(),
+      getAllByPlayer: mock(),
+      removeRoleFromPlayer: mock(),
+      getPlayerRoles: mock(),
+    },
+  }));
+};
+
+export const mockDatabase = () => {
+  mock.module('database', () => ({
+    default: mock().mockReturnValue({
+      from: mock().mockReturnThis(),
+      where: mock().mockReturnThis(),
+      orWhere: mock().mockReturnThis(),
+      select: mock().mockReturnThis(),
+      orderBy: mock().mockReturnThis(),
+      toSQL: mock().mockReturnThis(),
+      insert: mock().mockReturnThis(),
+      into: mock().mockReturnThis(),
+      returning: mock().mockReturnThis(),
+      update: mock().mockReturnThis(),
+      del: mock().mockReturnThis(),
+      toNative: mock(),
+      paginate: mock().mockReturnThis(),
+      leftJoin: mock().mockReturnThis(),
+    }),
+  }));
+};

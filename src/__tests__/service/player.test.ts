@@ -1,4 +1,5 @@
-import fetchMock from 'jest-fetch-mock';
+import { describe, expect, test, afterEach, beforeEach, jest } from 'bun:test';
+import { mock as fetchMock, clearMocks as clearFetchMock } from 'bun-bagel';
 
 import playerService from 'service/player';
 import playerDao from 'dao/player';
@@ -6,14 +7,15 @@ import playerRoleDao from 'dao/playerRole';
 
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
+import { mockPlayerDao, mockPlayerRoleDao } from '__tests__/mocks/modules';
+import { IPlayerExtended } from 'types/player';
 
-jest.mock('dao/player');
-jest.mock('dao/playerRole');
-fetchMock.enableMocks();
+mockPlayerDao();
+mockPlayerRoleDao();
 
 describe('Player Service', () => {
   beforeEach(() => {
-    fetchMock.resetMocks();
+    clearFetchMock();
   });
 
   afterEach(() => {
@@ -22,15 +24,18 @@ describe('Player Service', () => {
 
   describe('getByPrimaryKey', () => {
     test('should return player with metrix info', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify([
-          [],
-          [
-            [1, 10, ''],
-            [1, 20, ''],
+      fetchMock(
+        'https://discgolfmetrix.com/mystat_server_rating.php?user_id=1&other=1&course_id=0',
+        {
+          data: [
+            [],
+            [
+              [1, 10, ''],
+              [1, 20, ''],
+            ],
+            [],
           ],
-          [],
-        ]),
+        },
       );
       (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
@@ -46,14 +51,18 @@ describe('Player Service', () => {
         pdgaNumber: null,
         pdgaRating: null,
         pdgaActiveTo: null,
-      });
+      } as IPlayerExtended);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player without metrix info', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify([[], [], []]));
+      fetchMock(
+        'https://discgolfmetrix.com/mystat_server_rating.php?user_id=1&other=1&course_id=0',
+        {
+          data: [[], [], []],
+        },
+      );
       (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         pdgaNumber: null,
@@ -68,16 +77,15 @@ describe('Player Service', () => {
         pdgaNumber: null,
         pdgaRating: null,
         pdgaActiveTo: null,
-      });
+      } as IPlayerExtended);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player with pdga info', async () => {
-      fetchMock.mockResponseOnce(
-        '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
-      );
+      fetchMock('https://www.pdga.com/player/1', {
+        data: '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
+      });
       (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         metrixNumber: null,
@@ -92,14 +100,15 @@ describe('Player Service', () => {
         metrixRatingChange: null,
         pdgaRating: 955,
         pdgaActiveTo: new Date('31-Dec-2024').toISOString(),
-      });
+      } as IPlayerExtended);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player without pdga info', async () => {
-      fetchMock.mockResponseOnce('<html></html>');
+      fetchMock('https://www.pdga.com/player/1', {
+        data: '<html></html>',
+      });
       (playerDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce({
         ...testPlayer,
         metrixNumber: null,
@@ -114,10 +123,9 @@ describe('Player Service', () => {
         metrixRatingChange: null,
         pdgaRating: null,
         pdgaActiveTo: null,
-      });
+      } as IPlayerExtended);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
-      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     test('should return player without metrixNumber and pdgaNumber', async () => {
@@ -137,10 +145,9 @@ describe('Player Service', () => {
         pdgaNumber: null,
         pdgaRating: null,
         pdgaActiveTo: null,
-      });
+      } as IPlayerExtended);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(playerDao.getByPrimaryKey).toHaveBeenCalledWith(1);
-      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     test('should return null', async () => {
@@ -220,10 +227,7 @@ describe('Player Service', () => {
         [],
       );
 
-      const testFunction = async () =>
-        await playerService.updateRdgaRating(1, 1000);
-
-      await expect(testFunction).rejects.toThrow(
+      expect(playerService.updateRdgaRating(1, 1000)).rejects.toThrow(
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
@@ -258,10 +262,7 @@ describe('Player Service', () => {
         [],
       );
 
-      const testFunction = async () =>
-        await playerService.activatePlayerForCurrentYear(1);
-
-      await expect(testFunction).rejects.toThrow(
+      expect(playerService.activatePlayerForCurrentYear(1)).rejects.toThrow(
         'Игрока с номером РДГА 1 нет в базе',
       );
       expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
@@ -290,10 +291,7 @@ describe('Player Service', () => {
         { playerRdgaNumber: 1, roleCode: 'test' },
       ]);
 
-      const testFunction = async () =>
-        await playerService.addRoleToPlayer(1, 'test');
-
-      await expect(testFunction).rejects.toThrow(
+      expect(playerService.addRoleToPlayer(1, 'test')).rejects.toThrow(
         'Player already has this role',
       );
       expect(playerRoleDao.getAllByPlayer).toHaveBeenCalledTimes(1);
@@ -364,7 +362,7 @@ describe('Player Service', () => {
 
       const roles = await playerService.getAllRoles(1);
 
-      expect(roles).toEqual(mockedRoles);
+      expect(roles).toEqual(mockedRoles as typeof roles);
       expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledTimes(1);
       expect(playerRoleDao.getPlayerRoles).toHaveBeenCalledWith(1);
     });

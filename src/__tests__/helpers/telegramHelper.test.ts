@@ -1,3 +1,5 @@
+import { describe, expect, test, afterEach, jest } from 'bun:test';
+
 import { emptyTelegramUser, fullTelegramUser } from '../mocks/telegramUsers';
 import { checkTgAuthorization } from 'helpers/telegramHelper';
 

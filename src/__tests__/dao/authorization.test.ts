@@ -1,9 +1,12 @@
+import { describe, expect, test, afterEach, jest } from 'bun:test';
+
 import db from 'database';
 import authorizationDao from 'dao/authorization';
 import authorizationMapping from 'mapping/authorization';
 import testAuthDataDb from '__tests__/mocks/authorizationDb';
+import { mockDatabase } from '__tests__/mocks/modules';
 
-jest.mock('database');
+mockDatabase();
 
 describe('Authorization Dao', () => {
   afterEach(() => {

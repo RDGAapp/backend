@@ -1,11 +1,14 @@
+import { describe, expect, test, afterEach, jest } from 'bun:test';
+
 import db from 'database';
 import playerDao from 'dao/player';
 import playerMapping from 'mapping/player';
 import testPlayer from '../mocks/testPlayer';
 import testPlayerDb from '../mocks/testPlayerDb';
 import { Table } from 'types/db';
+import { mockDatabase } from '__tests__/mocks/modules';
 
-jest.mock('database');
+mockDatabase();
 
 describe('Player Dao', () => {
   afterEach(() => {
@@ -66,7 +69,7 @@ describe('Player Dao', () => {
       expect(db().where).toHaveBeenCalledWith({
         [`${Table.Player}.rdga_number`]: 24,
       });
-      expect(player).toEqual(testPlayer);
+      expect(player).toEqual(testPlayer as typeof player);
     });
 
     test('should return null if it was found', async () => {
@@ -87,7 +90,7 @@ describe('Player Dao', () => {
       expect(db().where).toHaveBeenCalledWith({
         [`${Table.Player}.rdga_number`]: 24,
       });
-      expect(player).toEqual(undefined);
+      expect(player).toEqual(undefined as unknown as typeof player);
     });
   });
 
