@@ -20,7 +20,7 @@ describe('Base Service', () => {
   });
 
   describe('getAll', () => {
-    test.only('should return whatever testDao returns', async () => {
+    test('should return whatever testDao returns', async () => {
       (testDao.getAll as jest.Mock).mockReturnValueOnce([]);
 
       const roles = await testService.getAll();
