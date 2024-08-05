@@ -1,9 +1,11 @@
 import { Request } from 'express';
+import { describe, expect, test, afterEach, jest } from 'bun:test';
 import tournamentsController from 'controller/tournament';
 import tournamentsService from 'service/tournament';
 import response from '../mocks/response';
+import { mockTournamentServices } from '__tests__/mocks/modules';
 
-jest.mock('service/tournament');
+mockTournamentServices();
 
 describe('Tournament Controller', () => {
   afterEach(() => {
@@ -31,9 +33,9 @@ describe('Tournament Controller', () => {
         throw new Error('Test');
       });
 
-      await expect(
-        async () => await tournamentsController.getAll(request, response),
-      ).rejects.toThrow('Test');
+      expect(tournamentsController.getAll(request, response)).rejects.toThrow(
+        'Test',
+      );
       expect(tournamentsService.getAll).toHaveBeenCalledTimes(1);
     });
   });

@@ -1,4 +1,5 @@
-import fetchMock from 'jest-fetch-mock';
+import { mock as fetchMock, clearMocks as clearFetchMock } from 'bun-bagel';
+import { describe, expect, test, jest, beforeEach } from 'bun:test';
 import authorizationService from 'service/authorization';
 import authorizationDao from 'dao/authorization';
 import playersService from 'service/player';
@@ -7,14 +8,17 @@ import testAuthData from '../mocks/authorization';
 import { fullTelegramUser } from '../mocks/telegramUsers';
 import testAuthDataDb from '../mocks/authorizationDb';
 import testPlayer from '../mocks/testPlayer';
+import {
+  mockAuthorizationDao,
+  mockPlayerServices,
+} from '__tests__/mocks/modules';
 
-jest.mock('dao/authorization');
-jest.mock('service/player');
-fetchMock.enableMocks();
+mockAuthorizationDao();
+mockPlayerServices();
 
 describe('Authorization Service', () => {
   beforeEach(() => {
-    fetchMock.resetMocks();
+    clearFetchMock();
     jest.clearAllMocks();
   });
 
@@ -61,17 +65,20 @@ describe('Authorization Service', () => {
 
   describe('createAuthData', () => {
     test('should create authData (username same case)', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
@@ -103,15 +110,18 @@ describe('Authorization Service', () => {
     });
 
     test('should create authData (username different case)', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [{ VALUE_TYPE: 'TELEGRAM', VALUE: 'tEsT' }],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [{ VALUE_TYPE: 'TELEGRAM', VALUE: 'tEsT' }],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
@@ -147,9 +157,8 @@ describe('Authorization Service', () => {
         testAuthData,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow('Already registered');
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -160,70 +169,75 @@ describe('Authorization Service', () => {
         null,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow("Player doesn't exist");
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
 
     test('should not create authData (bitrix response total 0)', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [],
-          total: 0,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [],
+            total: 0,
+          },
+        },
       );
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow('Bitrix error: more or less than 1 contact found');
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
 
     test('should not create authData (bitrix response total more than 1)', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [],
-          total: 10,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [],
+            total: 10,
+          },
+        },
       );
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow('Bitrix error: more or less than 1 contact found');
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
 
     test('should not create authData (bitrix response another username)', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [{ VALUE_TYPE: 'TELEGRAM', VALUE: 'some_random_one' }],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [{ VALUE_TYPE: 'TELEGRAM', VALUE: 'some_random_one' }],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
       (playersService.checkIfPlayerExist as jest.Mock).mockReturnValueOnce(
         testPlayer,
       );
 
-      await expect(
-        async () =>
-          await authorizationService.createAuthData(1, fullTelegramUser),
+      expect(
+        authorizationService.createAuthData(1, fullTelegramUser),
       ).rejects.toThrow("This rdgaNumber doesn't belong to this telegram");
       expect(authorizationDao.create).toHaveBeenCalledTimes(0);
     });
@@ -253,9 +267,9 @@ describe('Authorization Service', () => {
         testAuthData,
       );
 
-      await expect(
-        async () => await authorizationService.checkAuthData(1, 'hash'),
-      ).rejects.toThrow('Data is corrupted');
+      expect(authorizationService.checkAuthData(1, 'hash')).rejects.toThrow(
+        'Data is corrupted',
+      );
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);
     });
@@ -263,8 +277,8 @@ describe('Authorization Service', () => {
     test('should throw if no user', async () => {
       (authorizationDao.getByPrimaryKey as jest.Mock).mockReturnValueOnce(null);
 
-      await expect(
-        async () => await authorizationService.checkAuthData(1, correctHash),
+      expect(
+        authorizationService.checkAuthData(1, correctHash),
       ).rejects.toThrow('Data is corrupted');
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledTimes(1);
       expect(authorizationDao.getByPrimaryKey).toHaveBeenCalledWith(1);

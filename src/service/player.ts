@@ -34,7 +34,7 @@ class PlayerService extends BaseService<
     return existingPlayer[0];
   }
 
-  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayerExtended> {
+  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayerExtended | null> {
     const playerDb = await playerDao.getByPrimaryKey(rdgaNumber);
 
     if (!playerDb) return playerDb;

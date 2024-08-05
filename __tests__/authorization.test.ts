@@ -1,11 +1,10 @@
+import { describe, expect, test, beforeEach, afterEach } from 'bun:test';
 import request from 'supertest';
-import fetchMock from 'jest-fetch-mock';
+import { mock as fetchMock, clearMocks as clearFetchMock } from 'bun-bagel';
 import app from '../src/app';
 import db from '../src/database';
 import { fullTelegramUser } from '../src/__tests__/mocks/telegramUsers';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
-
-fetchMock.enableMocks();
 
 describe('Authorization endpoints', () => {
   beforeEach(async () => {
@@ -13,22 +12,26 @@ describe('Authorization endpoints', () => {
   });
 
   afterEach(async () => {
+    clearFetchMock();
     await db.migrate.rollback();
   });
 
   describe('POST /register', () => {
     test('should return 200', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       await request(app).post('/players').send(testPlayer);
@@ -74,17 +77,20 @@ describe('Authorization endpoints', () => {
     });
 
     test("should return 500 if player doesn't exist", async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       const response = await request(app)
@@ -100,17 +106,20 @@ describe('Authorization endpoints', () => {
 
   describe('POST /login', () => {
     test('should return 200', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       await request(app).post('/players').send(testPlayer);
@@ -163,17 +172,20 @@ describe('Authorization endpoints', () => {
     test('should return 200', async () => {
       const agent = request.agent(app);
 
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       await agent.post('/players').send(testPlayer);
@@ -183,10 +195,10 @@ describe('Authorization endpoints', () => {
 
       const authorizeResponse1 = await agent.get('/authorization/authorize');
       expect(authorizeResponse1.status).toBe(200);
-      
+
       const response = await agent.get('/authorization/logout');
       expect(response.status).toBe(201);
-      
+
       const authorizeResponse2 = await agent.get('/authorization/authorize');
       expect(authorizeResponse2.status).toBe(401);
     });
@@ -196,17 +208,20 @@ describe('Authorization endpoints', () => {
     test('should return 200 after register', async () => {
       const agent = request.agent(app);
 
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       await agent.post('/players').send(testPlayer);
@@ -221,17 +236,20 @@ describe('Authorization endpoints', () => {
     test('should return 200 after login', async () => {
       const agent = request.agent(app);
 
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       await agent.post('/players').send(testPlayer);
@@ -248,17 +266,20 @@ describe('Authorization endpoints', () => {
     test('should return 401 after logout', async () => {
       const agent = request.agent(app);
 
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          result: [
-            {
-              IM: [
-                { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
-              ],
-            },
-          ],
-          total: 1,
-        }),
+      fetchMock(
+        '/crm.contact.list.json?FILTER[UF_CRM_CONTACT_1705326811592]=1&SELECT[]=IM',
+        {
+          data: {
+            result: [
+              {
+                IM: [
+                  { VALUE_TYPE: 'TELEGRAM', VALUE: fullTelegramUser.username },
+                ],
+              },
+            ],
+            total: 1,
+          },
+        },
       );
 
       await agent.post('/players').send(testPlayer);

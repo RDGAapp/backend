@@ -1,11 +1,12 @@
 import { Response } from 'express';
+import { mock } from 'bun:test';
 
 const response = {
-  status: jest.fn().mockReturnThis(),
-  json: jest.fn().mockReturnThis(),
-  send: jest.fn().mockReturnThis(),
-  cookie: jest.fn().mockReturnThis(),
-  clearCookie: jest.fn().mockReturnThis(),
+  status: mock().mockReturnThis(),
+  json: mock().mockReturnThis(),
+  send: mock().mockReturnThis(),
+  cookie: mock().mockReturnThis(),
+  clearCookie: mock().mockReturnThis(),
 } as unknown as Response;
 
 export default response;
