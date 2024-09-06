@@ -17,7 +17,7 @@ describe('Helper function dbObjectToObject', () => {
     shwuggle: null,
   };
 
-  const mappedObject = {
+  const _mappedObject = {
     harry: 'wizard',
     ron: 'friend',
     ginny: 'girlfriend',
@@ -27,7 +27,7 @@ describe('Helper function dbObjectToObject', () => {
   const halfObject = { potter: 'wizard' };
 
   test('should map all fields', () => {
-    const dbObject = dbObjectToObject<typeof fullObject, typeof mappedObject>(
+    const dbObject = dbObjectToObject<typeof fullObject, typeof _mappedObject>(
       fullObject,
       mapping,
     );
@@ -40,7 +40,7 @@ describe('Helper function dbObjectToObject', () => {
   });
 
   test('should map only existing fields', () => {
-    const dbObject = dbObjectToObject<typeof fullObject, typeof mappedObject>(
+    const dbObject = dbObjectToObject<typeof fullObject, typeof _mappedObject>(
       halfObject,
       mapping,
     );
@@ -48,7 +48,7 @@ describe('Helper function dbObjectToObject', () => {
   });
 
   test('should map empty object to empty object', () => {
-    const dbObject = dbObjectToObject<typeof fullObject, typeof mappedObject>(
+    const dbObject = dbObjectToObject<typeof fullObject, typeof _mappedObject>(
       {},
       mapping,
     );

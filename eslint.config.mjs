@@ -20,7 +20,8 @@ export default tsEslint.config(
           "varsIgnorePattern": "^_",
           "ignoreRestSiblings": true
         }
-      ]
+      ],
+      "@typescript-eslint/no-empty-object-type": ["error", { allowInterfaces: "with-single-extends" }]
     },
   },
 
