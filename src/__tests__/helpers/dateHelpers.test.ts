@@ -1,12 +1,20 @@
+import {
+  describe,
+  expect,
+  test,
+  setSystemTime,
+  beforeAll,
+  afterAll,
+} from 'bun:test';
 import { getMonday } from 'helpers/dateHelpers';
 
 describe('Date Helpers', () => {
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+    setSystemTime(new Date('2020-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    setSystemTime();
   });
 
   describe('getMonday', () => {

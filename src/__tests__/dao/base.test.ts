@@ -1,8 +1,11 @@
+import { describe, expect, test, afterEach, jest } from 'bun:test';
+
 import db from 'database';
 import testDao from '__tests__/app/dao';
 import { tableName, testMapping } from '__tests__/app/helpers';
+import { mockDatabase } from '__tests__/mocks/modules';
 
-jest.mock('database');
+mockDatabase();
 
 const testSome = { test_db: 'some', display_db: 'more' };
 

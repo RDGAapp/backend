@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'bun:test';
+
 import dbObjectToObject from 'helpers/dbObjectToObject';
 
 describe('Helper function dbObjectToObject', () => {
@@ -42,7 +44,7 @@ describe('Helper function dbObjectToObject', () => {
       halfObject,
       mapping,
     );
-    expect(dbObject).toEqual({ harry: 'wizard' });
+    expect(dbObject).toEqual({ harry: 'wizard' } as typeof dbObject);
   });
 
   test('should map empty object to empty object', () => {
@@ -50,6 +52,6 @@ describe('Helper function dbObjectToObject', () => {
       {},
       mapping,
     );
-    expect(dbObject).toEqual({});
+    expect(dbObject).toEqual({} as typeof dbObject);
   });
 });

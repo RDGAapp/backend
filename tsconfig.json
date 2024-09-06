@@ -1,12 +1,9 @@
 {
-  "ts-node": {
-    "files": true,
-  },
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ESNext",
     "types": [
       "node",
-      "jest"
+      "bun-types"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -14,13 +11,12 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "baseUrl": "src",
     "noFallthroughCasesInSwitch": true,
-    "outDir": "./dist"
   },
   "extends": "@tsconfig/node21/tsconfig.json",
   "include": [

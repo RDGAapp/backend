@@ -1,10 +1,22 @@
+import {
+  describe,
+  expect,
+  test,
+  afterEach,
+  beforeAll,
+  afterAll,
+  jest,
+  setSystemTime,
+} from 'bun:test';
+
 import db from 'database';
 import tournamentDao from 'dao/tournament';
 import tournamentMapping from 'mapping/tournament';
 import { getMonday } from '../../helpers/dateHelpers';
 import { Table } from 'types/db';
+import { mockDatabase } from '__tests__/mocks/modules';
 
-jest.mock('database');
+mockDatabase();
 
 describe('Tournament Dao', () => {
   afterEach(() => {
@@ -13,11 +25,11 @@ describe('Tournament Dao', () => {
 
   describe('getAll', () => {
     beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+      setSystemTime(new Date('2020-01-01'));
     });
 
     afterAll(() => {
-      jest.useRealTimers();
+      setSystemTime();
     });
 
     test('should use select from table tournaments ', async () => {

@@ -1,13 +1,15 @@
 import { Request } from 'express';
+import { describe, expect, test, afterEach, jest } from 'bun:test';
 import authorizationController from 'controller/authorization';
 import authorizationService from 'service/authorization';
 import response from '../mocks/response';
 import { fullTelegramUser } from '../mocks/telegramUsers';
+import { mockAuthorizationServices } from '__tests__/mocks/modules';
 
-jest.mock('service/authorization');
+mockAuthorizationServices();
 
 describe('Authorization Controller', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
