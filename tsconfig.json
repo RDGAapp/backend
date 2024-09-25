@@ -18,7 +18,7 @@
     "baseUrl": "src",
     "noFallthroughCasesInSwitch": true,
   },
-  "extends": "@tsconfig/node21/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "include": [
     "src/**/*"
   ],
