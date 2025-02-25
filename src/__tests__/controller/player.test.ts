@@ -196,69 +196,6 @@ describe('Player Controller', () => {
     });
   });
 
-  describe('multipleUpdateRdgaRating', () => {
-    test('should update with 200 response', async () => {
-      const request = {
-        body: [{ rdgaNumber: 1, rating: 900 }],
-      } as Request;
-      (playerService.updateRdgaRating as jest.Mock).mockReturnValueOnce(
-        testPlayer,
-      );
-
-      await playerController.multipleUpdateRdgaRating(request, response);
-
-      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(1);
-      expect(playerService.updateRdgaRating).toHaveBeenCalledWith(1, 900);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledTimes(1);
-      expect(response.json).toHaveBeenCalledWith({
-        errors: [],
-        updatedPlayers: [testPlayer],
-      });
-    });
-
-    test('should return 200 with errors array if something went wrong', async () => {
-      const errorToThrow = new Error('Test');
-      const request = {
-        body: [{ rdgaNumber: 1, rating: 900 }],
-      } as Request;
-      (playerService.updateRdgaRating as jest.Mock).mockImplementationOnce(
-        () => {
-          throw errorToThrow;
-        },
-      );
-
-      await playerController.multipleUpdateRdgaRating(request, response);
-
-      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(1);
-      expect(playerService.updateRdgaRating).toHaveBeenCalledWith(1, 900);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(200);
-      expect(response.json).toHaveBeenCalledTimes(1);
-      expect(response.json).toHaveBeenCalledWith({
-        errors: [errorToThrow],
-        updatedPlayers: [],
-      });
-    });
-
-    test('should return 400 if data is corrupted', async () => {
-      const request = {
-        body: [{ rdgaNumber: 1, rating: 'hehe' }],
-      } as Request;
-
-      await playerController.multipleUpdateRdgaRating(request, response);
-
-      expect(playerService.updateRdgaRating).toHaveBeenCalledTimes(0);
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(400);
-      expect(response.send).toHaveBeenCalledTimes(1);
-      expect(response.send).toHaveBeenCalledWith(
-        'Validation error: Expected number, received string at "[0].rating"',
-      );
-    });
-  });
-
   describe('addRoleToPlayer', () => {
     test.todo('should response 200', async () => {
       const request = { primaryKeyValue: 1, body: ['su'] } as Request;

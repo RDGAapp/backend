@@ -20,10 +20,3 @@ export const playerPutSchema = playerSchema.omit({ rdgaNumber: true });
 export const playerUpdateRatingSchema = z.strictObject({
   rating: playerSchema.shape.rdgaRating,
 });
-
-export const multipleRdgaRatingUpdateSchema = z
-  .strictObject({
-    rdgaNumber: playerSchema.shape.rdgaNumber,
-    rating: playerSchema.shape.rdgaRating,
-  })
-  .array();

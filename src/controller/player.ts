@@ -5,10 +5,8 @@ import {
   playerSchema,
   playerPutSchema,
   playerUpdateRatingSchema,
-  multipleRdgaRatingUpdateSchema,
 } from 'schemas';
 import { IPlayerBase } from 'types/player';
-import logger from 'helpers/logger';
 import { getPlayerDataFromBitrix } from 'helpers/externalApiHelpers';
 import BaseController, { RdgaRequest } from './base';
 import { IPlayerDb } from 'types/playerDb';
@@ -108,35 +106,6 @@ class PlayerController extends BaseController<
     }
   }
 
-  async multipleUpdateRdgaRating(request: Request, response: Response) {
-    logger.info('multipleUpdateRdgaRating request acquired');
-    const result = multipleRdgaRatingUpdateSchema.safeParse(request.body);
-    if (!result.success) {
-      this._response400Schema(response, result.error);
-      return;
-    }
-
-    const errors: unknown[] = [];
-    const updatedPlayers: IPlayerBase[] = [];
-
-    for (const updateRatingValue of result.data) {
-      try {
-        const { rdgaNumber, rating } = updateRatingValue;
-        const updatedPlayer = await playerService.updateRdgaRating(
-          rdgaNumber,
-          rating,
-        );
-
-        updatedPlayers.push(updatedPlayer);
-      } catch (error) {
-        errors.push(error);
-      }
-    }
-
-    this._response200(response, { updatedPlayers, errors });
-    return;
-  }
-
   async updatePlayerFromBitrix(request: Request, response: Response) {
     const rdgaNumber = Number(request.query.rdgaNumber);
     if (isNaN(rdgaNumber)) {
@@ -145,10 +114,10 @@ class PlayerController extends BaseController<
     }
 
     try {
-      const playerFromDb = await playerService.getByPrimaryKey(rdgaNumber);
-      const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
+      const playerFromDb = await playerService.getByPrimaryKey(rdgaNumber, true);
 
       if (!playerFromDb) {
+        const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
         const newPlayerNumber = await playerService.create(playerFromBitrix);
 
         if (!newPlayerNumber) {

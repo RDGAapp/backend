@@ -28,12 +28,6 @@ router
   .delete((request, response) => playerController.delete(request, response));
 
 router
-  .route('/rdgaRating/multiple')
-  .put((request, response) =>
-    playerController.multipleUpdateRdgaRating(request, response),
-  );
-
-router
   .route('/:rdgaNumber/permissions')
   .get((request, response) =>
     playerController.getPlayerPermissions(request, response),
