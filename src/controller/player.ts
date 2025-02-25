@@ -46,9 +46,11 @@ class PlayerController extends BaseController<
         onlyActive,
       );
 
-      return this._response200(response, players);
+      this._response200(response, players);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -60,7 +62,8 @@ class PlayerController extends BaseController<
 
     const result = playerUpdateRatingSchema.safeParse(request.body);
     if (!result.success) {
-      return this._response400Schema(response, result.error);
+      this._response400Schema(response, result.error);
+      return;
     }
     const { rating } = result.data;
 
@@ -74,9 +77,11 @@ class PlayerController extends BaseController<
         rating,
       );
 
-      return this._response200(response, updatedPlayer);
+      this._response200(response, updatedPlayer);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -95,9 +100,11 @@ class PlayerController extends BaseController<
         primaryKeyValue,
       );
 
-      return this._response200(response, updatedPlayer);
+      this._response200(response, updatedPlayer);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -105,7 +112,8 @@ class PlayerController extends BaseController<
     logger.info('multipleUpdateRdgaRating request acquired');
     const result = multipleRdgaRatingUpdateSchema.safeParse(request.body);
     if (!result.success) {
-      return this._response400Schema(response, result.error);
+      this._response400Schema(response, result.error);
+      return;
     }
 
     const errors: unknown[] = [];
@@ -125,13 +133,15 @@ class PlayerController extends BaseController<
       }
     }
 
-    return this._response200(response, { updatedPlayers, errors });
+    this._response200(response, { updatedPlayers, errors });
+    return;
   }
 
   async updatePlayerFromBitrix(request: Request, response: Response) {
     const rdgaNumber = Number(request.query.rdgaNumber);
     if (isNaN(rdgaNumber)) {
-      return this._response500(response, new Error('Invalid rdgaNumber'));
+      this._response500(response, new Error('Invalid rdgaNumber'));
+      return;
     }
 
     try {
@@ -142,10 +152,8 @@ class PlayerController extends BaseController<
         const newPlayerNumber = await playerService.create(playerFromBitrix);
 
         if (!newPlayerNumber) {
-          return this._response500(
-            response,
-            new Error('Player was not created'),
-          );
+          this._response500(response, new Error('Player was not created'));
+          return;
         }
       }
 
@@ -153,9 +161,11 @@ class PlayerController extends BaseController<
         rdgaNumber,
       );
 
-      return this._response200(response, updatedPlayer);
+      this._response200(response, updatedPlayer);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -173,9 +183,11 @@ class PlayerController extends BaseController<
         primaryKeyValue,
       );
 
-      return this._response200(response, playerPermissions);
+      this._response200(response, playerPermissions);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -191,9 +203,11 @@ class PlayerController extends BaseController<
       }
       const playerRoles = await this._service.getAllRoles(primaryKeyValue);
 
-      return this._response200(response, playerRoles);
+      this._response200(response, playerRoles);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -212,9 +226,11 @@ class PlayerController extends BaseController<
 
       await this._service.addRoleToPlayer(primaryKeyValue, roleCode);
 
-      return this._response201(response, roleCode, 'added');
+      this._response201(response, roleCode, 'added');
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -233,9 +249,11 @@ class PlayerController extends BaseController<
 
       await this._service.removeRoleFromPlayer(primaryKeyValue, roleCode);
 
-      return this._response201(response, roleCode, 'removed');
+      this._response201(response, roleCode, 'removed');
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 }
