@@ -414,6 +414,7 @@ describe('Player endpoints', () => {
         metrixRatingChange: -10,
         pdgaNumber: null,
         pdgaRating: null,
+        pdgaRatingChange: null,
         pdgaActiveTo: null,
       });
     });
@@ -435,13 +436,14 @@ describe('Player endpoints', () => {
         metrixRatingChange: null,
         pdgaNumber: null,
         pdgaRating: null,
+        pdgaRatingChange: null,
         pdgaActiveTo: null,
       });
     });
 
     test('should return 200 with player with pdga data', async () => {
       fetchMock('https://www.pdga.com/player/1', {
-        data: '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html>',
+        data: '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html><a title="some info">+21</a>',
       });
       await request(app)
         .post('/players')
@@ -455,6 +457,7 @@ describe('Player endpoints', () => {
         metrixRating: null,
         metrixRatingChange: null,
         pdgaRating: 955,
+        pdgaRatingChange: 21,
         pdgaActiveTo: new Date('31-Dec-2024').toISOString(),
       });
     });
@@ -473,6 +476,7 @@ describe('Player endpoints', () => {
         metrixRating: null,
         metrixRatingChange: null,
         pdgaRating: null,
+        pdgaRatingChange: null,
         pdgaActiveTo: null,
       });
     });
@@ -491,6 +495,7 @@ describe('Player endpoints', () => {
         metrixRatingChange: null,
         pdgaNumber: null,
         pdgaRating: null,
+        pdgaRatingChange: null,
         pdgaActiveTo: null,
       });
     });
@@ -514,6 +519,7 @@ describe('Player endpoints', () => {
         metrixRatingChange: null,
         pdgaNumber: null,
         pdgaRating: null,
+        pdgaRatingChange: null,
         pdgaActiveTo: null,
         sportsCategory: SportsCategory.JuniorThird,
       });
