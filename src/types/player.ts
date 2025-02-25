@@ -21,5 +21,6 @@ export interface IPlayerExtended extends IPlayer {
   metrixRating: number | null;
   metrixRatingChange: number | null;
   pdgaRating: number | null;
+  pdgaRatingChange: number | null;
   pdgaActiveTo: string | null;
 }

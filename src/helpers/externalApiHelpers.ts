@@ -36,8 +36,9 @@ export const getMetrixDataByNumber = async (metrixNumber?: number | null) => {
 export const getPdgaDataByNumber = async (pdgaNumber?: number | null) => {
   const returnValue: {
     pdgaRating: IPlayerExtended['pdgaRating'];
+    pdgaRatingChange: IPlayerExtended['pdgaRatingChange'];
     pdgaActiveTo: IPlayerExtended['pdgaActiveTo'];
-  } = { pdgaRating: null, pdgaActiveTo: null };
+  } = { pdgaRating: null, pdgaRatingChange: null, pdgaActiveTo: null };
 
   if (!pdgaNumber) return returnValue;
 
@@ -60,9 +61,17 @@ export const getPdgaDataByNumber = async (pdgaNumber?: number | null) => {
         .split(' ')
         .at(-1),
     );
+    const pdgaRatingChange = Number(
+      [
+        ...pdgaPlayerHtml.matchAll(/<\s*a title=[^>]*>(.*?)<\s*\/\s*a>/g),
+      ]?.[0]?.[1],
+    );
 
     if (!Number.isNaN(pdgaRating)) {
       returnValue.pdgaRating = pdgaRating;
+    }
+    if (!Number.isNaN(pdgaRatingChange)) {
+      returnValue.pdgaRatingChange = pdgaRatingChange;
     }
     if (expireDateString) {
       returnValue.pdgaActiveTo = new Date(expireDateString).toISOString();

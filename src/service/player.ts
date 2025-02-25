@@ -34,7 +34,10 @@ class PlayerService extends BaseService<
     return existingPlayer[0];
   }
 
-  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayerExtended | null> {
+  async getByPrimaryKey(
+    rdgaNumber: number,
+    skipFetchingAdditionalInfo?: boolean,
+  ): Promise<IPlayerExtended | null> {
     const playerDb = await playerDao.getByPrimaryKey(rdgaNumber);
 
     if (!playerDb) return playerDb;
@@ -44,15 +47,18 @@ class PlayerService extends BaseService<
       metrixRating: null,
       metrixRatingChange: null,
       pdgaRating: null,
+      pdgaRatingChange: null,
       pdgaActiveTo: null,
     };
 
-    const externalInfo = await Promise.all([
-      getMetrixDataByNumber(player.metrixNumber),
-      getPdgaDataByNumber(player.pdgaNumber),
-    ]);
+    if (!skipFetchingAdditionalInfo) {
+      const [metrixInfo, pdgaInfo] = await Promise.all([
+        getMetrixDataByNumber(player.metrixNumber),
+        getPdgaDataByNumber(player.pdgaNumber),
+      ]);
 
-    player = Object.assign({}, player, ...externalInfo);
+      player = { ...player, ...metrixInfo, ...pdgaInfo };
+    }
 
     return player;
   }
