@@ -5,7 +5,10 @@ import logger from 'helpers/logger';
 import { ZodError, fromZodError } from 'zod-validation-error';
 import { z } from 'zod';
 
-export type RdgaRequest<TDataDb, TPrimaryKeyDb extends keyof TDataDb> = Request & {
+export type RdgaRequest<
+  TDataDb,
+  TPrimaryKeyDb extends keyof TDataDb,
+> = Request & {
   primaryKeyValue?: TDataDb[TPrimaryKeyDb];
 };
 
@@ -49,24 +52,29 @@ class BaseController<
     value: TDataDb[keyof TDataDb],
     action: string,
   ) {
-    return response.status(201).send(`Value "${value}" ${action}`);
+    response.status(201).send(`Value "${value}" ${action}`);
+    return;
   }
 
   protected _response400(response: Response, error: string) {
-    return response.status(400).send(error);
+    response.status(400).send(error);
+    return;
   }
 
   protected _response400Schema(response: Response, error: ZodError) {
-    return response.status(400).send(fromZodError(error).toString());
+    response.status(400).send(fromZodError(error).toString());
+    return;
   }
 
   protected _response404(response: Response) {
-    return response.status(404).send('Not found');
+    response.status(404).send('Not found');
+    return;
   }
 
   protected _response500(response: Response, error: unknown) {
     logger.error(error, 'Something went wrong');
-    return response.status(500).send(`Something's wrong: ${error}`);
+    response.status(500).send(`Something's wrong: ${error}`);
+    return;
   }
 
   protected async _getAllBase(
@@ -76,9 +84,11 @@ class BaseController<
     try {
       const values = await this._service.getAll();
 
-      return this._response200(response, values);
+      this._response200(response, values);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -91,9 +101,11 @@ class BaseController<
     try {
       const values = await this._service.getAllPaginated(pageNumber);
 
-      return this._response200(response, values);
+      this._response200(response, values);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -104,19 +116,22 @@ class BaseController<
     const result = this._createSchema.safeParse(request.body);
 
     if (!result.success) {
-      return this._response400Schema(response, result.error);
+      this._response400Schema(response, result.error);
+      return;
     }
 
     try {
       const createdValue = await this._service.create(result.data);
 
-      return this._response201(
+      this._response201(
         response,
         createdValue[this._displayProperty ?? this._primaryKeyDb],
         'created',
       );
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -129,7 +144,8 @@ class BaseController<
     const result = this._updateSchema.safeParse(request.body);
 
     if (!result.success) {
-      return this._response400Schema(response, result.error);
+      this._response400Schema(response, result.error);
+      return;
     }
 
     try {
@@ -142,9 +158,11 @@ class BaseController<
         [this._primaryKey]: primaryKeyValue,
       });
 
-      return this._response200(response, updatedValue);
+      this._response200(response, updatedValue);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -161,9 +179,11 @@ class BaseController<
 
       await this._service.delete(primaryKeyValue);
 
-      return this._response201(response, primaryKeyValue, 'deleted');
+      this._response201(response, primaryKeyValue, 'deleted');
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
@@ -181,16 +201,22 @@ class BaseController<
       const value = await this._service.getByPrimaryKey(primaryKeyValue);
 
       if (!value) {
-        return this._response404(response);
+        this._response404(response);
+        return;
       }
 
-      return this._response200(response, value);
+      this._response200(response, value);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
-  async getAll(request: RdgaRequest<TDataDb, TPrimaryKeyDb>, response: Response) {
+  async getAll(
+    request: RdgaRequest<TDataDb, TPrimaryKeyDb>,
+    response: Response,
+  ) {
     return this._getAllBase(request, response);
   }
 
@@ -201,15 +227,24 @@ class BaseController<
     return this._getAllPaginatedBase(request, response);
   }
 
-  async create(request: RdgaRequest<TDataDb, TPrimaryKeyDb>, response: Response) {
+  async create(
+    request: RdgaRequest<TDataDb, TPrimaryKeyDb>,
+    response: Response,
+  ) {
     return this._createBase(request, response);
   }
 
-  async update(request: RdgaRequest<TDataDb, TPrimaryKeyDb>, response: Response) {
+  async update(
+    request: RdgaRequest<TDataDb, TPrimaryKeyDb>,
+    response: Response,
+  ) {
     return this._updateBase(request, response);
   }
 
-  async delete(request: RdgaRequest<TDataDb, TPrimaryKeyDb>, response: Response) {
+  async delete(
+    request: RdgaRequest<TDataDb, TPrimaryKeyDb>,
+    response: Response,
+  ) {
     return this._deleteBase(request, response);
   }
 

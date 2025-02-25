@@ -25,9 +25,11 @@ class PostController extends BaseController<
     try {
       const posts = await postService.getAllPaginated(pageNumber, fromDateTime);
 
-      return this._response200(response, posts);
+      this._response200(response, posts);
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 }

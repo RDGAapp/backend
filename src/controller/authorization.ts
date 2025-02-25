@@ -46,52 +46,58 @@ class AuthorizationController extends BaseController<
   }
 
   protected _response401(response: Response) {
-    return clearCookies(response).status(401).send('Not authorized');
+    clearCookies(response).status(401).send('Not authorized');
+    return;
   }
 
   async login(request: Request, response: Response) {
     const result = telegramAuthorizationData.safeParse(request.body);
 
     if (!result.success) {
-      return this._response400Schema(response, result.error);
+      this._response400Schema(response, result.error);
+      return;
     }
 
     if (!checkTgAuthorization(result.data)) {
-      return this._response400(response, 'Your data is corrupted');
+      this._response400(response, 'Your data is corrupted');
+      return;
     }
 
     try {
       const authData = await authorizationService.updateAuthData(result.data);
 
       if (!authData) {
-        return this._response404(response);
+        this._response404(response);
+        return;
       }
 
-      return this._response200(
+      this._response200(
         setCookie(response, result.data.hash, authData.rdgaNumber),
         { rdgaNumber: authData.rdgaNumber, avatarUrl: authData.avatarUrl },
       );
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
   async register(request: Request, response: Response) {
     const { rdgaNumber, ...tgAuthData } = request.body;
     if (isNaN(Number(rdgaNumber))) {
-      return this._response400(
-        response,
-        'RDGA number is incorrect or not defined',
-      );
+      this._response400(response, 'RDGA number is incorrect or not defined');
+      return;
     }
 
     const result = telegramAuthorizationData.safeParse(tgAuthData);
     if (!result.success) {
-      return this._response400Schema(response, result.error);
+      this._response400Schema(response, result.error);
+      return;
     }
 
     if (!checkTgAuthorization(result.data)) {
-      return this._response400(response, 'Your data is corrupted');
+      this._response400(response, 'Your data is corrupted');
+      return;
     }
 
     try {
@@ -100,20 +106,23 @@ class AuthorizationController extends BaseController<
         result.data,
       );
 
-      return this._response200(
+      this._response200(
         setCookie(response, result.data.hash, authData.rdgaNumber),
         {
           rdgaNumber: authData.rdgaNumber,
           avatarUrl: authData.avatarUrl,
         },
       );
+      return;
     } catch (error) {
-      return this._response500(response, error);
+      this._response500(response, error);
+      return;
     }
   }
 
   async logout(_request: Request, response: Response) {
-    return clearCookies(response).status(201).send();
+    clearCookies(response).status(201).send();
+    return;
   }
 
   async authorize(request: Request, response: Response) {
@@ -123,7 +132,8 @@ class AuthorizationController extends BaseController<
     const numberedRdgaNumber = Number(rdgaNumber);
 
     if (!rdgaNumber || !hash || isNaN(numberedRdgaNumber)) {
-      return this._response401(response);
+      this._response401(response);
+      return;
     }
 
     try {
@@ -132,9 +142,11 @@ class AuthorizationController extends BaseController<
         hash,
       );
 
-      return this._response200(response, baseUserInfo);
+      this._response200(response, baseUserInfo);
+      return;
     } catch (_error) {
-      return this._response401(response);
+      this._response401(response);
+      return;
     }
   }
 }

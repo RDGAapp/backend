@@ -34,7 +34,8 @@ class TournamentController extends BaseController<
 
     const tournaments = await tournamentService.getAll(from, to);
 
-    return this._response200(response, tournaments);
+    this._response200(response, tournaments);
+    return;
   }
 }
 
