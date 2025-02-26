@@ -7,6 +7,7 @@ import { IPlayerDb } from 'types/playerDb';
 import {
   getMetrixDataByNumber,
   getPdgaDataByNumber,
+  getRdgaDataByNumber,
 } from 'helpers/externalApiHelpers';
 import BaseService from './base';
 import { IRoleDb } from 'types/roleDb';
@@ -24,7 +25,7 @@ class PlayerService extends BaseService<
   async checkIfPlayerExist(
     player: Partial<IPlayerBase>,
   ): Promise<null | IPlayerBase> {
-    const existingPlayer = await playerDao.getByRdgaPdgaMetrixNumber(
+    const existingPlayer = await this._dao.getByRdgaPdgaMetrixNumber(
       player.rdgaNumber,
       player.pdgaNumber,
       player.metrixNumber,
@@ -34,51 +35,49 @@ class PlayerService extends BaseService<
     return existingPlayer[0];
   }
 
-  async getByPrimaryKey(rdgaNumber: number): Promise<IPlayerExtended | null> {
-    const playerDb = await playerDao.getByPrimaryKey(rdgaNumber);
+  async getByPrimaryKey(
+    rdgaNumber: number,
+    skipFetchingAdditionalInfo?: boolean,
+  ): Promise<IPlayerExtended | null> {
+    const playerDb = await this._dao.getByPrimaryKey(rdgaNumber);
 
     if (!playerDb) return playerDb;
 
     let player: IPlayerExtended = {
       ...playerDb,
+      rdgaRating: 0,
+      rdgaRatingChange: 0,
       metrixRating: null,
       metrixRatingChange: null,
       pdgaRating: null,
+      pdgaRatingChange: null,
       pdgaActiveTo: null,
     };
 
-    const externalInfo = await Promise.all([
-      getMetrixDataByNumber(player.metrixNumber),
-      getPdgaDataByNumber(player.pdgaNumber),
-    ]);
+    if (!skipFetchingAdditionalInfo) {
+      const [metrixInfo, pdgaInfo, rdgaInfo] = await Promise.all([
+        getMetrixDataByNumber(player.metrixNumber),
+        getPdgaDataByNumber(player.pdgaNumber),
+        getRdgaDataByNumber(player.rdgaNumber),
+      ]);
 
-    player = Object.assign({}, player, ...externalInfo);
+      player = { ...player, ...metrixInfo, ...pdgaInfo, ...rdgaInfo };
+    }
 
     return player;
   }
 
-  async updateRdgaRating(
-    rdgaNumber: number,
-    rdgaRating: number,
-  ): Promise<IPlayerBase> {
-    const existingPlayer = await this.checkIfPlayerExist({ rdgaNumber });
-    if (existingPlayer?.rdgaNumber !== rdgaNumber)
-      throw Error(`Игрока с номером РДГА ${rdgaNumber} нет в базе`);
-
-    const ratingDifference = rdgaRating - (existingPlayer.rdgaRating || 0);
-
-    const playerDb = await playerDao.updateRdgaRating(
-      rdgaNumber,
-      rdgaRating,
-      ratingDifference,
-    );
-
-    const player = dbObjectToObject<IPlayerDb, IPlayerBase>(
-      playerDb,
-      playerMapping,
-    );
-
-    return player;
+  async getAllExtendedPaginated(pageNumber: number, ...args: unknown[]) {
+    const paginatedPlayers = await this._getAllPaginated(pageNumber, ...args);
+    return {
+      ...paginatedPlayers,
+      data: await Promise.all(
+        paginatedPlayers.data.map(async (player) => {
+          const ratingData = await getRdgaDataByNumber(player.rdgaNumber);
+          return { ...player, ...ratingData };
+        }),
+      ),
+    };
   }
 
   async activatePlayerForCurrentYear(rdgaNumber: number): Promise<IPlayerBase> {
@@ -86,7 +85,7 @@ class PlayerService extends BaseService<
     if (!existingPlayer)
       throw Error(`Игрока с номером РДГА ${rdgaNumber} нет в базе`);
 
-    const playerDb = await playerDao.activatePlayerForCurrentYear(rdgaNumber);
+    const playerDb = await this._dao.activatePlayerForCurrentYear(rdgaNumber);
 
     const player = dbObjectToObject<IPlayerDb, IPlayerBase>(
       playerDb,

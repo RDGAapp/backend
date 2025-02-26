@@ -12,9 +12,6 @@ router
   .get((request, response) => playerController.getAll(request, response))
   .post((request, response) => playerController.create(request, response));
 
-router.patch('/:rdgaNumber/rdgaRating', (request, response) =>
-  playerController.updateRdgaRating(request, response),
-);
 router.patch('/:rdgaNumber/activate', (request, response) =>
   playerController.activatePlayerForCurrentYear(request, response),
 );
@@ -26,12 +23,6 @@ router
   )
   .put((request, response) => playerController.update(request, response))
   .delete((request, response) => playerController.delete(request, response));
-
-router
-  .route('/rdgaRating/multiple')
-  .put((request, response) =>
-    playerController.multipleUpdateRdgaRating(request, response),
-  );
 
 router
   .route('/:rdgaNumber/permissions')

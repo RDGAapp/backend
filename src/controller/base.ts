@@ -52,29 +52,24 @@ class BaseController<
     value: TDataDb[keyof TDataDb],
     action: string,
   ) {
-    response.status(201).send(`Value "${value}" ${action}`);
-    return;
+    return response.status(201).send(`Value "${value}" ${action}`);
   }
 
   protected _response400(response: Response, error: string) {
-    response.status(400).send(error);
-    return;
+    return response.status(400).send(error);
   }
 
   protected _response400Schema(response: Response, error: ZodError) {
-    response.status(400).send(fromZodError(error).toString());
-    return;
+    return response.status(400).send(fromZodError(error).toString());
   }
 
   protected _response404(response: Response) {
-    response.status(404).send('Not found');
-    return;
+    return response.status(404).send('Not found');
   }
 
   protected _response500(response: Response, error: unknown) {
     logger.error(error, 'Something went wrong');
-    response.status(500).send(`Something's wrong: ${error}`);
-    return;
+    return response.status(500).send(`Something's wrong: ${error}`);
   }
 
   protected async _getAllBase(

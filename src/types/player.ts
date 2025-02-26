@@ -4,8 +4,6 @@ export interface IPlayerBase {
   name: IPlayerDb['name'];
   surname: IPlayerDb['surname'];
   rdgaNumber: IPlayerDb['rdga_number'];
-  rdgaRating: IPlayerDb['rdga_rating'];
-  rdgaRatingChange: IPlayerDb['rdga_rating_change'];
   town: IPlayerDb['town'];
   pdgaNumber: IPlayerDb['pdga_number'];
   metrixNumber: IPlayerDb['metrix_number'];
@@ -18,8 +16,11 @@ export interface IPlayer extends IPlayerBase {
 }
 
 export interface IPlayerExtended extends IPlayer {
+  rdgaRating: number;
+  rdgaRatingChange: number | null;
   metrixRating: number | null;
   metrixRatingChange: number | null;
   pdgaRating: number | null;
+  pdgaRatingChange: number | null;
   pdgaActiveTo: string | null;
 }

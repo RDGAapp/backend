@@ -1,6 +1,5 @@
 import db from 'database';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { updateTypes } = require('knex-types');
+import { updateTypes } from 'knex-types';
 
 updateTypes(db, { output: './src/types/db.ts' }).catch((err: unknown) => {
   console.error(err);

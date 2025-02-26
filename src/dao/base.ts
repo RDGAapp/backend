@@ -29,7 +29,7 @@ class BaseDao<TData, TDataDb, TPrimaryKey extends keyof TDataDb> {
   protected async _getAllPaginatedBase(
     pageNumber: number,
     ..._args: unknown[]
-  ): Promise<IWithPagination<TData[]>> {
+  ): Promise<IWithPagination<TData>> {
     const query = db(this._tableName);
 
     const results = query.select(this._mapping).paginate({
