@@ -27,6 +27,8 @@ describe('Player endpoints', () => {
     ...nullablePlayer,
     avatarUrl: null,
     activeTo: testPlayer.activeTo,
+    rdgaRating: 0,
+    rdgaRatingChange: null,
   };
 
   beforeEach(async () => {
@@ -40,12 +42,9 @@ describe('Player endpoints', () => {
 
   describe('GET /players', () => {
     test('should return 200 with empty array', async () => {
-      fetchMock(
-        'https://rdga-api-astrogator.amvera.io/api/actual_rating',
-        {
-          data: [],
-        },
-      );
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const response = await request(app).get('/players');
 
       expect(response.status).toBe(200);
@@ -65,12 +64,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 with someData', async () => {
-      fetchMock(
-        'https://rdga-api-astrogator.amvera.io/api/actual_rating',
-        {
-          data: [],
-        },
-      );
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).get('/players');
 
@@ -90,7 +86,10 @@ describe('Player endpoints', () => {
       });
     });
 
-    test('should return 200 sorted by rating and then by number', async () => {
+    test('should return 200 sorted by number', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -100,7 +99,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
       };
@@ -112,9 +110,9 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [
-          { ...testPlayer3, avatarUrl: null },
           testPlayerResponse,
-          { ...testPlayer2, avatarUrl: null },
+          { ...testPlayerResponse, ...testPlayer2 },
+          { ...testPlayerResponse, ...testPlayer3 },
         ],
         pagination: {
           currentPage: 1,
@@ -130,6 +128,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 filtered by city', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -140,7 +141,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
         town: 'Somewhere3',
@@ -152,7 +152,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [{ ...testPlayer2, avatarUrl: null }],
+        data: [{ ...testPlayerResponse, ...testPlayer2 }],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -167,6 +167,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200, filter by city and not drop table', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -177,7 +180,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
         town: 'Somewhere3',
@@ -208,9 +210,9 @@ describe('Player endpoints', () => {
       expect(responseAll.status).toBe(200);
       expect(responseAll.body).toEqual({
         data: [
-          { ...testPlayer3, avatarUrl: null },
           testPlayerResponse,
-          { ...testPlayer2, avatarUrl: null },
+          { ...testPlayerResponse, ...testPlayer2 },
+          { ...testPlayerResponse, ...testPlayer3 },
         ],
         pagination: {
           currentPage: 1,
@@ -226,6 +228,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 filtered by surname part', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -236,7 +241,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
         surname: 'User3',
@@ -248,7 +252,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [{ ...testPlayer2, avatarUrl: null }],
+        data: [{ ...testPlayerResponse, ...testPlayer2 }],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -263,6 +267,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 ignore case for surname', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -273,7 +280,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
         surname: 'User3',
@@ -286,9 +292,9 @@ describe('Player endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         data: [
-          { ...testPlayer3, avatarUrl: null },
           testPlayerResponse,
-          { ...testPlayer2, avatarUrl: null },
+          { ...testPlayerResponse, ...testPlayer2 },
+          { ...testPlayerResponse, ...testPlayer3 },
         ],
         pagination: {
           currentPage: 1,
@@ -304,6 +310,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200, filter by surname and not drop table', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -314,7 +323,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
         surname: 'User3',
@@ -345,9 +353,9 @@ describe('Player endpoints', () => {
       expect(responseAll.status).toBe(200);
       expect(responseAll.body).toEqual({
         data: [
-          { ...testPlayer3, avatarUrl: null },
           testPlayerResponse,
-          { ...testPlayer2, avatarUrl: null },
+          { ...testPlayerResponse, ...testPlayer2 },
+          { ...testPlayerResponse, ...testPlayer3 },
         ],
         pagination: {
           currentPage: 1,
@@ -363,6 +371,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 onlyActive members', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const testPlayer2 = {
         ...testPlayer,
         rdgaNumber: 2,
@@ -374,7 +385,6 @@ describe('Player endpoints', () => {
       const testPlayer3 = {
         ...testPlayer,
         rdgaNumber: 3,
-        rdgaRating: 10001,
         metrixNumber: 3,
         pdgaNumber: 3,
         surname: 'User3',
@@ -386,7 +396,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        data: [{ ...testPlayer3, avatarUrl: null }],
+        data: [{ ...testPlayerResponse, ...testPlayer3 }],
         pagination: {
           currentPage: 1,
           from: 0,
@@ -558,6 +568,9 @@ describe('Player endpoints', () => {
 
   describe('POST /players', () => {
     test('should return 201 and create player', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const response = await request(app).post('/players').send(testPlayer);
       expect(response.status).toBe(201);
       expect(response.text).toBe('Value "1" created');
@@ -573,7 +586,7 @@ describe('Player endpoints', () => {
 
       expect(response.status).toBe(500);
       expect(response.text).toEqual(
-        'Something\'s wrong: error: insert into "player" ("active_to", "metrix_number", "name", "pdga_number", "rdga_number", "rdga_rating", "rdga_rating_change", "sports_category", "surname", "town") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning * - duplicate key value violates unique constraint "player_pkey"',
+        'Something\'s wrong: error: insert into "player" ("active_to", "metrix_number", "name", "pdga_number", "rdga_number", "sports_category", "surname", "town") values ($1, $2, $3, $4, $5, $6, $7, $8) returning * - duplicate key value violates unique constraint "player_pkey"',
       );
     });
 
@@ -589,6 +602,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 and create player with null fields', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       const response = await request(app).post('/players').send(nullablePlayer);
       expect(response.status).toBe(201);
       expect(response.text).toBe('Value "1" created');

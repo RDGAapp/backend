@@ -34,10 +34,8 @@ describe('Player Dao', () => {
         '%testSurname%',
       );
       expect(db().where).toHaveBeenNthCalledWith(2, { town: 'testTown' });
-      expect(db().orderBy).toHaveBeenCalledTimes(2);
-      expect(db().orderBy).toHaveBeenNthCalledWith(1, 'rdga_rating', 'desc');
-      expect(db().orderBy).toHaveBeenNthCalledWith(
-        2,
+      expect(db().orderBy).toHaveBeenCalledTimes(1);
+      expect(db().orderBy).toHaveBeenCalledWith(
         `${Table.Player}.rdga_number`,
         'asc',
       );

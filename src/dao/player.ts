@@ -44,7 +44,6 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
         rdgaNumber: `${this._tableName}.rdga_number`,
         avatarUrl: 'telegram_photo_url',
       })
-      .orderBy('rdga_rating', 'desc')
       .orderBy(`${this._tableName}.rdga_number`, 'asc')
       .paginate({
         perPage: this._perPageRecords,

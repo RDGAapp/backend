@@ -71,10 +71,12 @@ class PlayerService extends BaseService<
     const paginatedPlayers = await this._getAllPaginated(pageNumber, ...args);
     return {
       ...paginatedPlayers,
-      data: paginatedPlayers.data.map(async (player) => {
-        const ratingData = await getRdgaDataByNumber(player.rdgaNumber);
-        return { ...player, ...ratingData };
-      }),
+      data: await Promise.all(
+        paginatedPlayers.data.map(async (player) => {
+          const ratingData = await getRdgaDataByNumber(player.rdgaNumber);
+          return { ...player, ...ratingData };
+        }),
+      ),
     };
   }
 
