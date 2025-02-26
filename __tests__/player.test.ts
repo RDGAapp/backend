@@ -6,6 +6,7 @@ import app from '../src/app';
 import db from '../src/database';
 import testPlayer from '../src/__tests__/mocks/testPlayer';
 import { SportsCategory } from '../src/types/db';
+import { clearRdgaDataCache } from '../src/helpers/externalApiHelpers';
 
 describe('Player endpoints', () => {
   const testPlayerResponse = {
@@ -33,6 +34,7 @@ describe('Player endpoints', () => {
 
   beforeEach(async () => {
     clearFetchMock();
+    clearRdgaDataCache();
     await db.migrate.latest();
   });
 
@@ -409,6 +411,61 @@ describe('Player endpoints', () => {
         },
       });
     });
+
+    test('should return 200 with rdga rating info', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [
+          { rdgaNumber: 1, rating: 100, diff: 10 },
+          { rdgaNumber: 2, rating: 200, diff: 20 },
+          { rdgaNumber: 3, rating: 300, diff: 30 },
+        ],
+      });
+      const testPlayer2 = {
+        ...testPlayer,
+        rdgaNumber: 2,
+        metrixNumber: 2,
+        pdgaNumber: 2,
+      };
+      const testPlayer3 = {
+        ...testPlayer,
+        rdgaNumber: 3,
+        metrixNumber: 3,
+        pdgaNumber: 3,
+      };
+      await request(app).post('/players').send(testPlayer2);
+      await request(app).post('/players').send(testPlayer3);
+      await request(app).post('/players').send(testPlayer);
+      const response = await request(app).get('/players');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        data: [
+          { ...testPlayerResponse, rdgaRating: 100, rdgaRatingChange: 10 },
+          {
+            ...testPlayerResponse,
+            ...testPlayer2,
+            rdgaRating: 200,
+            rdgaRatingChange: 20,
+          },
+          {
+            ...testPlayerResponse,
+            ...testPlayer3,
+            rdgaRating: 300,
+            rdgaRatingChange: 30,
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          from: 0,
+          lastPage: 1,
+          perPage: 30,
+          to: 3,
+          total: 3,
+          nextPage: null,
+          prevPage: null,
+        },
+      });
+    });
   });
 
   describe('GET /players/:rdgaNumber', () => {
@@ -426,6 +483,9 @@ describe('Player endpoints', () => {
           ],
         },
       );
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, pdgaNumber: null });
@@ -448,6 +508,9 @@ describe('Player endpoints', () => {
         'https://discgolfmetrix.com/mystat_server_rating.php?user_id=1&other=1&course_id=0',
         { data: [[], [], []] },
       );
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, pdgaNumber: null });
@@ -469,6 +532,9 @@ describe('Player endpoints', () => {
       fetchMock('https://www.pdga.com/player/1', {
         data: '<html><small>(test text 31-Dec-2024)</small><strong>Current Rating:</strong> 955</html><a title="some info">+21</a>',
       });
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null });
@@ -488,6 +554,9 @@ describe('Player endpoints', () => {
 
     test('should return 200 with player without pdga data', async () => {
       fetchMock('https://www.pdga.com/player/1', { data: '<html></html>' });
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null });
@@ -505,7 +574,34 @@ describe('Player endpoints', () => {
       });
     });
 
+    test('should return 200 with player with rdga data', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [{ rdgaNumber: 1, rating: 500, diff: -10 }],
+      });
+      await request(app)
+        .post('/players')
+        .send({ ...testPlayer, metrixNumber: null, pdgaNumber: null });
+      const response = await request(app).get('/players/1');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        ...testPlayerResponse,
+        metrixNumber: null,
+        metrixRating: null,
+        metrixRatingChange: null,
+        pdgaNumber: null,
+        pdgaRating: null,
+        pdgaRatingChange: null,
+        pdgaActiveTo: null,
+        rdgaRating: 500,
+        rdgaRatingChange: -10,
+      });
+    });
+
     test('should return 200 with player without metrixNumber and pdgaNumber', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app)
         .post('/players')
         .send({ ...testPlayer, metrixNumber: null, pdgaNumber: null });
@@ -525,6 +621,9 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 with player with SportsCategory', async () => {
+      fetchMock('https://rdga-api-astrogator.amvera.io/api/actual_rating', {
+        data: [],
+      });
       await request(app)
         .post('/players')
         .send({

@@ -44,7 +44,7 @@ export const getPdgaDataByNumber = async (pdgaNumber?: number | null) => {
       returnValue.pdgaActiveTo = new Date(expireDateString).toISOString();
     }
   } catch (error) {
-    console.error('Error getting metrix data', error);
+    console.error('Error getting pdga data', error);
   }
 
   return returnValue;

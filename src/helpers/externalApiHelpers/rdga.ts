@@ -11,7 +11,7 @@ let cachedPlayers: {
   rdgaRating: IPlayerExtended['rdgaRating'];
   rdgaRatingChange: IPlayerExtended['rdgaRatingChange'];
 }[] = [];
-const expireDate: Date = new Date();
+let expireDate: Date = new Date();
 
 export const getRdgaDataByNumber = async (rdgaNumber: number) => {
   const returnValue: {
@@ -45,10 +45,14 @@ export const getRdgaDataByNumber = async (rdgaNumber: number) => {
       returnValue.rdgaRatingChange = player.rdgaRatingChange;
     }
 
-    return returnValue;
   } catch (error) {
-    console.error('Error getting metrix data', error);
+    console.error('Error getting rdga data', error);
   }
 
   return returnValue;
+};
+
+export const clearRdgaDataCache = () => {
+  expireDate = new Date();
+  cachedPlayers = [];
 };
