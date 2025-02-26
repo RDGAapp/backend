@@ -6,8 +6,6 @@ export const playerSchema = z.strictObject({
   name: z.string(),
   surname: z.string().nullable(),
   rdgaNumber: z.number().min(1),
-  rdgaRating: z.number().nonnegative(),
-  rdgaRatingChange: z.number(),
   town: townSchema.nullable(),
   pdgaNumber: z.number().min(1).nullable(),
   metrixNumber: z.number().min(1).nullable(),
@@ -16,7 +14,3 @@ export const playerSchema = z.strictObject({
 });
 
 export const playerPutSchema = playerSchema.omit({ rdgaNumber: true });
-
-export const playerUpdateRatingSchema = z.strictObject({
-  rating: playerSchema.shape.rdgaRating,
-});

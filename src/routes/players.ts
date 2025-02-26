@@ -12,9 +12,6 @@ router
   .get((request, response) => playerController.getAll(request, response))
   .post((request, response) => playerController.create(request, response));
 
-router.patch('/:rdgaNumber/rdgaRating', (request, response) =>
-  playerController.updateRdgaRating(request, response),
-);
 router.patch('/:rdgaNumber/activate', (request, response) =>
   playerController.activatePlayerForCurrentYear(request, response),
 );

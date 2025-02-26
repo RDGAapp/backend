@@ -128,28 +128,6 @@ describe('Player Dao', () => {
     });
   });
 
-  describe('updateRdgaRating', () => {
-    test('should return updated player', async () => {
-      (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);
-      jest.clearAllMocks();
-
-      const updatedPlayer = await playerDao.updateRdgaRating(1, 1000, 200);
-
-      expect(updatedPlayer).toEqual(testPlayerDb);
-      expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith(Table.Player);
-      expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
-      expect(db().update).toHaveBeenCalledTimes(1);
-      expect(db().update).toHaveBeenCalledWith({
-        rdga_rating: 1000,
-        rdga_rating_change: 200,
-      });
-      expect(db().returning).toHaveBeenCalledTimes(1);
-      expect(db().returning).toHaveBeenCalledWith('*');
-    });
-  });
-
   describe('activatePlayerForCurrentYear', () => {
     test('should return updated player', async () => {
       (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);

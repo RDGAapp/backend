@@ -179,62 +179,6 @@ describe('Player Service', () => {
     });
   });
 
-  describe('updateRdgaRating', () => {
-    test.todo('should return player and count difference if rating already exists', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
-        testPlayer,
-      ]);
-      (playerDao.updateRdgaRating as jest.Mock).mockReturnValueOnce(
-        testPlayerDb,
-      );
-
-      const updatedPlayer = await playerService.updateRdgaRating(1, 900);
-
-      expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledWith(
-        1,
-        undefined,
-        undefined,
-      );
-      expect(playerDao.updateRdgaRating).toHaveBeenCalledTimes(1);
-      expect(playerDao.updateRdgaRating).toHaveBeenCalledWith(1, 900, -9100);
-    });
-
-    test.todo("should return player and count difference if rating doesn't already exists", async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([
-        { ...testPlayer, rdgaRating: null },
-      ]);
-      (playerDao.updateRdgaRating as jest.Mock).mockReturnValueOnce(
-        testPlayerDb,
-      );
-
-      const updatedPlayer = await playerService.updateRdgaRating(1, 900);
-
-      expect(updatedPlayer).toEqual(testPlayer);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledWith(
-        1,
-        undefined,
-        undefined,
-      );
-      expect(playerDao.updateRdgaRating).toHaveBeenCalledTimes(1);
-      expect(playerDao.updateRdgaRating).toHaveBeenCalledWith(1, 900, 900);
-    });
-
-    test.todo('should throw', async () => {
-      (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce(
-        [],
-      );
-
-      expect(playerService.updateRdgaRating(1, 1000)).rejects.toThrow(
-        'Игрока с номером РДГА 1 нет в базе',
-      );
-      expect(playerDao.getByRdgaPdgaMetrixNumber).toHaveBeenCalledTimes(1);
-      expect(playerDao.updateRdgaRating).toHaveBeenCalledTimes(0);
-    });
-  });
-
   describe('activatePlayerForCurrentYear', () => {
     test.todo('should return player', async () => {
       (playerDao.getByRdgaPdgaMetrixNumber as jest.Mock).mockReturnValueOnce([

@@ -20,7 +20,7 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
     surname: IPlayerDb['surname'],
     town: IPlayerDb['town'],
     onlyActive: boolean,
-  ): Promise<IWithPagination<IPlayer[]>> {
+  ): Promise<IWithPagination<IPlayer>> {
     let query = db(this._tableName).leftJoin(
       this.#authTableName,
       `${this._tableName}.rdga_number`,
@@ -84,19 +84,6 @@ class PlayerDao extends BaseDao<IPlayerBase, IPlayerDb, 'rdga_number'> {
       .orWhere({ metrix_number: metrixNumber || 0 });
 
     return player;
-  }
-
-  async updateRdgaRating(
-    rdgaNumber: IPlayerDb['rdga_number'],
-    rdgaRating: IPlayerDb['rdga_rating'],
-    ratingDifference: IPlayerDb['rdga_rating_change'],
-  ): Promise<IPlayerDb> {
-    const updatedPlayer = await db(this._tableName)
-      .where({ rdga_number: rdgaNumber })
-      .update({ rdga_rating: rdgaRating, rdga_rating_change: ratingDifference })
-      .returning('*');
-
-    return updatedPlayer[0];
   }
 
   async activatePlayerForCurrentYear(

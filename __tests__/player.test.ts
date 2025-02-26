@@ -11,6 +11,8 @@ describe('Player endpoints', () => {
   const testPlayerResponse = {
     ...testPlayer,
     avatarUrl: null,
+    rdgaRating: 0,
+    rdgaRatingChange: null,
   };
 
   const nullablePlayer = {
@@ -38,6 +40,12 @@ describe('Player endpoints', () => {
 
   describe('GET /players', () => {
     test('should return 200 with empty array', async () => {
+      fetchMock(
+        'https://rdga-api-astrogator.amvera.io/api/actual_rating',
+        {
+          data: [],
+        },
+      );
       const response = await request(app).get('/players');
 
       expect(response.status).toBe(200);
@@ -57,6 +65,12 @@ describe('Player endpoints', () => {
     });
 
     test('should return 200 with someData', async () => {
+      fetchMock(
+        'https://rdga-api-astrogator.amvera.io/api/actual_rating',
+        {
+          data: [],
+        },
+      );
       await request(app).post('/players').send(testPlayer);
       const response = await request(app).get('/players');
 
@@ -677,67 +691,6 @@ describe('Player endpoints', () => {
       expect(response.text).toEqual(
         "Something's wrong: Error: No primary key value provided",
       );
-    });
-  });
-
-  describe('PATCH /players/:rdgaNumber/rdgaRating', () => {
-    test("should return 200 and update player's rating", async () => {
-      await request(app).post('/players').send(testPlayer);
-
-      const response = await request(app)
-        .patch('/players/1/rdgaRating')
-        .send({ rating: 900 });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        ...testPlayer,
-        rdgaRating: 900,
-        rdgaRatingChange: -9100,
-      });
-    });
-
-    test('should return 500 if rdgaNumber is not a number', async () => {
-      const response = await request(app)
-        .patch('/players/test/rdgaRating')
-        .send({ rating: 900 });
-
-      expect(response.status).toBe(500);
-      expect(response.text).toEqual(
-        "Something's wrong: Error: No primary key value provided",
-      );
-    });
-
-    test('should return 400 if rating is not a number', async () => {
-      const response = await request(app)
-        .patch('/players/1/rdgaRating')
-        .send({ rating: 'test' });
-
-      expect(response.status).toBe(400);
-      expect(response.text).toEqual(
-        'Validation error: Expected number, received string at "rating"',
-      );
-    });
-
-    test('should return 200 and update player with null rating', async () => {
-      const playerToCreate: Partial<typeof testPlayer> = {
-        ...testPlayer,
-        rdgaRating: 0,
-      };
-
-      await request(app)
-        .post('/players')
-        .send({ ...playerToCreate });
-
-      const response = await request(app)
-        .patch('/players/1/rdgaRating')
-        .send({ rating: 900 });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        ...testPlayer,
-        rdgaRating: 900,
-        rdgaRatingChange: 900,
-      });
     });
   });
 

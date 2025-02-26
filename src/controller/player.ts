@@ -4,7 +4,6 @@ import playerDao from 'dao/player';
 import {
   playerSchema,
   playerPutSchema,
-  playerUpdateRatingSchema,
 } from 'schemas';
 import { IPlayerBase } from 'types/player';
 import { getPlayerDataFromBitrix } from 'helpers/externalApiHelpers';
@@ -37,7 +36,7 @@ class PlayerController extends BaseController<
     const onlyActive = request.query.onlyActive === 'true' ? true : false;
 
     try {
-      const players = await playerService.getAllPaginated(
+      const players = await this._service.getAllExtendedPaginated(
         pageNumber,
         surname,
         town,
@@ -45,37 +44,6 @@ class PlayerController extends BaseController<
       );
 
       this._response200(response, players);
-      return;
-    } catch (error) {
-      this._response500(response, error);
-      return;
-    }
-  }
-
-  async updateRdgaRating(
-    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
-    response: Response,
-  ) {
-    const { primaryKeyValue } = request;
-
-    const result = playerUpdateRatingSchema.safeParse(request.body);
-    if (!result.success) {
-      this._response400Schema(response, result.error);
-      return;
-    }
-    const { rating } = result.data;
-
-    try {
-      if (!primaryKeyValue) {
-        throw new Error('No primary key value provided');
-      }
-
-      const updatedPlayer = await playerService.updateRdgaRating(
-        primaryKeyValue,
-        rating,
-      );
-
-      this._response200(response, updatedPlayer);
       return;
     } catch (error) {
       this._response500(response, error);
@@ -94,7 +62,7 @@ class PlayerController extends BaseController<
         throw new Error('No primary key value provided');
       }
 
-      const updatedPlayer = await playerService.activatePlayerForCurrentYear(
+      const updatedPlayer = await this._service.activatePlayerForCurrentYear(
         primaryKeyValue,
       );
 
@@ -114,7 +82,7 @@ class PlayerController extends BaseController<
     }
 
     try {
-      const playerFromDb = await playerService.getByPrimaryKey(rdgaNumber, true);
+      const playerFromDb = await this._service.getByPrimaryKey(rdgaNumber, true);
 
       if (!playerFromDb) {
         const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
@@ -126,7 +94,7 @@ class PlayerController extends BaseController<
         }
       }
 
-      const updatedPlayer = await playerService.activatePlayerForCurrentYear(
+      const updatedPlayer = await this._service.activatePlayerForCurrentYear(
         rdgaNumber,
       );
 
