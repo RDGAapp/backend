@@ -70,8 +70,6 @@ export type Player = {
   rdga_number: number;
   name: string;
   surname: string | null;
-  rdga_rating: number;
-  rdga_rating_change: number | null;
   town: string | null;
   pdga_number: number | null;
   metrix_number: number | null;

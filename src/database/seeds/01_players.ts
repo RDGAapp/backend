@@ -16,8 +16,6 @@ for (let i = 1; i <= 100; i++) {
     name: faker.person.firstName(sex),
     surname: faker.person.lastName(sex),
     rdga_number: i,
-    rdga_rating: faker.number.int({ min: 0, max: 1_000 }),
-    rdga_rating_change: faker.number.int({ min: -1_000, max: 1_000 }),
     town: faker.location.city(),
     pdga_number: faker.number.int({ min: 0, max: 1_000_000 }),
     metrix_number: faker.number.int({ min: 0, max: 1_000_000 }),

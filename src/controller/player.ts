@@ -4,11 +4,8 @@ import playerDao from 'dao/player';
 import {
   playerSchema,
   playerPutSchema,
-  playerUpdateRatingSchema,
-  multipleRdgaRatingUpdateSchema,
 } from 'schemas';
 import { IPlayerBase } from 'types/player';
-import logger from 'helpers/logger';
 import { getPlayerDataFromBitrix } from 'helpers/externalApiHelpers';
 import BaseController, { RdgaRequest } from './base';
 import { IPlayerDb } from 'types/playerDb';
@@ -39,7 +36,7 @@ class PlayerController extends BaseController<
     const onlyActive = request.query.onlyActive === 'true' ? true : false;
 
     try {
-      const players = await playerService.getAllPaginated(
+      const players = await this._service.getAllExtendedPaginated(
         pageNumber,
         surname,
         town,
@@ -47,37 +44,6 @@ class PlayerController extends BaseController<
       );
 
       this._response200(response, players);
-      return;
-    } catch (error) {
-      this._response500(response, error);
-      return;
-    }
-  }
-
-  async updateRdgaRating(
-    request: RdgaRequest<IPlayerDb, 'rdga_number'>,
-    response: Response,
-  ) {
-    const { primaryKeyValue } = request;
-
-    const result = playerUpdateRatingSchema.safeParse(request.body);
-    if (!result.success) {
-      this._response400Schema(response, result.error);
-      return;
-    }
-    const { rating } = result.data;
-
-    try {
-      if (!primaryKeyValue) {
-        throw new Error('No primary key value provided');
-      }
-
-      const updatedPlayer = await playerService.updateRdgaRating(
-        primaryKeyValue,
-        rating,
-      );
-
-      this._response200(response, updatedPlayer);
       return;
     } catch (error) {
       this._response500(response, error);
@@ -96,7 +62,7 @@ class PlayerController extends BaseController<
         throw new Error('No primary key value provided');
       }
 
-      const updatedPlayer = await playerService.activatePlayerForCurrentYear(
+      const updatedPlayer = await this._service.activatePlayerForCurrentYear(
         primaryKeyValue,
       );
 
@@ -108,35 +74,6 @@ class PlayerController extends BaseController<
     }
   }
 
-  async multipleUpdateRdgaRating(request: Request, response: Response) {
-    logger.info('multipleUpdateRdgaRating request acquired');
-    const result = multipleRdgaRatingUpdateSchema.safeParse(request.body);
-    if (!result.success) {
-      this._response400Schema(response, result.error);
-      return;
-    }
-
-    const errors: unknown[] = [];
-    const updatedPlayers: IPlayerBase[] = [];
-
-    for (const updateRatingValue of result.data) {
-      try {
-        const { rdgaNumber, rating } = updateRatingValue;
-        const updatedPlayer = await playerService.updateRdgaRating(
-          rdgaNumber,
-          rating,
-        );
-
-        updatedPlayers.push(updatedPlayer);
-      } catch (error) {
-        errors.push(error);
-      }
-    }
-
-    this._response200(response, { updatedPlayers, errors });
-    return;
-  }
-
   async updatePlayerFromBitrix(request: Request, response: Response) {
     const rdgaNumber = Number(request.query.rdgaNumber);
     if (isNaN(rdgaNumber)) {
@@ -145,10 +82,10 @@ class PlayerController extends BaseController<
     }
 
     try {
-      const playerFromDb = await playerService.getByPrimaryKey(rdgaNumber);
-      const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
+      const playerFromDb = await this._service.getByPrimaryKey(rdgaNumber, true);
 
       if (!playerFromDb) {
+        const playerFromBitrix = await getPlayerDataFromBitrix(rdgaNumber);
         const newPlayerNumber = await playerService.create(playerFromBitrix);
 
         if (!newPlayerNumber) {
@@ -157,7 +94,7 @@ class PlayerController extends BaseController<
         }
       }
 
-      const updatedPlayer = await playerService.activatePlayerForCurrentYear(
+      const updatedPlayer = await this._service.activatePlayerForCurrentYear(
         rdgaNumber,
       );
 

@@ -34,10 +34,8 @@ describe('Player Dao', () => {
         '%testSurname%',
       );
       expect(db().where).toHaveBeenNthCalledWith(2, { town: 'testTown' });
-      expect(db().orderBy).toHaveBeenCalledTimes(2);
-      expect(db().orderBy).toHaveBeenNthCalledWith(1, 'rdga_rating', 'desc');
-      expect(db().orderBy).toHaveBeenNthCalledWith(
-        2,
+      expect(db().orderBy).toHaveBeenCalledTimes(1);
+      expect(db().orderBy).toHaveBeenCalledWith(
         `${Table.Player}.rdga_number`,
         'asc',
       );
@@ -125,28 +123,6 @@ describe('Player Dao', () => {
       expect(db().orWhere).toHaveBeenCalledTimes(2);
       expect(db().orWhere).toHaveBeenNthCalledWith(1, { pdga_number: 0 });
       expect(db().orWhere).toHaveBeenNthCalledWith(2, { metrix_number: 0 });
-    });
-  });
-
-  describe('updateRdgaRating', () => {
-    test('should return updated player', async () => {
-      (db().returning as jest.Mock).mockReturnValueOnce([testPlayerDb]);
-      jest.clearAllMocks();
-
-      const updatedPlayer = await playerDao.updateRdgaRating(1, 1000, 200);
-
-      expect(updatedPlayer).toEqual(testPlayerDb);
-      expect(db).toHaveBeenCalledTimes(1);
-      expect(db).toHaveBeenCalledWith(Table.Player);
-      expect(db().where).toHaveBeenCalledTimes(1);
-      expect(db().where).toHaveBeenCalledWith({ rdga_number: 1 });
-      expect(db().update).toHaveBeenCalledTimes(1);
-      expect(db().update).toHaveBeenCalledWith({
-        rdga_rating: 1000,
-        rdga_rating_change: 200,
-      });
-      expect(db().returning).toHaveBeenCalledTimes(1);
-      expect(db().returning).toHaveBeenCalledWith('*');
     });
   });
 

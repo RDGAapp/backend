@@ -4,8 +4,6 @@ const testPlayer: IPlayerBase = {
   name: 'Test',
   surname: 'User',
   rdgaNumber: 1,
-  rdgaRating: 10000,
-  rdgaRatingChange: 10,
   town: 'Somewhere',
   pdgaNumber: 1,
   metrixNumber: 1,

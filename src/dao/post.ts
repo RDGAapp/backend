@@ -20,7 +20,7 @@ class PostDao extends BaseDao<IBlogPostBase, IBlogPostDb, 'code'> {
   async getAllPaginated(
     pageNumber: number,
     fromDateTime?: string,
-  ): Promise<IWithPagination<IBlogPost[]>> {
+  ): Promise<IWithPagination<IBlogPost>> {
     let query = db(this._tableName)
       .leftJoin(
         this.#playersTableName,
