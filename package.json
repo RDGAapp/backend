@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "main": "server.js",
   "dependencies": {
-    "@tsconfig/node22": "22.0.0",
+    "@tsconfig/node24": "24.0.0",
     "@types/cookie-parser": "1.4.8",
     "@types/cors": "2.8.17",
     "@types/express": "5.0.0",
